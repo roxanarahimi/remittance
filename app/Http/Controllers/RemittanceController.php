@@ -275,7 +275,6 @@ class RemittanceController extends Controller
                 foreach ($details as $it) {
                     if (str_contains($it->{'ProductName'}, 'نودالیت')) {
                         $noodElite += $it->{'Quantity'};
-                        break;
                     }
                 }
                 $item->{'noodElite'} = $noodElite;

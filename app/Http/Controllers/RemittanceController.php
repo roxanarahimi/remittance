@@ -116,6 +116,8 @@ class RemittanceController extends Controller
                     "LGS3.InventoryVoucher.InventoryVoucherID as OrderID","LGS3.InventoryVoucher.Number as OrderNumber",
                     "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",
                 ])
+                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")//68, 69
+                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")//68, 69
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef','=',68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef','=',69)//68, 69
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
@@ -138,19 +140,30 @@ class RemittanceController extends Controller
 
                 $item->{'OrderItems'} = $details;
 
-                foreach ($details as $it) {
-                    if (str_contains($it->{'ProductName'}, 'نودالیت')) {
-                        $noodElite += $it->{'Quantity'};
-                    }
-                }
-                $item->{'noodElite'} = $noodElite;
 
-                if ($noodElite > 0) {
+
+//                foreach ($details as $it) {
+//                    if (str_contains($it->{'ProductName'}, 'نودالیت')) {
+//                        $noodElite += $it->{'Quantity'};
+//                    }
+//                }
+//                $item->{'noodElite'} = $noodElite;
+//
+//                if ($noodElite > 0) {
+//                    $item->{'ok'} = 1;
+//                }
+//                if (str_contains($item->{'AddressName'}, 'گرمدره')){
+//                    $item->{'ok'} = 0;
+//                }
+                $x = array_filter($details->toArray(), function($el){
+                    return str_contains($el->{'ProductName'}, 'نودالیت');
+                });
+                if (count($x) > 0) {
                     $item->{'ok'} = 1;
                 }
-                if (str_contains($item->{'AddressName'}, 'گرمدره')){
-                    $item->{'ok'} = 0;
-                }
+//                if (str_contains($item->{'AddressName'}, 'گرمدره')){
+//                    $item->{'ok'} = 0;
+//                }
             }
 
             $filtered = array_filter($dat, function ($el) {
@@ -274,9 +287,7 @@ class RemittanceController extends Controller
 
                 $item->{'OrderItems'} = $details;
 
-                $x = array_filter($details->toArray(), function($el){
-                    return str_contains($el->{'ProductName'}, 'نودالیت');
-                });
+
 
 //                foreach ($details as $it) {
 //                    if (str_contains($it->{'ProductName'}, 'نودالیت')) {
@@ -291,6 +302,9 @@ class RemittanceController extends Controller
 //                if (str_contains($item->{'AddressName'}, 'گرمدره')){
 //                    $item->{'ok'} = 0;
 //                }
+                $x = array_filter($details->toArray(), function($el){
+                    return str_contains($el->{'ProductName'}, 'نودالیت');
+                });
                 if (count($x) > 0) {
                     $item->{'ok'} = 1;
                 }

@@ -272,7 +272,7 @@ class RemittanceController extends Controller
 
                 $item->{'OrderItems'} = $details;
 
-                $x = array_filter($details, function($el){
+                $x = array_filter($details->toArray(), function($el){
                     return str_contains($el->{'ProductName'}, 'نودالیت');
                 });
 

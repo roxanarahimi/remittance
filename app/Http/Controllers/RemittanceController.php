@@ -272,14 +272,24 @@ class RemittanceController extends Controller
 
                 $item->{'OrderItems'} = $details;
 
-                foreach ($details as $it) {
-                    if (str_contains($it->{'ProductName'}, 'نودالیت')) {
-                        $noodElite += $it->{'Quantity'};
-                    }
-                }
-                $item->{'noodElite'} = $noodElite;
+                $x = array_filter($details, function($el){
+                    return str_contains($el->{'ProductName'}, 'نودالیت');
+                });
 
-                if ($noodElite > 0) {
+//                foreach ($details as $it) {
+//                    if (str_contains($it->{'ProductName'}, 'نودالیت')) {
+//                        $noodElite += $it->{'Quantity'};
+//                    }
+//                }
+//                $item->{'noodElite'} = $noodElite;
+//
+//                if ($noodElite > 0) {
+//                    $item->{'ok'} = 1;
+//                }
+//                if (str_contains($item->{'AddressName'}, 'گرمدره')){
+//                    $item->{'ok'} = 0;
+//                }
+                if (count($x) > 0) {
                     $item->{'ok'} = 1;
                 }
                 if (str_contains($item->{'AddressName'}, 'گرمدره')){

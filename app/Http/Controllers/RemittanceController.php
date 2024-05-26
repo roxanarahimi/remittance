@@ -62,8 +62,16 @@ class RemittanceController extends Controller
             return response()->json($validator->messages(), 422);
         }
         try {
-            $remittance = Remittance::create($request->all());
-            return response(new RemittanceResource($remittance), 201);
+            foreach ($request->OrderItems as $item ){
+                Remittance::create([
+                    "orderID"=> $request['OrderID'],
+                    "addressName"=> $request['AddressName'],
+                    "barcode"=> $item['Barcode'],
+                    "productID"=> $item['ProductID']
+                ]);
+            }
+            $remittances = Remittance::orderByDesc('id')->where('orderID',$request['OrderID'])->get();
+            return response(new RemittanceResource($remittances), 201);
         } catch (\Exception $exception) {
             return response($exception);
         }

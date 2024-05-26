@@ -61,19 +61,20 @@ class RemittanceController extends Controller
 //        if ($validator->fails()) {
 //            return response()->json($validator->messages(), 422);
 //        }
-        return $request;
-        return [json_decode($request['OrderItems'],TRUE), $request];
+
+
+
+        $orderItems = explode(',',$request['OrderItems']);
         try {
-            foreach ($request->OrderItems as $item ){
+            foreach ($orderItems as $item) {
                 Remittance::create([
-                    "orderID"=> $request['OrderID'],
-                    "addressName"=> $request['AddressName'],
-                    "barcode"=> $item['Barcode'],
-                    "productID"=> $item['ProductID']
+                    "orderID" => $request['OrderID'],
+                    "addressName" => $request['AddressName'],
+                    "barcode" => $item,
                 ]);
             }
-            $remittances = Remittance::orderByDesc('id')->where('orderID',$request['OrderID'])->get();
-            return response(new RemittanceResource($remittances), 201);
+            $remittances = Remittance::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
+            return response(RemittanceResource::collection($remittances), 201);
         } catch (\Exception $exception) {
             return response($exception);
         }
@@ -123,13 +124,13 @@ class RemittanceController extends Controller
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
                 ->select([
-                    "LGS3.InventoryVoucher.InventoryVoucherID as OrderID","LGS3.InventoryVoucher.Number as OrderNumber",
+                    "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
                     "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",
                 ])
                 ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")//68, 69
                 ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")//68, 69
-                ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef','=',68)//68, 69
-                ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef','=',69)//68, 69
+                ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
+                ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get()->unique()->toArray();
@@ -137,19 +138,17 @@ class RemittanceController extends Controller
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 0;
                 $item->{'noodElite'} = '';
-                $item->{'AddressName'} = $item->{'AddressName'}.substr($item->{'OrderID'}, -3);
+                $item->{'AddressName'} = $item->{'AddressName'} . substr($item->{'OrderID'}, -3);
                 $noodElite = 0;
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                     ->join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItemTrackingFactor.PartRef')
-
                     ->select(
-                        "LGS3.Part.Name as ProductName","LGS3.InventoryVoucherItem.Quantity as Quantity",  "LGS3.Part.PartID as Id",
+                        "LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity", "LGS3.Part.PartID as Id",
                         "LGS3.Part.Code as ProductNumber")
                     ->where('InventoryVoucherRef', $item->{'OrderID'})->get();
 
                 $item->{'OrderItems'} = $details;
-
 
 
 //                foreach ($details as $it) {
@@ -165,7 +164,7 @@ class RemittanceController extends Controller
 //                if (str_contains($item->{'AddressName'}, 'گرمدره')){
 //                    $item->{'ok'} = 0;
 //                }
-                $x = array_filter($details->toArray(), function($el){
+                $x = array_filter($details->toArray(), function ($el) {
                     return str_contains($el->{'ProductName'}, 'نودالیت');
                 });
                 if (count($x) > 0) {
@@ -254,7 +253,7 @@ class RemittanceController extends Controller
             $info = array_slice($input, $offset, $perPage);
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
 
-            return response()->json($paginator ,200);
+            return response()->json($paginator, 200);
 
         } catch (\Exception $exception) {
             return response($exception);
@@ -270,13 +269,13 @@ class RemittanceController extends Controller
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
                 ->select([
-                   "LGS3.InventoryVoucher.InventoryVoucherID as OrderID","LGS3.InventoryVoucher.Number as OrderNumber",
-                     "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",
+                    "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
+                    "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",
                 ])
                 ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")//68, 69
                 ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")//68, 69
-                ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef','=',68)//68, 69
-                ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef','=',69)//68, 69
+                ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
+                ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get()->unique()->toArray();
@@ -284,19 +283,17 @@ class RemittanceController extends Controller
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 0;
                 $item->{'noodElite'} = '';
-                $item->{'AddressName'} = $item->{'AddressName'}.substr($item->{'OrderID'}, -3);
+                $item->{'AddressName'} = $item->{'AddressName'} . substr($item->{'OrderID'}, -3);
                 $noodElite = 0;
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                     ->join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItemTrackingFactor.PartRef')
-
                     ->select(
-                        "LGS3.Part.Name as ProductName","LGS3.InventoryVoucherItem.Quantity as Quantity",  "LGS3.Part.PartID as Id",
+                        "LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity", "LGS3.Part.PartID as Id",
                         "LGS3.Part.Code as ProductNumber")
-                ->where('InventoryVoucherRef', $item->{'OrderID'})->get();
+                    ->where('InventoryVoucherRef', $item->{'OrderID'})->get();
 
                 $item->{'OrderItems'} = $details;
-
 
 
 //                foreach ($details as $it) {
@@ -312,7 +309,7 @@ class RemittanceController extends Controller
 //                if (str_contains($item->{'AddressName'}, 'گرمدره')){
 //                    $item->{'ok'} = 0;
 //                }
-                $x = array_filter($details->toArray(), function($el){
+                $x = array_filter($details->toArray(), function ($el) {
                     return str_contains($el->{'ProductName'}, 'نودالیت');
                 });
                 if (count($x) > 0) {
@@ -392,7 +389,7 @@ class RemittanceController extends Controller
 //              if ($request['type'] && $request['type'] == 'InventoryVoucher'){
 //                $input = $input1;
 //            }
-                $input = $input1;
+            $input = $input1;
 
 
             if ($request['page'] && $request['page'] > 1) {
@@ -401,7 +398,7 @@ class RemittanceController extends Controller
             $info = array_slice($input, $offset, $perPage);
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
 
-            return response()->json($paginator ,200);
+            return response()->json($paginator, 200);
 
         } catch (\Exception $exception) {
             return response($exception);

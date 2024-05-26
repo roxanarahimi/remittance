@@ -16,9 +16,9 @@ class RemittanceResource extends JsonResource
     {
         return [
             "id" => (string)$this->id,
-            "name" => $this->name,
-            "info" => json_decode($this->info),
-            "date" => $this->date,
+            "orderID" => $this->orderID,
+            "addressName" => $this->addressName,
+            "barcode" => $this->barcode,
             "created_at" => date('Y-m-d', strtotime($this->created_at)),
             "updated_at" => date('Y-m-d', strtotime($this->updated_at)),
 

@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('remittances', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('orderID');
             $table->string('addressName');
             $table->string('barcode');
-            $table->string('productID');
             $table->timestamps();
         });
     }

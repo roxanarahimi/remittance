@@ -61,6 +61,7 @@ class RemittanceController extends Controller
 //        if ($validator->fails()) {
 //            return response()->json($validator->messages(), 422);
 //        }
+        return $request;
         return [json_decode($request['OrderItems'],TRUE), $request];
         try {
             foreach ($request->OrderItems as $item ){

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Mockery\Exception;
 use Illuminate\Pagination\Paginator;
 use function Laravel\Prompts\select;
+use Illuminate\Support\Facades\Redis;
 
 // error_reporting(E_ALL);
 // ini_set('display_errors', '1');
@@ -62,6 +63,12 @@ class RemittanceController extends Controller
 //            return response()->json($validator->messages(), 422);
 //        }
 
+
+        //return $request;
+
+        $redis = Redis::connection();
+
+        return $redis;
 
 
         $orderItems = explode(',',$request['OrderItems']);

@@ -66,7 +66,7 @@ class RemittanceController extends Controller
 
         //return $request;
 
-        $redis = Redis::connection();
+        $redis = Redis::connection('redis');
 
         return $redis;
 

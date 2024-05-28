@@ -64,30 +64,23 @@ class RemittanceController extends Controller
 //        }
 
 
-        //return $request;
-
-//         $redis = Redis::connect('127.0.0.1',3306);
-//        $redis = new Redis();
-//        $redis->connect('127.0.0.1', 6379);
-
         $data = json_encode([
             'OrderID'=> $request['OrderID'],
             'OrderItems'=> $request['OrderItems'],
         ]);
         Redis::set($request['OrderID'], $data);
-         $r = Redis::get($request['OrderID']);
-         $e = json_decode($r);
-         $t = $e->{'OrderItems'};
-         return explode(',',$t);
-
-
+         $value = Redis::get($request['OrderID']);
+         $json = json_decode($value);
+         $id = $json->{'OrderID'};
+         $items = explode(',',$json->{'OrderItems'});
+         $name = $json->{'name'};
 
         $orderItems = explode(',',$request['OrderItems']);
         try {
             foreach ($orderItems as $item) {
                 Remittance::create([
                     "orderID" => $request['OrderID'],
-                    "addressName" => $request['AddressName'],
+                    "addressName" => $request['name'],
                     "barcode" => $item,
                 ]);
             }

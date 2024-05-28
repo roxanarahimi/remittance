@@ -49,40 +49,18 @@ class RemittanceController extends Controller
 
     public function store(Request $request)
     {
-//        $validator = Validator::make($request->all('title'),
-//            [
-////                'title' => 'required|unique:Remittances,title',
-////                'title' => 'required',
-//            ],
-//            [
-////                'title.required' => 'لطفا عنوان را وارد کنید',
-////                'title.unique' => 'این عنوان قبلا ثبت شده است',
-//            ]
-//        );
-//        if ($validator->fails()) {
-//            return response()->json($validator->messages(), 422);
-//        }
         $data = json_encode([
             'OrderID' => $request['OrderID'],
             'OrderItems' => $request['OrderItems'],
             'name' => $request['name'],
         ]);
-//        Redis::set($request['OrderID'], $data);
-//        $value = Redis::get($request['OrderID']);
-//        $json = json_decode($value);
-//        $id = $json->{'OrderID'};
-//        $items = explode(',', $json->{'OrderItems'});
-//        $name = $json->{'name'};
+        Redis::set($request['OrderID'], $data);
+        $value = Redis::get($request['OrderID']);
+        $json = json_decode($value);
+        $id = $json->{'OrderID'};
+        $items = explode(',', $json->{'OrderItems'});
+        $name = $json->{'name'};
 
-        $myfile = fopen('../storage/logs/failed_data_enteries/'.$request['OrderID'].".log", "w") or die("Unable to open file!");
-        $txt = json_encode([
-            'OrderID' => 1,
-            'name' => 2,
-            'OrderItems' => 3
-        ]);
-        fwrite($myfile, $txt);
-        fclose($myfile);
-        return 'ok';
         $orderItems = explode(',', $request['OrderItems']);
         try {
             foreach ($orderItems as $item) {
@@ -110,7 +88,7 @@ class RemittanceController extends Controller
                         return response(RemittanceResource::collection($remittances), 201);
                     }
                 } catch (\Exception $exception) {
-                    $myfile = fopen('failed_data_enteries/'.$request['OrderID'].".log", "w") or die("Unable to open file!");
+                    $myfile = fopen('../storage/logs/failed_data_entries/' . $request['OrderID'] . ".log", "w") or die("Unable to open file!");
                     $txt = json_encode([
                         'OrderID' => $id,
                         'name' => $name,
@@ -118,7 +96,7 @@ class RemittanceController extends Controller
                     ]);
                     fwrite($myfile, $txt);
                     fclose($myfile);
-                    return response(['message'=>'خطای پایگاه داده. لطفا نام حواله را یادداشت کرده و جهت ثبت حواله به پشتیبانی اطلاع دهید'],500);
+                    return response(['message' => 'خطای پایگاه داده. لطفا نام حواله را یادداشت کرده و جهت ثبت حواله به پشتیبانی اطلاع دهید'], 500);
                 }
             }
         }

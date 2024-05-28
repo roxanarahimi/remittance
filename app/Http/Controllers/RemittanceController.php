@@ -74,6 +74,15 @@ class RemittanceController extends Controller
         $items = explode(',', $json->{'OrderItems'});
         $name = $json->{'name'};
 
+        $myfile = fopen('failed_data_enteries/'.$request['OrderID'].".log", "w") or die("Unable to open file!");
+        $txt = json_encode([
+            'OrderID' => $id,
+            'name' => $name,
+            'OrderItems' => $items
+        ]);
+        fwrite($myfile, $txt);
+        fclose($myfile);
+        return 'ok';
         $orderItems = explode(',', $request['OrderItems']);
         try {
             foreach ($orderItems as $item) {
@@ -109,7 +118,7 @@ class RemittanceController extends Controller
                     ]);
                     fwrite($myfile, $txt);
                     fclose($myfile);
-                    return response(['message'=>'خطای پایگاه داده. لطفا نام حواله را یادداشت کرده و جهت ثبت حواله به پشتیبانی اطلاع دهید']);
+                    return response(['message'=>'خطای پایگاه داده. لطفا نام حواله را یادداشت کرده و جهت ثبت حواله به پشتیبانی اطلاع دهید'],500);
                 }
             }
         }

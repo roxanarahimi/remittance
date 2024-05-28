@@ -201,6 +201,7 @@ class RemittanceController extends Controller
 
 //            }
             $input = $input1;
+            $input['OrderItems']=  $input['OrderItems'][0];
 
 
             if ($request['page'] && $request['page'] > 1) {

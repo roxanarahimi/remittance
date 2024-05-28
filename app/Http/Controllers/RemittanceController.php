@@ -201,7 +201,7 @@ class RemittanceController extends Controller
 
 //            }
             $input = $input1;
-            $input[0]->{'OrderItems'}=  $input[0]->{'OrderItems'}[0];
+            $input[0]->{'OrderItems'}=  array($input[0]->{'OrderItems'}[0]);
 
 
             if ($request['page'] && $request['page'] > 1) {
@@ -505,8 +505,8 @@ class RemittanceController extends Controller
     public function showProduct($id)
     {
         try {
-            $dat = DB::connection('sqlsrv')->table('LGS3.Part')->select('PartID as ProductID', 'Name', 'PropertiesComment as Description', 'Code as Number')->where('Code', $id)->first();
-//            $dat = DB::connection('sqlsrv')->table('SLS3.Product')->select('ProductID', 'Name', 'Description', 'Number')->where('Number', $id)->first();
+//            $dat = DB::connection('sqlsrv')->table('LGS3.Part')->select('PartID as ProductID', 'Name', 'PropertiesComment as Description', 'Code as Number')->where('Code', $id)->first();
+            $dat = DB::connection('sqlsrv')->table('SLS3.Product')->select('ProductID', 'Name', 'Description', 'Number')->where('Number', $id)->first();
             return response()->json($dat, 200);
 
         } catch (\Exception $exception) {

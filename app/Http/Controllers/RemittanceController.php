@@ -67,18 +67,18 @@ class RemittanceController extends Controller
             'OrderItems' => $request['OrderItems'],
             'name' => $request['name'],
         ]);
-        Redis::set($request['OrderID'], $data);
-        $value = Redis::get($request['OrderID']);
-        $json = json_decode($value);
-        $id = $json->{'OrderID'};
-        $items = explode(',', $json->{'OrderItems'});
-        $name = $json->{'name'};
+//        Redis::set($request['OrderID'], $data);
+//        $value = Redis::get($request['OrderID']);
+//        $json = json_decode($value);
+//        $id = $json->{'OrderID'};
+//        $items = explode(',', $json->{'OrderItems'});
+//        $name = $json->{'name'};
 
-        $myfile = fopen('failed_data_enteries/'.$request['OrderID'].".log", "w") or die("Unable to open file!");
+        $myfile = fopen('../storage/logs/failed_data_enteries/'.$request['OrderID'].".log", "w") or die("Unable to open file!");
         $txt = json_encode([
-            'OrderID' => $id,
-            'name' => $name,
-            'OrderItems' => $items
+            'OrderID' => 1,
+            'name' => 2,
+            'OrderItems' => 3
         ]);
         fwrite($myfile, $txt);
         fclose($myfile);

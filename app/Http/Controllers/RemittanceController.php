@@ -201,7 +201,7 @@ class RemittanceController extends Controller
 
 //            }
             $input = $input1;
-            return $input;
+            return $input->{'OrderItems'};
             $input['OrderItems']=  $input['OrderItems'][0];
 
 

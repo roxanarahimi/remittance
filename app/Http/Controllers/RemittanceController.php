@@ -62,21 +62,19 @@ class RemittanceController extends Controller
 //        if ($validator->fails()) {
 //            return response()->json($validator->messages(), 422);
 //        }
-
-
         $data = json_encode([
-            'OrderID'=> $request['OrderID'],
-            'OrderItems'=> $request['OrderItems'],
-            'name'=> $request['name'],
+            'OrderID' => $request['OrderID'],
+            'OrderItems' => $request['OrderItems'],
+            'name' => $request['name'],
         ]);
         Redis::set($request['OrderID'], $data);
-         $value = Redis::get($request['OrderID']);
-         $json = json_decode($value);
-         $id = $json->{'OrderID'};
-         $items = explode(',',$json->{'OrderItems'});
-         $name = $json->{'name'};
+        $value = Redis::get($request['OrderID']);
+        $json = json_decode($value);
+        $id = $json->{'OrderID'};
+        $items = explode(',', $json->{'OrderItems'});
+        $name = $json->{'name'};
 
-        $orderItems = explode(',',$request['OrderItems']);
+        $orderItems = explode(',', $request['OrderItems']);
         try {
             foreach ($orderItems as $item) {
                 Remittance::create([
@@ -88,8 +86,35 @@ class RemittanceController extends Controller
             $remittances = Remittance::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
             return response(RemittanceResource::collection($remittances), 201);
         } catch (\Exception $exception) {
-            return response($exception);
+            for ($i = 0; $i < 3; $i++) {
+                try {
+                    foreach ($orderItems as $item) {
+                        Remittance::create([
+                            "orderID" => $request['OrderID'],
+                            "addressName" => $request['name'],
+                            "barcode" => $item,
+                        ]);
+                    }
+                    $remittances = Remittance::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
+                    if (count($remittances) == count($orderItems)) {
+                        $i = 3;
+                        return response(RemittanceResource::collection($remittances), 201);
+                    }
+                } catch (\Exception $exception) {
+                    $myfile = fopen('failed_data_enteries/'.$request['OrderID'].".log", "w") or die("Unable to open file!");
+                    $txt = json_encode([
+                        'OrderID' => $id,
+                        'name' => $name,
+                        'OrderItems' => $items
+                    ]);
+                    fwrite($myfile, $txt);
+                    fclose($myfile);
+                    return response(['message'=>'خطای پایگاه داده. لطفا نام حواله را یادداشت کرده و جهت ثبت حواله به پشتیبانی اطلاع دهید']);
+                }
+            }
         }
+
+
     }
 
     public function update(Request $request, Remittance $remittance)

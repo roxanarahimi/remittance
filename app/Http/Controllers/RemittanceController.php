@@ -70,8 +70,8 @@ class RemittanceController extends Controller
 //        $redis = new Redis();
 //        $redis->connect('127.0.0.1', 6379);
 
-        Redis::set('aaa','bbb');
-         $r = Redis::get('aaa');
+        Redis::set($request['OrderID'], $request);
+         $r = Redis::get($request['OrderID']);
          return $r;
 
 

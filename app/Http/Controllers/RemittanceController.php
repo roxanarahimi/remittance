@@ -66,13 +66,7 @@ class RemittanceController extends Controller
 
         //return $request;
 
-        try{
-            $redis=Redis::connect('127.0.0.1',3306);
-            return response('redis working');
-        }catch(\Predis\Connection\ConnectionException $e){
-            return response('error connection redis');
-        }
-
+        return Redis::connect('127.0.0.1',3306);
 
 
         $orderItems = explode(',',$request['OrderItems']);

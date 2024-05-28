@@ -202,7 +202,7 @@ class RemittanceController extends Controller
 //            }
             $input = $input1;
             return $input[0]->{'OrderItems'};
-            $input['OrderItems']=  $input['OrderItems'][0];
+            $input['OrderItems']=  $input['OrderItems'][0][0];
 
 
             if ($request['page'] && $request['page'] > 1) {

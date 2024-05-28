@@ -174,7 +174,7 @@ class RemittanceController extends Controller
 
                 $item->{'OrderItems'} = $details;
                 foreach ($details as $it) {
-                    if (str_contains($it->{'ProductName'}, 'نودالیت گوشت') || str_contains($it->{'ProductName'}, 'نودالیت مرغ') || str_contains($it->{'ProductName'}, 'نودالیت سبزی')) {
+                    if (str_contains($it->{'ProductName'}, 'نودالیت')) {
 //                        if(str_contains($it->{'ProductName'},'پک 5 ع')){
                         $noodElite += $it->{'Quantity'};
 //                        }else{
@@ -201,7 +201,6 @@ class RemittanceController extends Controller
 
 //            }
             $input = $input1;
-
             $input[0]->{'OrderItems'}=  array($input[0]->{'OrderItems'}[0]);
 
 

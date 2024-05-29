@@ -54,25 +54,34 @@ class RemittanceController extends Controller
             'OrderItems' => $request['OrderItems'],
             'name' => $request['name'],
         ]);
-        $id=$request['OrderID'];
+        $id = $request['OrderID'];
         $info = Redis::get($request['OrderID']);
-        if (isset($info)){
-            $id = $request['OrderID'].'-'.explode(',', $request['OrderItems'])[0];
+        if (isset($info)) {
+            $id = $request['OrderID'] . '-' . substr(explode(',', $request['OrderItems'])[0], -4);
         }
         Redis::set($id, $data);
         $value = Redis::get($id);
         $json = json_decode($value);
-        $id = $json->{'OrderID'};
+        $orderId = $json->{'OrderID'};
         $items = explode(',', $json->{'OrderItems'});
         $name = $json->{'name'};
+        $myfile = fopen('../storage/logs/failed_data_entries/' . $id . ".log", "w") or die("Unable to open file!");
+        $txt = json_encode([
+            'OrderID' => $orderId,
+            'name' => $name,
+            'OrderItems' => $items
+        ]);
+        fwrite($myfile, $txt);
+        fclose($myfile);
 
-        $orderItems = explode(',', $request['OrderItems']);
+        $str = str_replace(' ', '', str_replace('"', '', $request['OrderItems']));
+        $orderItems = explode(',', $str);
         try {
             foreach ($orderItems as $item) {
                 Remittance::create([
                     "orderID" => $request['OrderID'],
                     "addressName" => $request['name'],
-                    "barcode" => str_replace(' ','',str_replace('"','',$item)),
+                    "barcode" => $item,
                 ]);
             }
             $remittances = Remittance::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
@@ -84,7 +93,7 @@ class RemittanceController extends Controller
                         Remittance::create([
                             "orderID" => $request['OrderID'],
                             "addressName" => $request['name'],
-                            "barcode" => str_replace(' ','',str_replace('"','',$item)),
+                            "barcode" => str_replace(' ', '', str_replace('"', '', $item)),
                         ]);
                     }
                     $remittances = Remittance::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
@@ -93,15 +102,10 @@ class RemittanceController extends Controller
                         return response(RemittanceResource::collection($remittances), 201);
                     }
                 } catch (\Exception $exception) {
-                    $myfile = fopen('../storage/logs/failed_data_entries/' . $request['OrderID'] . ".log", "w") or die("Unable to open file!");
-                    $txt = json_encode([
-                        'OrderID' => $id,
-                        'name' => $name,
-                        'OrderItems' => $items
-                    ]);
-                    fwrite($myfile, $txt);
-                    fclose($myfile);
-                    return response(['message' => 'خطای پایگاه داده. لطفا نام حواله را یادداشت کرده و جهت ثبت حواله به پشتیبانی اطلاع دهید'], 500);
+                    return response(['message' =>
+                        'خطای پایگاه داده. لطفا کد '
+                        . $id .
+                        ' را یادداشت کرده و جهت ثبت بارکد ها به پشتیبانی اطلاع دهید'], 500);
                 }
             }
         }
@@ -147,7 +151,6 @@ class RemittanceController extends Controller
     public function readOnly(Request $request)
     {
         try {
-
 
 
 /// real place
@@ -321,7 +324,7 @@ class RemittanceController extends Controller
                     ->join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItemTrackingFactor.PartRef')
                     ->select(
-                        "LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity","LGS3.InventoryVoucherItem.Barcode as Barcode", "LGS3.Part.PartID as Id",
+                        "LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity", "LGS3.InventoryVoucherItem.Barcode as Barcode", "LGS3.Part.PartID as Id",
                         "LGS3.Part.Code as ProductNumber")
                     ->where('InventoryVoucherRef', $item->{'OrderID'})->get();
 
@@ -448,7 +451,8 @@ class RemittanceController extends Controller
             return response($exception);
         }
     }
- public function fix(Request $request)
+
+    public function fix(Request $request)
     {
 
     }

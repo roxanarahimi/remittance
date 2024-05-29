@@ -477,6 +477,7 @@ class RemittanceController extends Controller
                         "LGS3.Part.Name as ProductName",
                         "LGS3.InventoryVoucherItem.Quantity as Quantity","LGS3.InventoryVoucherItem.Barcode as Barcode",
                         "LGS3.InventoryVoucherItem.Number as XNumber","LGS3.InventoryVoucherItem.ReferenceCode as ReferenceCode",
+                       "LGS3.InventoryVoucherItemTrackingFactor.Barcode as Barcode",
                         "LGS3.Part.PartID as Id",
                         "LGS3.Part.Code as ProductNumber")
                     ->where('InventoryVoucherRef', $item->{'OrderID'})

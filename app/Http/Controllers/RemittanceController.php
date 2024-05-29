@@ -447,17 +447,19 @@ class RemittanceController extends Controller
     {
         try {
 
-            $data = Remittance::orderByDesc('id')->get();
-            foreach($data as $item){
-                $barcode = str_replace($item['barcode'],' ','');
-                $barcode = str_replace($barcode,'\"','');
-                if ($item['id']<51){
-                    $item->delete();
-                }else{
-                    $item->update([
-                        'barcode'=> $barcode
-                    ]);
-                }
+            return Redis::get('191137');
+//
+//            $data = Remittance::orderByDesc('id')->get();
+//            foreach($data as $item){
+//                $barcode = str_replace($item['barcode'],' ','');
+//                $barcode = str_replace($barcode,'\"','');
+//                if ($item['id']<51){
+//                    $item->delete();
+//                }else{
+//                    $item->update([
+//                        'barcode'=> $barcode
+//                    ]);
+//                }
 
             }
 

@@ -60,7 +60,6 @@ class RemittanceController extends Controller
         }else{
             Redis::set($request['OrderID'], $data);
         }
-        return Redis::get($request['OrderID']);
         $value = Redis::get($request['OrderID']);
         $json = json_decode($value);
         $id = $json->{'OrderID'};

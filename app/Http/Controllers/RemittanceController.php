@@ -54,7 +54,13 @@ class RemittanceController extends Controller
             'OrderItems' => $request['OrderItems'],
             'name' => $request['name'],
         ]);
-        Redis::set($request['OrderID'], $data);
+        $info = Redis::get($request['OrderID']);
+        if (isset($info)){
+            Redis::set($request['OrderID'], $info.$data);
+        }else{
+            Redis::set($request['OrderID'], $data);
+        }
+        return Redis::get($request['OrderID']);
         $value = Redis::get($request['OrderID']);
         $json = json_decode($value);
         $id = $json->{'OrderID'};
@@ -446,7 +452,6 @@ class RemittanceController extends Controller
  public function fix()
     {
         try {
-
 //
             $data = Remittance::orderByDesc('id')->get();
             foreach($data as $item){

@@ -67,7 +67,7 @@ class RemittanceController extends Controller
                 Remittance::create([
                     "orderID" => $request['OrderID'],
                     "addressName" => $request['name'],
-                    "barcode" => str_replace($item,'"',''),
+                    "barcode" => $item,
                 ]);
             }
             $remittances = Remittance::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
@@ -79,7 +79,7 @@ class RemittanceController extends Controller
                         Remittance::create([
                             "orderID" => $request['OrderID'],
                             "addressName" => $request['name'],
-                            "barcode" => str_replace($item,'"',''),
+                            "barcode" => $item,
                         ]);
                     }
                     $remittances = Remittance::orderByDesc('id')->where('orderID', $request['OrderID'])->get();

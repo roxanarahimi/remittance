@@ -16,7 +16,7 @@ class InventoryVoucher extends Model
     }
     public function Store()
     {
-        return $this->belongsTo(Store::class,  'StoreRef','StoreID');
+        return $this->belongsTo(Store::class,  'StoreID','StoreRef');
     }
 //    public function Address()
 //    {

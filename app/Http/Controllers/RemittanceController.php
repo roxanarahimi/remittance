@@ -304,7 +304,7 @@ class RemittanceController extends Controller
         try {
 
             $x = InventoryVoucher::orderByDesc('InventoryVoucherID')
-                ->select("InventoryVoucherID as OrderID","Number as OrderNumber","CreationDate","Date as DeliveryDate")
+                ->select("*")
                 ->where('InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('StoreRef')
@@ -321,9 +321,9 @@ class RemittanceController extends Controller
                 ->whereDoesntHave('Store.Plant.Address', function ($q) {
                     $q->where('Details', 'LIKE', '%گرمدره%');
                 })
-                ->get(100);
+                ->paginate(100);
 //            $l = InventoryVoucherResource::collection($x)->withQuery(['ok','>',0]);
-            return \response(InventoryVoucherResource::collection($x),200);
+            return InventoryVoucherResource::collection($x);
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')

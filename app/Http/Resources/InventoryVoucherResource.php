@@ -26,7 +26,6 @@ class InventoryVoucherResource extends JsonResource
             "CreationDate" => $this->CreationDate,
             "DeliveryDate" => $this->Date,
             "OrderItems" => InventoryVoucherItemResource::collection($this->OrderItems),
-
         ];
     }
 }

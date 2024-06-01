@@ -302,6 +302,8 @@ class RemittanceController extends Controller
     {
         try {
 
+            $x = Part::select("Name","PartID")->where('Name','LIKE','%نودالیت%')->get();
+            return $x;
             $x = InventoryVoucher::select("*")
                 ->where('InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69

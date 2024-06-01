@@ -12,7 +12,7 @@ class InventoryVoucher extends Model
     protected $table = 'LGS3.InventoryVoucher';
     public function OrderItems()
     {
-        return $this->hasMany(InventoryVoucher::class, 'InventoryVoucherID','InventoryVoucherRef');
+        return $this->hasMany(InventoryVoucherItem::class, 'InventoryVoucherID','InventoryVoucherRef');
     }
 
 }

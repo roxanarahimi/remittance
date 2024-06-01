@@ -14,12 +14,12 @@ class InventoryVoucherResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $ok = 0;
-        foreach ($this->OrderItems as $item) {
-            if (str_contains($item['ProductName'], 'نودالیت')) {
-                $ok += 1;
-            }
-        }
+//        $ok = 0;
+//        foreach ($this->OrderItems as $item) {
+//            if (str_contains($item['ProductName'], 'نودالیت')) {
+//                $ok += 1;
+//            }
+//        }
         return [
             "OrderID" => $this->InventoryVoucherID,
             "OrderNumber" => $this->Number,
@@ -32,7 +32,7 @@ class InventoryVoucherResource extends JsonResource
             "DeliveryDate" => $this->Date,
 
 
-            "ok" => $ok,
+//            "ok" => $ok,
             "OrderItems" => InventoryVoucherItemResource::collection($this->OrderItems),
 
         ];

@@ -320,7 +320,7 @@ class RemittanceController extends Controller
                 ->doesntHave('Store.Plant.Address', function($q){
                     $q->where('Details','LIKE','%گرمدره%');
                 })
-                ->take(50)->get();
+                ->get(100);
             return \response(InventoryVoucherResource::collection($x));
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')

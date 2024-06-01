@@ -331,9 +331,9 @@ class RemittanceController extends Controller
             $info = array_slice($input, $offset, $perPage);
 //            $info = InventoryVoucherResource::collection($info);
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
-            foreach(array($paginator['data']) as $item){
-                $item = new InventoryVoucherResource($item);
-            }
+//            foreach(array($paginator['data']) as $item){
+//                $item = new InventoryVoucherResource($item);
+//            }
             return response()->json($paginator, 200);
             return $x;
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store

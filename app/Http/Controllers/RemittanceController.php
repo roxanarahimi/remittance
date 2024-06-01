@@ -325,8 +325,8 @@ class RemittanceController extends Controller
 
 
             $x = InventoryVoucherResource::collection($x);
-            return $x;
-            $input1 = array_values($filtered);
+//            return $x;
+            $input1 = $x->toArray();
             $offset = 0;
             $perPage = 100;
             $input = $input1;

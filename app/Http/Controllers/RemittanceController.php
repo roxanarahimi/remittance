@@ -7,6 +7,7 @@ use App\Http\Middleware\Token;
 use App\Http\Resources\InventoryVoucherResource;
 use App\Http\Resources\RemittanceResource;
 use App\Models\InventoryVoucher;
+use App\Models\InventoryVoucherItem;
 use App\Models\Remittance;
 use http\Env\Response;
 use Illuminate\Contracts\Support\Responsable;
@@ -305,7 +306,7 @@ class RemittanceController extends Controller
                 ->where('InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('FiscalYearRef', 1403)
-                ->whereIn('OrderItems',['ProductName'=>'نودالیت مرغ الیت'])
+                ->with('')
                 ->paginate(50);
             return \response(InventoryVoucherResource::collection($x));
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store

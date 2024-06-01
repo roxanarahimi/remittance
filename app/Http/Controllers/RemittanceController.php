@@ -323,7 +323,7 @@ class RemittanceController extends Controller
                 })
                 ->get();
 //            $l = InventoryVoucherResource::collection($x)->withQuery(['ok','>',0]);
-            $input1 = InventoryVoucherResource::collection($x);
+            $input1 = array(InventoryVoucherResource::collection($x));
             $offset = 0;
             $perPage = 100;
             $input = $input1;

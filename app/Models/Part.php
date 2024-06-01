@@ -11,5 +11,5 @@ class Part extends Model
     protected $table = 'LGS3.Part';
     public function Item()
     {
-        return $this->belongsTo(InventoryVoucherItem::class,  'InventoryVoucherItemRef','InventoryVoucherItemID');
+        return $this->belongsTo(InventoryVoucherItem::class,  'PartRef','PartID');
     }}

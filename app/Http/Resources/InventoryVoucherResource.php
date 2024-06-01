@@ -19,8 +19,8 @@ class InventoryVoucherResource extends JsonResource
             "OrderNumber" => $this->Number,
 
             "AddressName" => $this->Store->Name,
-            "Address" => $this->Store->Plant,
-            "Phone" => $this->Store->Plant,
+            "Address" => $this->Store->PlantRef,
+            "Phone" => $this->Store->PlantRef,
 
             "CreationDate" => $this->CreationDate,
             "DeliveryDate" => $this->Date,

@@ -321,11 +321,22 @@ class RemittanceController extends Controller
                     $q->where('Details','LIKE','%گرمدره%');
                 })
                 ->with('OrderItems')
-                ->get()->toArray();
+                ->take(200)->get()->toArray();
 
 
-//            $x = InventoryVoucherResource::collection($x);
+            $x = InventoryVoucherResource::collection($x);
             return $x;
+            $input1 = array_values($filtered);
+            $offset = 0;
+            $perPage = 100;
+            $input = $input1;
+            if ($request['page'] && $request['page'] > 1) {
+                $offset = ($request['page'] - 1) * $perPage;
+            }
+            $info = array_slice($input, $offset, $perPage);
+            $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+            return response()->json($paginator, 200);
+
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')

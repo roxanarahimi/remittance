@@ -315,10 +315,10 @@ class RemittanceController extends Controller
                     $q->where('Name','LIKE','%گرمدره%');
                 })
                 ->whereDoesntHave('Store.Plant.Address', function($q){
-                    $q->where('Name','LIKE','%گرمدره%');
+                    $q->where('AddressName','LIKE','%گرمدره%');
                 })
                 ->whereDoesntHave('Store.Plant.Address', function($q){
-                    $q->where('Details','LIKE','%گرمدره%');
+                    $q->where('Address','LIKE','%گرمدره%');
                 })
 //                ->with('OrderItems')
                 ->take(200)->get();

@@ -324,6 +324,7 @@ class RemittanceController extends Controller
                 ->paginate(100)->toArray();
 
 
+            $x['data'] = InventoryVoucherResource::collection(json_encode($x['data']));
             return $x;
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')

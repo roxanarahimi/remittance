@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class InventoryVoucherResource extends JsonResource
+class InventoryVoucherItemResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +15,7 @@ class InventoryVoucherResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "orderID" => $this->InventoryVoucherID,
-            "Number" => $this->Number,
-            "OrderItems" => InventoryVoucherItemResource::collection($this->OrderItems),
-
+            "InventoryVoucherItemID" => $this->InventoryVoucherItemID,
         ];
     }
 }

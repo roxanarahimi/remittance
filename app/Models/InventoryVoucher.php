@@ -14,5 +14,13 @@ class InventoryVoucher extends Model
     {
         return $this->hasMany(InventoryVoucherItem::class,  'InventoryVoucherRef','InventoryVoucherID');
     }
+    public function Store()
+    {
+        return $this->belongsTo(Store::class,  'StoreRef','StoreID');
+    }
+//    public function Address()
+//    {
+//        return $this->hasMany(Address::class,  'InventoryVoucherRef','InventoryVoucherID');
+//    }
 
 }

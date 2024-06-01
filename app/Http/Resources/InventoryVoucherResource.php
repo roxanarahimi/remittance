@@ -15,8 +15,17 @@ class InventoryVoucherResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "orderID" => $this->InventoryVoucherID,
-            "Number" => $this->Number,
+            "OrderID" => $this->InventoryVoucherID,
+            "OrderNumber" => $this->Number,
+
+            "AddressName" => $this->Store->Name,
+            "Address" => $this->Store->Address->Details,
+            "Phone" => $this->Store->Address->Phone,
+
+            "CreationDate" => $this->CreationDate,
+            "DeliveryDate" => $this->Date,
+
+
             "OrderItems" => InventoryVoucherItemResource::collection($this->OrderItems),
 
         ];

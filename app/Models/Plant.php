@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Plant extends Model
 {
     protected $connection= 'sqlsrv';
-    protected $table = 'LGS3.Store';
+    protected $table = 'LGS3.Plant';
 
     public function Address()
     {

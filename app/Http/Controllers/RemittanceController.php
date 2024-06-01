@@ -304,7 +304,7 @@ class RemittanceController extends Controller
         try {
 
             $x = InventoryVoucher::orderByDesc('InventoryVoucherID')
-                ->select("InventoryVoucherID as OrderID","Number as OrderNumber","CreationDate","Date as DeliveryDate",'StoreRef')
+                ->select("InventoryVoucherID as OrderID","Number as OrderNumber","CreationDate","Date as DeliveryDate",'OrderItems')
                 ->where('InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('StoreRef')

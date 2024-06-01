@@ -307,9 +307,8 @@ class RemittanceController extends Controller
                 ->select("InventoryVoucherID as OrderID","Number as OrderNumber","CreationDate","Date as DeliveryDate")
                 ->where('InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69
+                ->where('StoreRef')
                 ->where('FiscalYearRef', 1403)
-                ->whereHas('Store')
-
                 ->whereHas('OrderItems.Part', function ($q) {
                     $q->where('Name', 'LIKE', '%نودالیت%');
                 })
@@ -317,21 +316,13 @@ class RemittanceController extends Controller
                     $q->where('Name', 'LIKE', '%گرمدره%');
                 })
                 ->whereDoesntHave('Store.Plant.Address', function ($q) {
+                    $q->where('Name', 'LIKE', '%گرمدره%');
+                })
+                ->whereDoesntHave('Store.Plant.Address', function ($q) {
                     $q->where('Details', 'LIKE', '%گرمدره%');
                 })
-                ->get(100);
-            return InventoryVoucherResource::collection($x);
-$x = array(InventoryVoucherResource::collection($x));
-            $input1 = $x;
-            $offset = 0;
-            $perPage = 100;
-            $input = $input1;
-            if ($request['page'] && $request['page'] > 1) {
-                $offset = ($request['page'] - 1) * $perPage;
-            }
-            $info = array_slice($input, $offset, $perPage);
-            $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
-            return response()->json($paginator, 200);
+                ->get(50);
+//            $l = InventoryVoucherResource::collection($x)->withQuery(['ok','>',0]);
             return $x;
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')

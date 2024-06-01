@@ -321,9 +321,9 @@ class RemittanceController extends Controller
                     $q->where('Details','LIKE','%گرمدره%');
                 })
                 ->paginate(100);
-            $y = InventoryVoucherResource::collection($x['data']);
-            $x['data'] = $y;
-            return \response($x,200);
+//            $y = InventoryVoucherResource::collection($x['data']);
+//            $x['data'] = $y;
+            return \response($x['data'],200);
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')

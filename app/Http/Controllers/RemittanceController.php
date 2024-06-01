@@ -304,11 +304,12 @@ class RemittanceController extends Controller
         try {
 
             $x = InventoryVoucher::orderByDesc('InventoryVoucherID')
-                ->select("InventoryVoucherID as OrderID","Number as OrderNumber","CreationDate","Date as DeliveryDate",'OrderItems')
+                ->select("InventoryVoucherID as OrderID","Number as OrderNumber","CreationDate","Date as DeliveryDate")
                 ->where('InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('StoreRef')
                 ->where('FiscalYearRef', 1403)
+                ->with('OrderItems')
                 ->whereHas('OrderItems.Part', function ($q) {
                     $q->where('Name', 'LIKE', '%نودالیت%');
                 })

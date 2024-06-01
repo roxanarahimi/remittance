@@ -9,10 +9,10 @@ class Store extends Model
 {
     protected $connection= 'sqlsrv';
     protected $table = 'LGS3.Store';
-    public function Order()
-    {
-        return $this->hasMany(InventoryVoucher::class,  'CounterpartStoreRef','StoreID');
-    }
+//    public function Order()
+//    {
+//        return $this->hasMany(InventoryVoucher::class,  'CounterpartStoreRef','StoreID');
+//    }
     public function Address()
     {
         return $this->hasOne(Address::class,  'AddressRef','AddressID');

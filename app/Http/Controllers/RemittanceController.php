@@ -321,7 +321,7 @@ class RemittanceController extends Controller
                     $q->where('Details','LIKE','%گرمدره%');
                 })
                 ->with('OrderItems')
-                ->get();
+                ->take(500)->get();
 
 
             $x = InventoryVoucherResource::collection($x);

@@ -7,5 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class InventoryVoucherItem extends Model
 {
-    use HasFactory;
+    protected $connection= 'sqlsrv';
+    protected $table = 'LGS3.InventoryVoucherItem';
 }

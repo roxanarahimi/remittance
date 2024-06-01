@@ -10,4 +10,5 @@ class Order extends Model
     use HasFactory;
     protected $connection= 'sqlsrv';
     protected $table = 'SLS3.Order';
+
 }

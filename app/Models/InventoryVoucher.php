@@ -10,5 +10,9 @@ class InventoryVoucher extends Model
     //use HasFactory;
     protected $connection= 'sqlsrv';
     protected $table = 'LGS3.InventoryVoucher';
+    public function OrderItems()
+    {
+        return $this->hasMany(InventoryVoucher::class, 'InventoryVoucherRef', 'InventoryVoucherID');
+    }
 
 }

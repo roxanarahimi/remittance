@@ -301,7 +301,7 @@ class RemittanceController extends Controller
     {
         try {
 
-            $x = InventoryVoucher::where('FiscalYearRef', 1403)->select("InventoryVoucherID", "Number",)->take(2)->get();
+            $x = InventoryVoucher::where('FiscalYearRef', 1403)->select("*")->take(2)->get();
             return \response(InventoryVoucherResource::collection($x));
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')

@@ -302,15 +302,6 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         try {
-            "OrderID" => $this->InventoryVoucherID,
-            "OrderNumber" => $this->Number,
-
-            "AddressName" => $this->Store->Name,
-            "Address" => $this->Store->Plant->Address->Details,
-            "Phone" => $this->Store->Plant->Address->Phone,
-
-            "CreationDate" => $this->CreationDate,
-            "DeliveryDate" => $this->Date,
 
             $x = InventoryVoucher::orderByDesc('InventoryVoucherID')
                 ->select("InventoryVoucherID as OrderID","OrderNumber","CreationDate","Date as DeliveryDate")

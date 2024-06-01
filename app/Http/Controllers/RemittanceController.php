@@ -304,7 +304,7 @@ class RemittanceController extends Controller
         try {
 
 
-            $x = InventoryVoucher::select("*")->makeHidden(['Version'])
+            $x = InventoryVoucher::select("*")
                 ->where('InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('FiscalYearRef', 1403)

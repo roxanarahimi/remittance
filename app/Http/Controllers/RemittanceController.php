@@ -306,7 +306,7 @@ class RemittanceController extends Controller
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('FiscalYearRef', 1403)
 
-                ->take(2)->get();
+                ->paginate(50);
             return \response(InventoryVoucherResource::collection($x));
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')

@@ -13,4 +13,8 @@ class InventoryVoucherItem extends Model
     {
         return $this->belongsTo(InventoryVoucher::class,  'InventoryVoucherRef','InventoryVoucherID');
     }
+    public function Part()
+    {
+        return $this->hasOne(Part::class,  'InventoryVoucherItemRef','InventoryVoucherItemID');
+    }
 }

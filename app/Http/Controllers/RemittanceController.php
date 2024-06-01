@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Middleware\Token;
 use App\Http\Resources\RemittanceResource;
+use App\Models\InventoryVoucher;
 use App\Models\Remittance;
 use http\Env\Response;
 use Illuminate\Contracts\Support\Responsable;
@@ -299,6 +300,8 @@ class RemittanceController extends Controller
     {
         try {
 
+            $x = InventoryVoucher::where('FiscalYearRef', 1403)->select("InventoryVoucherID", "Number",)->first();
+            return $x;
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')

@@ -303,25 +303,23 @@ class RemittanceController extends Controller
     {
         try {
 
-            $x = InventoryVoucher::orderByDesc('InventoryVoucherID')
-                ->select("*")
+            $x = InventoryVoucher::select("*")
                 ->where('InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('FiscalYearRef', 1403)
-                ->where('StoreRef')
-                ->whereHas('OrderItems.Part', function ($q) {
-                    $q->where('Name', 'LIKE', '%نودالیت%');
+                ->whereHas('OrderItems.Part', function($q){
+                    $q->where('Name','LIKE','%نودالیت%');
                 })
-                ->whereDoesntHave('Store', function ($q) {
-                    $q->where('Name', 'LIKE', '%گرمدره%');
+                ->doesntHave('Store', function($q){
+                    $q->where('Name','LIKE','%گرمدره%');
                 })
-                ->whereDoesntHave('Store.Plant.Address', function ($q) {
-                    $q->where('Name', 'LIKE', '%گرمدره%');
+                ->doesntHave('Store.Plant.Address', function($q){
+                    $q->where('Name','LIKE','%گرمدره%');
                 })
-                ->whereDoesntHave('Store.Plant.Address', function ($q) {
-                    $q->where('Details', 'LIKE', '%گرمدره%');
+                ->doesntHave('Store.Plant.Address', function($q){
+                    $q->where('Details','LIKE','%گرمدره%');
                 })
-                ->take(100)->get();
+                ->take(50)->get();
 //            $l = InventoryVoucherResource::collection($x)->withQuery(['ok','>',0]);
             return InventoryVoucherResource::collection($x);
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store

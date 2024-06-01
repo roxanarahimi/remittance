@@ -320,7 +320,7 @@ class RemittanceController extends Controller
                     $q->where('Details', 'LIKE', '%گرمدره%');
                 })
                 ->get();
-$x = InventoryVoucherResource::collection($x)->toArray();
+$x = array(InventoryVoucherResource::collection($x));
             $input1 = $x;
             $offset = 0;
             $perPage = 100;

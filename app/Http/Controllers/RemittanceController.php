@@ -8,6 +8,7 @@ use App\Http\Resources\InventoryVoucherResource;
 use App\Http\Resources\RemittanceResource;
 use App\Models\InventoryVoucher;
 use App\Models\InventoryVoucherItem;
+use App\Models\Part;
 use App\Models\Remittance;
 use http\Env\Response;
 use Illuminate\Contracts\Support\Responsable;

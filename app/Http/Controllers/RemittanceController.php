@@ -307,8 +307,9 @@ class RemittanceController extends Controller
                 ->select("InventoryVoucherID as OrderID","Number as OrderNumber","CreationDate","Date as DeliveryDate")
                 ->where('InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69
-                ->where('StoreRef')
                 ->where('FiscalYearRef', 1403)
+                ->whereHas('Store')
+
                 ->whereHas('OrderItems.Part', function ($q) {
                     $q->where('Name', 'LIKE', '%نودالیت%');
                 })

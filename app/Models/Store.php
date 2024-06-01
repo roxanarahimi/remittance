@@ -11,7 +11,7 @@ class Store extends Model
     protected $table = 'LGS3.Store';
     public function Order()
     {
-        return $this->hasMany(InventoryVoucher::class,  'StoreID','CounterpartStoreRef');
+        return $this->hasMany(InventoryVoucher::class,  'CounterpartStoreRef','StoreID');
     }
 //    public function Address()
 //    {

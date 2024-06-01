@@ -16,8 +16,8 @@ class InventoryVoucherResource extends JsonResource
     {
         $ok = 0;
         foreach ($this->OrderItems as $item) {
-            if (str_contains($item['ProductName'],'نودالیت')){
-                $ok ++;
+            if (str_contains($item['ProductName'], 'نودالیت')) {
+                $ok += 1;
             }
         }
         return [

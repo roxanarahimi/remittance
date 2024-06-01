@@ -304,7 +304,7 @@ class RemittanceController extends Controller
         try {
 
             $x = InventoryVoucher::orderByDesc('InventoryVoucherID')
-                ->select("InventoryVoucherID as OrderID","Number as OrderNumber","CreationDate","Date as DeliveryDate",'StoreRef')
+                ->select("InventoryVoucherID as OrderID","OrderNumber","CreationDate","Date as DeliveryDate")
                 ->where('InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('StoreRef')
@@ -322,7 +322,8 @@ class RemittanceController extends Controller
                     $q->where('Details', 'LIKE', '%گرمدره%');
                 })
                 ->get(100);
-            return \response(InventoryVoucherResource::collection($x),200);
+//            $l = InventoryVoucherResource::collection($x)->withQuery(['ok','>',0]);
+            return $x;
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')

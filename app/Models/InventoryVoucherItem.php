@@ -19,6 +19,6 @@ class InventoryVoucherItem extends Model
     }
     public function NPart()
     {
-        return $this->hasOne(Part::class,  'PartID','PartRef')->where('Name','LIKE','نودالیت');
+        return $this->hasOne(Part::class,  'PartID','PartRef')->where('Name','LIKE','%نودالیت%');
     }
 }

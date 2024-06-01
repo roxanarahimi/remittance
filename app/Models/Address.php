@@ -9,7 +9,7 @@ class Address extends Model
 {
     protected $connection= 'sqlsrv';
     protected $table = 'GNR3.Address';
-    public function Store()
+    public function Plant()
     {
         return $this->belongsTo(Store::class,  'AddressRef','AddressID');
     }

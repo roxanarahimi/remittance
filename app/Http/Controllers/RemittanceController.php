@@ -305,7 +305,7 @@ class RemittanceController extends Controller
                 ->where('InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('FiscalYearRef', 1403)
-
+                ->whereIn('OrderItems',['ProductName'=>'نودالیت مرغ الیت'])
                 ->paginate(50);
             return \response(InventoryVoucherResource::collection($x));
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store

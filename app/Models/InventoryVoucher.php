@@ -10,6 +10,7 @@ class InventoryVoucher extends Model
     //use HasFactory;
     protected $connection= 'sqlsrv';
     protected $table = 'LGS3.InventoryVoucher';
+    protected $hidden = ['Version'];
 
     public function OrderItems()
     {

@@ -16,6 +16,7 @@ class InventoryVoucherItemResource extends JsonResource
     {
         return [
             "InventoryVoucherItemID" => $this->InventoryVoucherItemID,
+            "Quantity" => $this->Quantity,
         ];
     }
 }

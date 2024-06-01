@@ -309,7 +309,6 @@ class RemittanceController extends Controller
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('StoreRef')
                 ->where('FiscalYearRef', 1403)
-                ->with('OrderItems')
                 ->whereHas('OrderItems.Part', function ($q) {
                     $q->where('Name', 'LIKE', '%نودالیت%');
                 })
@@ -322,8 +321,18 @@ class RemittanceController extends Controller
                 ->whereDoesntHave('Store.Plant.Address', function ($q) {
                     $q->where('Details', 'LIKE', '%گرمدره%');
                 })
-                ->paginate(100);
+                ->get();
 //            $l = InventoryVoucherResource::collection($x)->withQuery(['ok','>',0]);
+            $input1 = InventoryVoucherResource::collection($x);
+            $offset = 0;
+            $perPage = 100;
+            $input = $input1;
+            if ($request['page'] && $request['page'] > 1) {
+                $offset = ($request['page'] - 1) * $perPage;
+            }
+            $info = array_slice($input, $offset, $perPage);
+            $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+            return response()->json($paginator, 200);
             return $x;
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')

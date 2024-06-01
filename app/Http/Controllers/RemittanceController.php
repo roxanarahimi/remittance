@@ -311,16 +311,16 @@ class RemittanceController extends Controller
                 ->whereHas('OrderItems.Part', function($q){
                     $q->where('Name','LIKE','%نودالیت%');
                 })
-                ->doesntHave('Store', function($q){
+                ->whereDoesntHave('Store', function($q){
                     $q->where('Name','LIKE','%گرمدره%');
                 })
-                ->doesntHave('Store.Plant.Address', function($q){
+                ->whereDoesntHave('Store.Plant.Address', function($q){
                     $q->where('Name','LIKE','%گرمدره%');
                 })
-                ->doesntHave('Store.Plant.Address', function($q){
+                ->whereDoesntHave('Store.Plant.Address', function($q){
                     $q->where('Details','LIKE','%گرمدره%');
                 })
-                ->get(100);
+                ->take(50)->get();
             return \response(InventoryVoucherResource::collection($x));
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')

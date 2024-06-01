@@ -9,4 +9,8 @@ class InventoryVoucherItem extends Model
 {
     protected $connection= 'sqlsrv';
     protected $table = 'LGS3.InventoryVoucherItem';
+    public function Order()
+    {
+        return $this->belogsTo(InventoryVoucher::class,  'InventoryVoucherID','InventoryVoucherRef');
+    }
 }

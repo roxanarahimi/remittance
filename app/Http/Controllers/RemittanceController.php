@@ -319,7 +319,8 @@ class RemittanceController extends Controller
                 ->whereDoesntHave('Store.Plant.Address', function ($q) {
                     $q->where('Details', 'LIKE', '%گرمدره%');
                 })
-                ->get();
+                ->paginate(100);
+            return InventoryVoucherResource::collection($x);
 $x = array(InventoryVoucherResource::collection($x));
             $input1 = $x;
             $offset = 0;
@@ -329,11 +330,7 @@ $x = array(InventoryVoucherResource::collection($x));
                 $offset = ($request['page'] - 1) * $perPage;
             }
             $info = array_slice($input, $offset, $perPage);
-//            $info = InventoryVoucherResource::collection($info);
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
-//            foreach(array($paginator['data']) as $item){
-//                $item = new InventoryVoucherResource($item);
-//            }
             return response()->json($paginator, 200);
             return $x;
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store

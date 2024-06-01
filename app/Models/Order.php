@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
+    protected $hidden = ['Version'];
     protected $connection= 'sqlsrv';
     protected $table = 'SLS3.Order';
 

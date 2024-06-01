@@ -9,6 +9,7 @@ class Plant extends Model
 {
     protected $connection= 'sqlsrv';
     protected $table = 'LGS3.Plant';
+    protected $hidden = ['Version'];
 
     public function Address()
     {

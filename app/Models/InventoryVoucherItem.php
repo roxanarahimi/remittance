@@ -9,6 +9,7 @@ class InventoryVoucherItem extends Model
 {
     protected $connection= 'sqlsrv';
     protected $table = 'LGS3.InventoryVoucherItem';
+    protected $hidden = ['Version'];
     public function Order()
     {
         return $this->belongsTo(InventoryVoucher::class,  'InventoryVoucherRef','InventoryVoucherID');

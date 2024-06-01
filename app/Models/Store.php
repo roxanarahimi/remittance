@@ -13,8 +13,8 @@ class Store extends Model
     {
         return $this->hasMany(InventoryVoucher::class,  'CounterpartStoreRef','StoreID');
     }
-//    public function Address()
-//    {
-//        return $this->hasOne(Address::class,  'AddressRef','AddressID');
-//    }
+    public function Plant()
+    {
+        return $this->hasOne(Plant::class,  'PlantRef','PlantID');
+    }
 }

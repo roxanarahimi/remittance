@@ -302,11 +302,18 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         try {
+            "OrderID" => $this->InventoryVoucherID,
+            "OrderNumber" => $this->Number,
 
-//            $x = Part::select("Name","PartID")->where('Name','LIKE','%نودالیت%')->get();
-//            return $x;
+            "AddressName" => $this->Store->Name,
+            "Address" => $this->Store->Plant->Address->Details,
+            "Phone" => $this->Store->Plant->Address->Phone,
+
+            "CreationDate" => $this->CreationDate,
+            "DeliveryDate" => $this->Date,
+
             $x = InventoryVoucher::orderByDesc('InventoryVoucherID')
-                ->select("*")
+                ->select("InventoryVoucherID","Number","CreationDate","Date")
                 ->where('InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('StoreRef')
@@ -325,7 +332,7 @@ class RemittanceController extends Controller
                 })
                 ->paginate(100);
 //            $l = InventoryVoucherResource::collection($x)->withQuery(['ok','>',0]);
-            return \response(InventoryVoucherResource::collection($x));
+            return $x;
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')

@@ -309,7 +309,9 @@ class RemittanceController extends Controller
                 ->where('InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('FiscalYearRef', 1403)
-                ->with('InventoryVoucherItem')->where('Name','LIKE','%نودالیت%')
+                ->whereHas('InventoryVoucherItem', function($q){
+                    $q->where('Name','LIKE','%نودالیت%');
+                })
                 ->take(200)->get();
             $l = InventoryVoucherResource::collection($x)->withQuery(['ok','>',0]);
             return \response($l);

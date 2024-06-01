@@ -312,13 +312,13 @@ class RemittanceController extends Controller
                 ->whereHas('OrderItems.Part', function($q){
                     $q->where('Name','LIKE','%نودالیت%');
                 })
-                ->doesntHave('Store', function($q){
+                ->whereDoesntHave('Store', function($q){
                     $q->where('Name','LIKE','%گرمدره%');
                 })
-                ->doesntHave('Store.Plant.Address', function($q){
+                ->whereDoesntHave('Store.Plant.Address', function($q){
                     $q->where('Name','LIKE','%گرمدره%');
                 })
-                ->doesntHave('Store.Plant.Address', function($q){
+                ->whereDoesntHave('Store.Plant.Address', function($q){
                     $q->where('Details','LIKE','%گرمدره%');
                 })
                 ->take(50)->get();

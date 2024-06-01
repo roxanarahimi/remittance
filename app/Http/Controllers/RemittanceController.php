@@ -316,9 +316,6 @@ class RemittanceController extends Controller
                     $q->where('Name', 'LIKE', '%گرمدره%');
                 })
                 ->whereDoesntHave('Store.Plant.Address', function ($q) {
-                    $q->where('Name', 'LIKE', '%گرمدره%');
-                })
-                ->whereDoesntHave('Store.Plant.Address', function ($q) {
                     $q->where('Details', 'LIKE', '%گرمدره%');
                 })
                 ->get();

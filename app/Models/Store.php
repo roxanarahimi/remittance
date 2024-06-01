@@ -15,6 +15,6 @@ class Store extends Model
     }
     public function Plant()
     {
-        return $this->hasOne(Plant::class,  'PlantRef','PlantID');
+        return $this->hasOne(Plant::class,  'PlantID','PlantRef');
     }
 }

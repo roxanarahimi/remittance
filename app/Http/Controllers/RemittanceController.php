@@ -319,7 +319,7 @@ class RemittanceController extends Controller
                     $q->where('Name','LIKE','%نودالیت%');
                 })
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-               ->take(100)->get()->unique()->toArray();
+               ->take(100)->get()->unique();
 //            $x = InventoryVoucherResource::collection($x);
             return response()->json(InventoryVoucherResource::collection($x), 200);
             $offset = 0;

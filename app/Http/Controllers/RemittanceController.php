@@ -319,7 +319,9 @@ class RemittanceController extends Controller
                 ->with(
                     [
                         'OrderItems' => function (HasMany $query) use ($search) {
-                            $query->where('Part.Name', 'like', "%{$search}%");
+                            $query->whereHas('Part',function ($q) use ($search){
+                                $q->where('Name', 'LIKE', "%{$search}%");
+                            });
                         }
                     ]
                 )

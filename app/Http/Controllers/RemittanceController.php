@@ -326,7 +326,7 @@ class RemittanceController extends Controller
 //                ->whereDoesntHave('Store.Plant.Address', function($q){
 //                    $q->where('Details','LIKE','%گرمدره%');
 //                })
-                ->with('OrderItems')
+//                ->with('OrderItems')
                 ->take(200)->get()->toArray();
 
 //            return $x;
@@ -343,7 +343,7 @@ class RemittanceController extends Controller
             }
             $info = array_slice($input, $offset, $perPage);
             foreach($info as $item){
-                $item = InventoryVoucherResource::collection($item);
+                $item = new InventoryVoucherResource($item);
             }
 
 //            return $info;

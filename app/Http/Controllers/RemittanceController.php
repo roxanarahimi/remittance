@@ -327,25 +327,33 @@ class RemittanceController extends Controller
 //                    $q->where('Details','LIKE','%گرمدره%');
 //                })
                 ->with('OrderItems')
-                ->take(200)->get()->toArray();
+                ->paginate(100);
 
-//            return $x;
+////            return $x;
+//
+////            $x = InventoryVoucherResource::collection($x);
+////            return $x;
+//
+//            $offset = 0;
+//            $perPage = 100;
+//            $input1 = $x;
+//            $input = $input1;
+//            if ($request['page'] && $request['page'] > 1) {
+//                $offset = ($request['page'] - 1) * $perPage;
+//            }
+//            $info = array_slice($input, $offset, $perPage);
+//            $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+//            return response()->json($paginator, 200);
+//
 
-//            $x = InventoryVoucherResource::collection($x);
-//            return $x;
-
-            $offset = 0;
             $perPage = 100;
-            $input1 = $x;
-            $input = $input1;
-            if ($request['page'] && $request['page'] > 1) {
-                $offset = ($request['page'] - 1) * $perPage;
-            }
-            $info = array_slice($input, $offset, $perPage);
-            $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
-            return response()->json($paginator, 200);
-
-
+            $data = $x;
+            $pages_count = ceil($data->total()/$perPage);
+            return response([
+                "data"=>InventoryVoucherResource::collection($data),
+                "pages"=>$pages_count,
+                "total"=> $data->total(),
+            ], 200);
 
 
 

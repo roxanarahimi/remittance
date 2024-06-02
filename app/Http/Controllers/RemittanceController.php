@@ -342,8 +342,9 @@ class RemittanceController extends Controller
                 $offset = ($request['page'] - 1) * $perPage;
             }
             $info = array_slice($input, $offset, $perPage);
+            return $info;
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
-            return response()->json(array($paginator), 200);
+            return response()->json($paginator, 200);
 
 
 

@@ -329,9 +329,9 @@ class RemittanceController extends Controller
 //                ->with('OrderItems')
                 ->take(200)->get()->toArray();
 
-//            return $x;
+            return $x;
 
-            $x = InventoryVoucherResource::collection($x[0]);
+            $x = InventoryVoucherResource::collection($x);
 //            return $x;
 
             $offset = 0;

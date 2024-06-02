@@ -324,16 +324,16 @@ class RemittanceController extends Controller
                     $q->where('Name','LIKE','%نودالیت%');
                 })
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-                ->skip($page*$perPage)->take($perPage)->get();
+                ->get();
 
 
             $data = $x;
-//            $pages_count = ceil($data->total()/$perPage);
+            $pages_count = ceil($data->total()/$perPage);
             return response([
                 "current_page"=> $page,
                 "data"=>InventoryVoucherResource::collection($data),
-//                "pages"=>$pages_count,
-//                "total"=> $data->total(),
+                "pages"=>$pages_count,
+                "total"=> $data->total(),
             ], 200);
 
 

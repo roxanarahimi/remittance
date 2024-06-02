@@ -342,7 +342,12 @@ class RemittanceController extends Controller
                 $offset = ($request['page'] - 1) * $perPage;
             }
             $info = array_slice($input, $offset, $perPage);
-            return [InventoryVoucherResource::collection($info),count($info)];
+            $result =(string)$info;
+
+            $obj = json_decode($result,true);
+
+//            echo $obj['messages'][0]['id'];
+            return [InventoryVoucherResource::collection($obj['0']),count($info)];
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
             return response()->json($paginator, 200);
 

@@ -304,8 +304,8 @@ class RemittanceController extends Controller
         try {
 
 
-            $x = InventoryVoucher::select( "LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
-                 "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate","CounterpartStoreRef")
+            $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
                 ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -315,11 +315,13 @@ class RemittanceController extends Controller
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->where('LGS3.InventoryVoucher.CounterpartStoreRef')
-                ->whereHas('OrderItems.Part', function($q){
-                    $q->where('Name','LIKE','%نودالیت%');
+                ->whereHas('OrderItems', function ($q) {
+                    $q->whereHas('Part', function ($z) {
+                        $z->where('Name', 'LIKE', '%نودالیت%');
+                    });
                 })
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-               ->take(100)->get();
+                ->take(100)->get();
 //            $x = InventoryVoucherResource::collection($x);
             return response()->json(InventoryVoucherResource::collection($x), 200);
             $offset = 0;
@@ -333,9 +335,6 @@ class RemittanceController extends Controller
 
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
             return response()->json($paginator, 200);
-
-
-
 
 
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store

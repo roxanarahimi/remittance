@@ -326,7 +326,7 @@ class RemittanceController extends Controller
 //                ->whereDoesntHave('Store.Plant.Address', function($q){
 //                    $q->where('Details','LIKE','%گرمدره%');
 //                })
-//                ->with('OrderItems')
+                ->with('OrderItems')
                 ->take(200)->get()->toArray();
 
 //            return $x;
@@ -342,11 +342,6 @@ class RemittanceController extends Controller
                 $offset = ($request['page'] - 1) * $perPage;
             }
             $info = array_slice($input, $offset, $perPage);
-            $info1 = [];
-            foreach($info as $item){
-                $info1[] = collect($item);
-            }
-            return $info1;
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
             return response()->json($paginator, 200);
 

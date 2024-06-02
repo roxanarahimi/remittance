@@ -344,7 +344,7 @@ class RemittanceController extends Controller
             $info = array_slice($input, $offset, $perPage);
             $result =json_encode($info);
 
-            $obj = json_decode($result,true);
+            $obj = json_decode($result);
 
 //            echo $obj['messages'][0]['id'];
             return [InventoryVoucherResource::collection($obj['0']),count($info)];

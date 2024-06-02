@@ -331,7 +331,7 @@ class RemittanceController extends Controller
 
 //            return $x;
 
-            $x = InventoryVoucherResource::collection($x);
+            $x = InventoryVoucherResource::collection($x[0]);
 //            return $x;
 
             $offset = 0;

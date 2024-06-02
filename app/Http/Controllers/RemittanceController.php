@@ -13,6 +13,7 @@ use App\Models\Remittance;
 use http\Env\Response;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -316,7 +317,12 @@ class RemittanceController extends Controller
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->where('LGS3.InventoryVoucher.CounterpartStoreRef')
-                ->whereHas(['OrderItems' => fn($query) => $query->with('Part', fn($q) => $q->where('Name', 'like', '%نودالیت%')) ])
+                ->with('OrderItems')
+                    ->whereHas('OrderItems', function ($query) {
+                        $query->whereHas('Part',function (Builder $q){
+                            $q->where('Name', 'like', '%نودالیت%');
+                        });
+                    })
 
 //                ->whereHas('OrderItems', function($query) {
 //                    $query->whereHas('Part',function ($v){

@@ -325,13 +325,13 @@ class RemittanceController extends Controller
 //                ->whereDoesntHave('Store.Plant.Address', function($q){
 //                    $q->where('Details','LIKE','%گرمدره%');
 //                })
-                ->with('OrderItems')
+//                ->with('OrderItems')
                 ->take(20)->get();
 
-            return $x;
+//            return $x;
 
             $x = InventoryVoucherResource::collection($x);
-//            return count($x);
+            return $x;
 
             $offset = 0;
             $perPage = 100;

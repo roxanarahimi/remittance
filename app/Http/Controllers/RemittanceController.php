@@ -12,6 +12,7 @@ use App\Models\Part;
 use App\Models\Remittance;
 use http\Env\Response;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -302,7 +303,7 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         try {
-
+            $search = 'نودالیت';
 
             $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
                 "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
@@ -315,11 +316,18 @@ class RemittanceController extends Controller
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->where('LGS3.InventoryVoucher.CounterpartStoreRef')
-                ->whereHas('OrderItems', function ($q) {
-                    $q->whereHas('Part', function ($z) {
-                        $z->where('Name', 'LIKE', '%نودالیت%');
-                    });
-                })
+                ->with(
+                    [
+                        'OrderItems' => function (HasMany $query) use ($search) {
+                            $query->where('Part.Name', 'like', "%{$search}%");
+                        }
+                    ]
+                )
+//                ->whereHas('OrderItems', function ($q) {
+//                    $q->whereHas('Part', function ($z) {
+//                        $z->where('Name', 'LIKE', '%نودالیت%');
+//                    });
+//                })
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->take(100)->get();
 //            $x = InventoryVoucherResource::collection($x);

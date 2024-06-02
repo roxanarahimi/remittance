@@ -319,7 +319,7 @@ class RemittanceController extends Controller
                 ->whereHas('OrderItems', function($query) {
                     $query->whereHas('Part',function ($v){
 //                        return str_contains('Name','نودالیت');
-                        $v->search('Name', 'LIKE','%نودالیت%');
+                        $v->where('Name', 'like','%نودالیت%');
                     });
                 })
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')

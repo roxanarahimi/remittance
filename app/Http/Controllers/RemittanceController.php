@@ -304,8 +304,8 @@ class RemittanceController extends Controller
         try {
 
 
-            $x = InventoryVoucher::select( "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
-                "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",)
+            $x = InventoryVoucher::select( "LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+                 "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate")
                 ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')

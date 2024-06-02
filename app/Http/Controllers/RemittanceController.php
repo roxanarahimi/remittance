@@ -305,6 +305,10 @@ class RemittanceController extends Controller
 
 
             $x = InventoryVoucher::select("*")
+                ->join('Store', 'Store.StoreID', '=', 'InventoryVoucher.CounterpartStoreRef')
+                ->join('Plant', 'Plant.PlantID', '=', 'Store.PlantRef')
+                ->join('Address', 'Address.AddressID', '=', 'Plant.AddressRef')
+
                 ->where('InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('FiscalYearRef', 1403)
@@ -320,14 +324,16 @@ class RemittanceController extends Controller
                     $q->where('Details','LIKE','%گرمدره%');
                 })
 //                ->with('OrderItems')
-                ->take(200)->get();
+                ->take(20)->get();
 
+            return $x;
 
             $x = InventoryVoucherResource::collection($x);
 //            return count($x);
-            $input1 = $x;
+
             $offset = 0;
             $perPage = 100;
+            $input1 = $x;
             $input = $input1;
             if ($request['page'] && $request['page'] > 1) {
                 $offset = ($request['page'] - 1) * $perPage;

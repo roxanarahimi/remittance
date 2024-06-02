@@ -333,7 +333,7 @@ class RemittanceController extends Controller
                 "current_page"=> $page,
                 "data"=>InventoryVoucherResource::collection($data),
                 "pages"=>$pages_count,
-                "total"=> $data->total(),
+//                "total"=> $data->total(),
             ], 200);
 
 

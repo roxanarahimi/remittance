@@ -342,7 +342,7 @@ class RemittanceController extends Controller
                 $offset = ($request['page'] - 1) * $perPage;
             }
             $info = array_slice($input, $offset, $perPage);
-            $result =json_encode($info);
+            $result =json_decode($info);
 
             return $request;
             $obj = json_decode($result);

@@ -326,7 +326,7 @@ class RemittanceController extends Controller
 //                ->whereDoesntHave('Store.Plant.Address', function($q){
 //                    $q->where('Details','LIKE','%گرمدره%');
 //                })
-                ->with('OrderItems')
+                ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->paginate(100);
 
 ////            return $x;

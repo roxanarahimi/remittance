@@ -345,8 +345,7 @@ class RemittanceController extends Controller
             foreach($info as $item){
                 $item = new InventoryVoucherResource($item);
             }
-
-//            return $info;
+            return $info;
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
             return response()->json($paginator, 200);
 

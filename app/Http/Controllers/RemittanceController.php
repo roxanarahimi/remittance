@@ -304,6 +304,11 @@ class RemittanceController extends Controller
         try {
 
 
+            $page = 1;
+            if (isset($request['page'])){
+                $page = $request['page'];
+            }
+            $perPage = 100;
             $x = InventoryVoucher::select( "LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
                  "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate","CounterpartStoreRef")
                 ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
@@ -318,39 +323,14 @@ class RemittanceController extends Controller
                 ->whereHas('OrderItems.Part', function($q){
                     $q->where('Name','LIKE','%نودالیت%');
                 })
-//                ->whereJsonContains('OrderItems->Part->Name', ['نودالیت'])
-
-//                ->whereDoesntHave('Store', function($q){
-//                    $q->where('Name','LIKE','%گرمدره%');
-//                })
-//                ->whereDoesntHave('Store.Plant.Address', function($q){
-//                    $q->where('Details','LIKE','%گرمدره%');
-//                })
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-                ->paginate(100);
+                ->skip($page*$perPage)->take($perPage)->get();
 
-////            return $x;
-//
-////            $x = InventoryVoucherResource::collection($x);
-////            return $x;
-//
-//            $offset = 0;
-//            $perPage = 100;
-//            $input1 = $x;
-//            $input = $input1;
-//            if ($request['page'] && $request['page'] > 1) {
-//                $offset = ($request['page'] - 1) * $perPage;
-//            }
-//            $info = array_slice($input, $offset, $perPage);
-//            $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
-//            return response()->json($paginator, 200);
-//
 
-            $perPage = 100;
             $data = $x;
             $pages_count = ceil($data->total()/$perPage);
             return response([
-                "current_page"=> $request['page'] || 1,
+                "current_page"=> $page,
                 "data"=>InventoryVoucherResource::collection($data),
                 "pages"=>$pages_count,
                 "total"=> $data->total(),

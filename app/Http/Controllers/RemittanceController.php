@@ -305,9 +305,9 @@ class RemittanceController extends Controller
 
 
             $x = InventoryVoucher::select("*")
-                ->join('Store', 'Store.StoreID', '=', 'InventoryVoucher.CounterpartStoreRef')
-                ->join('Plant', 'Plant.PlantID', '=', 'Store.PlantRef')
-                ->join('Address', 'Address.AddressID', '=', 'Plant.AddressRef')
+                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
 
                 ->where('InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('InventoryVoucherSpecificationRef', '=', 69)//68, 69

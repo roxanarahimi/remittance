@@ -328,11 +328,11 @@ class RemittanceController extends Controller
 
 
             $data = $x;
-            $pages_count = ceil($data->total()/$perPage);
+//            $pages_count = ceil($data->total()/$perPage);
             return response([
                 "current_page"=> $page,
                 "data"=>InventoryVoucherResource::collection($data),
-                "pages"=>$pages_count,
+//                "pages"=>$pages_count,
 //                "total"=> $data->total(),
             ], 200);
 

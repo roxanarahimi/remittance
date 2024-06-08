@@ -321,8 +321,10 @@ class RemittanceController extends Controller
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->where('LGS3.InventoryVoucher.CounterpartStoreRef')
-                ->whereHas('OrderItems.Nood', function ($query) {
-                    $query->whereNot('PartID',null);
+                ->whereHas('OrderItems', function ($query) {
+                    $query->whereHas('Nood',function($q){
+                        $q->whereNot('PartID',null);
+                    });
                 })
 //                ->has('OkItems') // This ensures only records with non-null OkItems are included
                 ->with('OkItems')

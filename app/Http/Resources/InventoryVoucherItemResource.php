@@ -20,6 +20,7 @@ class InventoryVoucherItemResource extends JsonResource
             "ProductName" => $this->Part?$this->Part->Name:'',
             "ProductNumber" => $this->Part?$this->Part->Code:'',
             "Quantity" => $this->Quantity,
+            "Nood" => $this->Nood,
 //            "NPart" => $this->NPart?1:0,
         ];
     }

@@ -18,7 +18,7 @@ class InventoryVoucher extends Model
     }
     public function OkItems()
     {
-        $t = Part::where('Name','like', '%نودالیت%')->get('PartID')->toArray();
+        $t = Part::where('Name','LIKE', '%نودالیت%')->get('PartID')->toArray();
         $ids = [];
         foreach ($t as $item){
             $ids[] = (integer)$item['PartID'];

@@ -325,7 +325,7 @@ class RemittanceController extends Controller
 //                ->whereHas('OrderItems.Part', function($query) {
 //                    $query->where('Name', 'like', '%نودالیت%');
 //                })
-                    ->where()->OkItems(true)
+//                    ->where()->OkItems(true)
 //                    ->whereHas('OkItems',function($q){
 //                        $q = true;
 //                    })

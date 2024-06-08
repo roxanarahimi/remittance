@@ -319,10 +319,12 @@ class RemittanceController extends Controller
                 ->where('LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->with(['OrderItems' => function($q) {
                     $q->whereHas('Part', function($query) {
-                        $query->where('Name', 'LIKE', '%نودالیت%');
+                        $query->where('Name', 'like', '%نودالیت%');
                     });
                 }])
-                ->where()->OrderItems->count()
+                ->whereHas('OrderItems.Part', function($query) {
+                    $query->where('Name', 'like', '%نودالیت%');
+                })
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->take(100)->get();
 //            $x = InventoryVoucherResource::collection($x);

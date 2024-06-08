@@ -320,10 +320,9 @@ class RemittanceController extends Controller
                 ->has('OkItems')
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->take(100)->get();
-           $xx= array_filter(InventoryVoucherResource::collection($x),function ($t){
-                return $t->OkItems != null;
-            });
-            return response()->json($xx, 200);
+
+            return response()->json($x, 200);
+            return response()->json(InventoryVoucherResource::collection($x), 200);
             $offset = 0;
             $perPage = 100;
             $input1 = $x;

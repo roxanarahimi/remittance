@@ -23,7 +23,8 @@ class InventoryVoucher extends Model
         foreach ($t as $item){
             $ids[] = (integer)$item['PartID'];
         }
-        return $this->hasOne(InventoryVoucherItem::class,  'InventoryVoucherRef','InventoryVoucherID') ->whereIn('PartRef', $ids);
+        return $this->hasOne(InventoryVoucherItem::class,  'InventoryVoucherRef','InventoryVoucherID')
+            ->whereIn('PartRef', $ids)->count();
     }
     public function Store()
     {

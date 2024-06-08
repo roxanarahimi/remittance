@@ -18,14 +18,9 @@ class InventoryVoucher extends Model
     }
     public function OkItems()
     {
-        $x= $this->hasMany(InventoryVoucherItem::class,  'InventoryVoucherRef','InventoryVoucherID');
-        foreach ($x as $item){
-            if(str_contains($item->Part->Name,'نودالیت')){
-                return true;
-            }else{
-                return false;
-            }
-        }
+        return $this->hasOne(InventoryVoucherItem::class,  'InventoryVoucherRef','InventoryVoucherID')->whereHas('Part',function($q){
+            $q->where('Name','LIKE','%نودالیت%');
+        });
     }
     public function Store()
     {

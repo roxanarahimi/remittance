@@ -306,7 +306,7 @@ class RemittanceController extends Controller
         try {
             $search = 'نودالیت';
 
-            $t = Part::where('Name','Like', '%نودالیت%')->get('PartID');
+            $t = Part::where('Name','Like', '%نودالیت%')->get('PartID')->toArray();
             return $t;
             $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
                 "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")

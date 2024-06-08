@@ -16,12 +16,12 @@ class InventoryVoucher extends Model
     {
         return $this->hasMany(InventoryVoucherItem::class,  'InventoryVoucherRef','InventoryVoucherID');
     }
-    public function OkItems()
-    {
-        return $this->hasOne(InventoryVoucherItem::class,  'InventoryVoucherRef','InventoryVoucherID')->whereHas('Part',function($q){
-            $q->where('Name','LIKE','%نودالیت%');
-        });
-    }
+//    public function OkItems()
+//    {
+//        return $this->hasOne(InventoryVoucherItem::class,  'InventoryVoucherRef','InventoryVoucherID')->whereHas('Part',function($q){
+//            $q->where('Name','LIKE','%نودالیت%');
+//        });
+//    }
     public function Store()
     {
         return $this->belongsTo(Store::class, 'CounterpartStoreRef','StoreID');

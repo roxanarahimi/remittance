@@ -324,7 +324,7 @@ class RemittanceController extends Controller
                 ->whereHas('OkItems')
                 ->with('OkItems')
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID','DESC')
-                ->take(100)->get();
+                ->take(100)->get()->where('ok_items');
 
             return response()->json($x, 200);
             return response()->json(InventoryVoucherResource::collection($x), 200);

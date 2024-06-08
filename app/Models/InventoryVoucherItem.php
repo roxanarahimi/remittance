@@ -20,6 +20,7 @@ class InventoryVoucherItem extends Model
     }
     public function Nood()
     {
-        return $this->hasOne(Part::class,  'PartID','PartRef')->whereIn('Name','LIKE','%نودالیت%');
+        return $this->hasOne(Part::class,  'PartID','PartRef')
+            ->where('Name','LIKE','%نودالیت%');
     }
 }

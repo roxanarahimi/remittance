@@ -321,11 +321,13 @@ class RemittanceController extends Controller
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->where('LGS3.InventoryVoucher.CounterpartStoreRef')
-                ->whereHas('OkItems')
+                ->whereHas('OrderItems.Part', function ($query) {
+                    $query->where('Name', 'like', '%نودالیت%');
+                })
                 ->with('OkItems')
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID','DESC')
-                ->whereNot('ok_items',null)
                 ->take(100)->get();
+
 
             return response()->json($x, 200);
             return response()->json(InventoryVoucherResource::collection($x), 200);

@@ -328,7 +328,7 @@ class RemittanceController extends Controller
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->take(100)->get();
 //            $x = InventoryVoucherResource::collection($x);
-            $x = $x->whereNot('OrderItems',[]);
+            $x = $x->where('OrderItems','<>',[]);
             return response()->json(InventoryVoucherResource::collection($x), 200);
             $offset = 0;
             $perPage = 100;

@@ -322,7 +322,7 @@ class RemittanceController extends Controller
                         $query->where('Name', 'LIKE', '%نودالیت%');
                     });
                 }])
-
+                ->where()->OrderItems->count()
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->take(100)->get();
 //            $x = InventoryVoucherResource::collection($x);

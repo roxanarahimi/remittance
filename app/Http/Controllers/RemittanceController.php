@@ -306,10 +306,9 @@ class RemittanceController extends Controller
         try {
             $search = 'نودالیت';
             $t = Part::where('Name','LIKE', '%نودالیت%')->pluck('PartID')->toArray();
-            return $t;
             $ids = [];
             foreach ($t as $item){
-                $ids[] = (integer)$item['PartID'];
+                $ids[] = (integer)$item;
             }
             $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
                 "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")

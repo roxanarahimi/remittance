@@ -305,7 +305,8 @@ class RemittanceController extends Controller
     {
         try {
             $search = 'نودالیت';
-            $t = Part::where('Name','LIKE', '%نودالیت%')->get('PartID')->toArray();
+            $t = Part::where('Name','LIKE', '%نودالیت%')->pluck('PartID')->toArray();
+            return $t
             $ids = [];
             foreach ($t as $item){
                 $ids[] = (integer)$item['PartID'];

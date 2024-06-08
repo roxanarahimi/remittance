@@ -324,7 +324,7 @@ class RemittanceController extends Controller
                 ->whereHas('OrderItems.Part', function ($query) {
                     $query->where('Name', 'like', '%نودالیت%');
                 })
-                ->whereHas('OkItems')
+                ->has('OkItems') // This ensures only records with non-null OkItems are included
                 ->with('OkItems')
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID','DESC')
                 ->take(100)->get();

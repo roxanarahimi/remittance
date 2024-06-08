@@ -14,6 +14,7 @@ class InventoryVoucherResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $this->OkItems? $val = ['ok', 1]:  $val = ['ok', 0];
 
         return [
             "OrderID" => $this->InventoryVoucherID,

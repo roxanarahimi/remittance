@@ -329,7 +329,7 @@ class RemittanceController extends Controller
                 ->take(100)->get();
 
 
-            return response()->json($x, 200);
+//            return response()->json($x, 200);
             return response()->json(InventoryVoucherResource::collection($x), 200);
             $offset = 0;
             $perPage = 100;

@@ -305,13 +305,6 @@ class RemittanceController extends Controller
     {
         try {
             $search = 'نودالیت';
-
-            $t = Part::where('Name','like', '%نودالیت%')->get('PartID')->toArray();
-            $ids = [];
-            foreach ($t as $item){
-                $ids[] = (integer)$item['PartID'];
-            }
-//            return $ids;
             $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
                 "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
                 ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
@@ -323,17 +316,8 @@ class RemittanceController extends Controller
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->where('LGS3.InventoryVoucher.CounterpartStoreRef')
-
-                ->with('OrderItems', function($query) use ($ids) {
-                    $query->whereIn('PartRef', $ids);
-                })
-                ->whereHas('OrderItems', function($query) use ($ids) {
-                    $query->whereIn('PartRef', $ids);
-                })
-//                    ->where()->OkItems(true)
-//                    ->whereHas('OkItems',function($q){
-//                        $q = true;
-//                    })
+                ->with('OkItems')
+                ->whereHas('OkItems')
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->take(100)->get();
 //            $x = InventoryVoucherResource::collection($x);

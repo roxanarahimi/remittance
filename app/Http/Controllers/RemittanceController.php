@@ -321,8 +321,10 @@ class RemittanceController extends Controller
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->where('LGS3.InventoryVoucher.CounterpartStoreRef')
-                ->whereNotNull('OkItems')
                 ->with('OkItems')
+                ->whereHas('OkItems', function ($query) {
+                    // Optionally add more conditions if needed
+                })
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->take(100)->get();
 

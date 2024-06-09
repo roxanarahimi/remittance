@@ -158,6 +158,44 @@ class RemittanceController extends Controller
     public function readOnly(Request $request)
     {
         try {
+            $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
+                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+//                ->where('LGS3.InventoryVoucher.CounterpartStoreRef', $request['id'])
+                ->whereHas('OrderItems', function ($query) {
+                    $query->whereHas('Part', function ($q) {
+                        $q->where('Name', 'like', '%نودالیت%');
+                    });
+                })
+                ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
+                ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
+                ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
+                ->get();
+
+//            $d =(object)$x['data'][0];
+//            return new InventoryVoucherResource($d);
+//            $dataa = [];
+//            foreach ($x['data'] as $item) {
+//
+//                $dataa[] = $item;
+//                $dataa[] = new InventoryVoucherResource($item);
+//            }
+//            return $dataa;
+            $offset = 0;
+            $perPage = 100;
+            $t = InventoryVoucherResource::collection($x);
+
+            $input1 = json_decode($t->toJson(), true);
+            $input = $input1;
+            if ($request['page'] && $request['page'] > 1) {
+                $offset = ($request['page'] - 1) * $perPage;
+            }
+            $info = array_slice($input, $offset, $perPage);
+            $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+            return response()->json($paginator, 200);
 
 
 /// real place

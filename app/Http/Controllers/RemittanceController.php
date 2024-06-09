@@ -344,22 +344,20 @@ class RemittanceController extends Controller
                     });
                 })
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID','DESC')
-                ->take(100)->get();
+                ->get();
 
-//            return $x;
+
 
 
 //            return response()->json($x, 200);
 
 
             $t = InventoryVoucherResource::collection($x);
-            //return $t;
             $tt = array_filter(json_decode($t->toJson(), true), function ($item){
                 return count($item['OrderItems'])>0;
             });
-
-
-            return response()->json(array_values($tt), 200);
+            return count($tt);
+//            return response()->json(array_values($tt), 200);
             $offset = 0;
             $perPage = 100;
             $input1 = $x;

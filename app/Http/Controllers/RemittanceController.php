@@ -340,10 +340,9 @@ class RemittanceController extends Controller
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
-                ->paginate(50);
+                ->paginate(50)->toArray();
 
-            $z = json_decode($x->toJson(), true);
-            return InventoryVoucherResource::collection($z['data']);
+            return InventoryVoucherResource::collection($x['data']);
             $dataa = [];
             foreach ($x['data'] as $item) {
 

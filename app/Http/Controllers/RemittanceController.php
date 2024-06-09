@@ -344,7 +344,7 @@ class RemittanceController extends Controller
                     });
                 })
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID','DESC')
-                ->take(100)->get()->toArray();
+                ->take(100)->get();
 
 //            return $x;
 

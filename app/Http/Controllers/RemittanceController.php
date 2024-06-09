@@ -359,7 +359,7 @@ class RemittanceController extends Controller
             });
 
 
-            return response()->json($tt, 200);
+            return response()->json(array_values($tt), 200);
             $offset = 0;
             $perPage = 100;
             $input1 = $x;

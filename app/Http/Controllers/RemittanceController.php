@@ -302,36 +302,46 @@ class RemittanceController extends Controller
         }
     }
 
-    public function readOnly1(Request $request)
+    public function getStores(Request $request)
     {
-//        $t = Store::
-//            select("LGS3.Store.StoreID","LGS3.Store.Name as SName", "GNR3.Address.Name as PName", "GNR3.Address.Details")
-//            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-//            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-//            ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")//68, 69
-//            ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")//68, 69
-//            ->get();
-//        return $t;
-
 
         try {
-        $id = $request['id'];
-            $x = InventoryVoucher::select("LGS3.InventoryVoucher.State","LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+            $t = Store::select("LGS3.Store.StoreID", "LGS3.Store.Name as SName",
+                "GNR3.Address.Name as PName", "GNR3.Address.Details")
+                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%");
+            if (isset($request['search'])) {
+                $t = $t->where('LGS3.Store.Name', 'LIKE', "%" . $request['search'] . "%")
+                    ->orWhere('GNR3.Address.Details', 'LIKE', "%" . $request['search'] . "%");
+            }
+            $t = $t->get();
+            return $t;
+        } catch (\Exception $exception) {
+            return response($exception);
+        }
+    }
+
+    public function readOnly1(Request $request)
+    {
+        try {
+            $id = $request['id'];
+            $x = InventoryVoucher::select("LGS3.InventoryVoucher.State", "LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
                 "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
                 ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-                ->where('LGS3.InventoryVoucher.CounterpartStoreRef',$id)
+                ->where('LGS3.InventoryVoucher.CounterpartStoreRef', $id)
                 ->whereHas('OrderItems', function ($query) {
-                    $query->whereHas('Part',function($q){
-                        $q->where('Name','like', '%نودالیت%');
+                    $query->whereHas('Part', function ($q) {
+                        $q->where('Name', 'like', '%نودالیت%');
                     });
                 })
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
-                ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID','DESC')
+                ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
                 ->get();
             $t = InventoryVoucherResource::collection($x);
             $offset = 0;
@@ -342,7 +352,6 @@ class RemittanceController extends Controller
                 $offset = ($request['page'] - 1) * $perPage;
             }
             $info = array_slice($input, $offset, $perPage);
-
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
             return response()->json($paginator, 200);
 

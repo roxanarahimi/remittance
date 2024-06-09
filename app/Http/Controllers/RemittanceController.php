@@ -345,7 +345,9 @@ class RemittanceController extends Controller
 //            return InventoryVoucherResource::collection($x[0]['data']);
             $dataa = [];
             foreach ($x['data'] as $item) {
-                $dataa[] = new InventoryVoucherResource(json_encode($item));
+
+                $dataa[] = $item;
+//                $dataa[] = new InventoryVoucherResource(json_encode($item));
             }
             return $dataa;
             $t = InventoryVoucherResource::collection($x);

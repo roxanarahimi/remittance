@@ -315,12 +315,12 @@ class RemittanceController extends Controller
 
 
         try {
-//            $search = 'نودالیت';
-//            $t = Part::where('Name','LIKE', '%نودالیت%')->pluck('PartID')->toArray();
-//            $ids = [];
-//            foreach ($t as $item){
-//                $ids[] = (integer)$item;
-//            }
+            $search = 'نودالیت';
+            $t = Part::where('Name','LIKE', '%نودالیت%')->pluck('PartID')->toArray();
+            $ids = [];
+            foreach ($t as $item){
+                $ids[] = (integer)$item;
+            }
         $id = $request['id'];
             $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
                 "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
@@ -344,12 +344,15 @@ class RemittanceController extends Controller
 //                    });
 //                })
                 ->whereHas('OkItems', function($q){
-                        $q->whereNot('InventoryVoucherItemID',null);
+                    $q->whereNot('InventoryVoucherItemID',null);
                 })
                 ->with('OkItems')
+                ->whereHas('OrderItems',function($query) use ($ids){
+                    $query->whereIn('PartRef',$ids);
+                })
                 ->with('OrderItems')
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID','DESC')
-                ->get()->count();
+                ->take(100)->get();
 
             return $x;
             $t = InventoryVoucherResource::collection($x);

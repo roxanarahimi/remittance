@@ -327,34 +327,31 @@ class RemittanceController extends Controller
                 ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")//68, 69
-                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")//68, 69
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
+                 ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->where('LGS3.InventoryVoucher.CounterpartStoreRef',$id)
-                ->whereHas('OrderItems', function ($query) {
-                    $query->whereHas('Part',function($q){
-                        $q->where('Name','like', '%نودالیت%');
-                    });
+//                ->whereHas('OrderItems', function ($query) {
+//                    $query->whereHas('Part',function($q){
+//                        $q->where('Name','like', '%نودالیت%');
+//                    });
+//                })
+//                ->with('OrderItems', function ($query) {
+//                    $query->whereHas('Part',function($q){
+//                        $q->where('Name','like', '%نودالیت%');
+//                    });
+//                })
+                    ->whereHase('OkItems', function($q){
+                    //    $q;
                 })
-                 ->with('OrderItems', function ($query) {
-                    $query->whereHas('Part',function($q){
-                        $q->where('Name','like', '%نودالیت%');
-                    });
-                })
+                ->with('OkItems')
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID','DESC')
                 ->get();
-
-
-
-
-//            return response()->json($x, 200);
-
-
             $t = InventoryVoucherResource::collection($x);
             $tt = array_filter(json_decode($t->toJson(), true), function ($item){
-                return count($item['OrderItems'])>0;
+                return count($item['OkItems'])>0;
             });
             //return count($tt);
 //            return response()->json(array_values($tt), 200);

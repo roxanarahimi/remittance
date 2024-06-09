@@ -347,9 +347,11 @@ class RemittanceController extends Controller
                         $q->whereNot('InventoryVoucherItemID',null);
                 })
                 ->with('OkItems')
+                ->with('OrderItems')
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID','DESC')
-                ->take(2100)->get();
+                ->paginate(100);
 
+            return $x;
             $t = InventoryVoucherResource::collection($x);
             $tt = array_filter(json_decode($t->toJson(), true), function ($item){
                 return $item['OkItems'] != null;

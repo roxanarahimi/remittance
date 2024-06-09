@@ -14,17 +14,10 @@ class InventoryVoucher extends Model
 
     public function OrderItems()
     {
-        return $this->hasMany(InventoryVoucherItem::class,  'InventoryVoucherRef','InventoryVoucherID');
-    }
-    public function OkItems()
-    {
-        $t = Part::where('Name','LIKE', '%نودالیت%')->get('PartID')->toArray();
-        $ids = [];
-        foreach ($t as $item){
-            $ids[] = (integer)$item['PartID'];
-        }
-        return $this->hasOne(InventoryVoucherItem::class,  'InventoryVoucherRef','InventoryVoucherID')
-            ->whereIn('PartRef', $ids);
+        return $this->hasMany(InventoryVoucherItem::class,  'InventoryVoucherRef','InventoryVoucherID')
+            ->whereHas('Part', function($q){
+                $q->where('Name','like', '%نودالیت%');
+            });
     }
     public function Store()
     {

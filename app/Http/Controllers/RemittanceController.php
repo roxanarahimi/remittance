@@ -343,7 +343,7 @@ class RemittanceController extends Controller
 //                        $q->where('Name','like', '%نودالیت%');
 //                    });
 //                })
-                    ->whereHase('OkItems', function($q){
+                    ->whereHas('OkItems', function($q){
                     //    $q;
                 })
                 ->with('OkItems')

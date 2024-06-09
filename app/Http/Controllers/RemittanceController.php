@@ -325,7 +325,7 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         try {
-            $x = InventoryVoucher::select("LGS3.InventoryVoucher.State", "LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+            $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
                 "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
                 ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
@@ -340,7 +340,9 @@ class RemittanceController extends Controller
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
-                ->paginate(100);
+                ->paginate(50);
+
+            $x['data'] = InventoryVoucherResource::collection($x['data']);
             return $x;
             $t = InventoryVoucherResource::collection($x);
             $offset = 0;

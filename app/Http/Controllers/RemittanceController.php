@@ -340,26 +340,28 @@ class RemittanceController extends Controller
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
-                ->paginate(50)->toArray();
+                ->get();
 
-            $d =(object)$x['data'][0];
-            return new InventoryVoucherResource($d);
-            $dataa = [];
-            foreach ($x['data'] as $item) {
-
+//            $d =(object)$x['data'][0];
+//            return new InventoryVoucherResource($d);
+//            $dataa = [];
+//            foreach ($x['data'] as $item) {
+//
 //                $dataa[] = $item;
-                $dataa[] = new InventoryVoucherResource($item);
-            }
-            return $dataa;
-            $t = InventoryVoucherResource::collection($x);
+//                $dataa[] = new InventoryVoucherResource($item);
+//            }
+//            return $dataa;
             $offset = 0;
             $perPage = 100;
-            $input1 = json_decode($t->toJson(), true);
-            $input = $input1;
+//            $t = InventoryVoucherResource::collection($x);
+
+            $input= json_decode($x->toJson(), true);
+
             if ($request['page'] && $request['page'] > 1) {
                 $offset = ($request['page'] - 1) * $perPage;
             }
-            $info = array_slice($input, $offset, $perPage);
+            $info1 = array_slice($input, $offset, $perPage);
+            $info = InventoryVoucherResource::collection($info1);
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
             return response()->json($paginator, 200);
 

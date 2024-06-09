@@ -353,7 +353,7 @@ class RemittanceController extends Controller
                 })
                 ->with('OrderItems')
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID','DESC')
-                ->get()->count();
+                ->paginate(100);
 
             return $x;
             $t = InventoryVoucherResource::collection($x);

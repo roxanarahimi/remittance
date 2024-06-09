@@ -343,7 +343,7 @@ class RemittanceController extends Controller
                 ->get();
 
             $z = json_decode($x->toJson(), true);
-            return InventoryVoucherResource::collection($z['data']);
+            return InventoryVoucherResource::collection($z->{'data'});
             $dataa = [];
             foreach ($x['data'] as $item) {
 

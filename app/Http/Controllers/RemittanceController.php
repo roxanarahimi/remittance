@@ -315,12 +315,6 @@ class RemittanceController extends Controller
 
 
         try {
-            $search = 'نودالیت';
-            $t = Part::where('Name','LIKE', '%نودالیت%')->pluck('PartID')->toArray();
-            $ids = [];
-            foreach ($t as $item){
-                $ids[] = (integer)$item;
-            }
         $id = $request['id'];
             $x = InventoryVoucher::select("LGS3.InventoryVoucher.State","LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
                 "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
@@ -335,29 +329,11 @@ class RemittanceController extends Controller
                         $q->where('Name','like', '%نودالیت%');
                     });
                 })
-//                ->with('OrderItems', function ($query) {
-//                    $query->whereHas('Part',function($q){
-//                        $q->where('Name','like', '%نودالیت%');
-//                    });
-//                })
-//                ->whereHas('OkItems', function($q){
-//                    $q->whereNot('InventoryVoucherItemID',null);
-//                })
-//                ->whereHas('OrderItems',function($query) use ($ids){
-//                    $query->whereIn('PartRef',$ids);
-//                })
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID','DESC')
                 ->get();
-
-          //  return $x;
             $t = InventoryVoucherResource::collection($x);
-//            $tt = array_filter(json_decode($t->toJson(), true), function ($item){
-//                return $item['OkItems'] != null;
-//            });
-            //return count($tt);
-//            return response()->json(array_values($tt), 200);
             $offset = 0;
             $perPage = 100;
             $input1 = json_decode($t->toJson(), true);

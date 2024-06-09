@@ -356,11 +356,11 @@ class RemittanceController extends Controller
             $tt = array_filter(json_decode($t->toJson(), true), function ($item){
                 return count($item['OrderItems'])>0;
             });
-            return count($tt);
+            //return count($tt);
 //            return response()->json(array_values($tt), 200);
             $offset = 0;
             $perPage = 100;
-            $input1 = $x;
+            $input1 = $tt;
             $input = $input1;
             if ($request['page'] && $request['page'] > 1) {
                 $offset = ($request['page'] - 1) * $perPage;

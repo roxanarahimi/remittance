@@ -353,7 +353,7 @@ class RemittanceController extends Controller
 
 
             $t = InventoryVoucherResource::collection($x);
-            return $t;
+            //return $t;
             $tt = array_filter($t, function ($item){
                 return count($item->{'OrderItems'})>0;
             });

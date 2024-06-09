@@ -350,10 +350,10 @@ class RemittanceController extends Controller
 
 
 //            return response()->json($x, 200);
-            $tt = InventoryVoucherResource::collection($x)->toArray();
+            $tt = InventoryVoucherResource::collection($x);
 
 
-            return response()->json(InventoryVoucherResource::collection($x), 200);
+            return response()->json($tt, 200);
             $offset = 0;
             $perPage = 100;
             $input1 = $x;

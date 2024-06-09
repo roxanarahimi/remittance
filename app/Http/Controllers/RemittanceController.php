@@ -340,16 +340,16 @@ class RemittanceController extends Controller
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
-                ->paginate(50)->toArray();
+                ->get();
 
 //            return InventoryVoucherResource::collection($x['data']);
-            $dataa = [];
-            foreach ($x['data'] as $item) {
-
-//                $dataa[] = $item;
-                $dataa[] = new InventoryVoucherResource($item);
-            }
-            return $dataa;
+//            $dataa = [];
+//            foreach ($x['data'] as $item) {
+//
+////                $dataa[] = $item;
+//                $dataa[] = new InventoryVoucherResource($item);
+//            }
+//            return $dataa;
             $t = InventoryVoucherResource::collection($x);
             $offset = 0;
             $perPage = 100;

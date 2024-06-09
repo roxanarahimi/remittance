@@ -173,7 +173,7 @@ class RemittanceController extends Controller
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
-                ->get();
+                ->paginate(100);
             $t = InventoryVoucherResource::collection($x);
             $offset = 0;
             $perPage = 100;
@@ -358,7 +358,7 @@ class RemittanceController extends Controller
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-                ->where('LGS3.InventoryVoucher.CounterpartStoreRef', $request['id'])
+//                ->where('LGS3.InventoryVoucher.CounterpartStoreRef', $request['id'])
                 ->whereHas('OrderItems', function ($query) {
                     $query->whereHas('Part', function ($q) {
                         $q->where('Name', 'like', '%نودالیت%');
@@ -367,7 +367,8 @@ class RemittanceController extends Controller
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
-                ->get();
+                ->paginate(100);
+            return $x;
             $t = InventoryVoucherResource::collection($x);
             $offset = 0;
             $perPage = 100;

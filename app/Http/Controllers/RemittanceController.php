@@ -326,24 +326,23 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         try {
+            $id = $request['id'];
             $x = InventoryVoucher::select("LGS3.InventoryVoucher.State", "LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
                 "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
                 ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+//                ->where('LGS3.InventoryVoucher.CounterpartStoreRef', $id)
                 ->whereHas('OrderItems', function ($query) {
                     $query->whereHas('Part', function ($q) {
                         $q->where('Name', 'like', '%نودالیت%');
                     });
                 })
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
-                ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69);//68, 69
-            if (isset($request['id'])){
-                $x = $x->where('LGS3.InventoryVoucher.CounterpartStoreRef', $request['id']);
-
-            }
-                $x = $x->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')->get();
+                ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
+                ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
+                ->get();
             $t = InventoryVoucherResource::collection($x);
             $offset = 0;
             $perPage = 100;

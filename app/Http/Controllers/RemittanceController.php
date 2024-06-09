@@ -351,6 +351,9 @@ class RemittanceController extends Controller
 
 //            return response()->json($x, 200);
 
+
+            $tt = array(InventoryVoucherResource::collection($x));
+            return $tt;
             $tt = array_filter($x, function ($item){
                 return count($item->{'OrderItems'})>0;
             });

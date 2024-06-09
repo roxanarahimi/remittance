@@ -305,10 +305,10 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         $t = Store::
-            select("LGS3.Plant.Name as SName")
+            select("LGS3.Plant.Name as SName", "GNR3.Address.Name as PName")
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-        ->get();
+            ->get();
         return $t;
 
         try {

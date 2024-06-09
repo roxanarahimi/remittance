@@ -24,9 +24,9 @@ Route::controller(App\Http\Controllers\RemittanceController::class)->group(funct
         Route::post('/store', 'store');
         Route::post('/update/{remittance}', 'update');
         Route::post('/destroy/{remittance}', 'destroy');
-        Route::post('/stores', 'getStores');
         Route::post('/fix', 'fix');
     });
+    Route::post('/stores', 'getStores');
     Route::post('/read/info', 'readOnly');
     Route::get('/info', 'readOnly1');
     Route::post('/product/{id}', 'showProduct');

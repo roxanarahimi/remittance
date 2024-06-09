@@ -24,7 +24,7 @@ class InventoryVoucherResource extends JsonResource
             "Phone" => $this->Store->Plant->Address->Phone,
 
             "CreationDate" => $this->CreationDate,
-            "DeliveryDate" => $this->Date,
+            "DeliveryDate" => $this->CreationDate,
             "OrderItems" => InventoryVoucherItemResource::collection($this->OrderItems),
             "OkItems" => $this->OkItems,
         ];

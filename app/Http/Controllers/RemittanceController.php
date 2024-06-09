@@ -348,7 +348,7 @@ class RemittanceController extends Controller
                 })
                 ->with('OkItems')
                 ->whereHas('OrderItems',function($query) use ($ids){
-                    $query->whereIn('Id',$ids);
+                    $query->whereIn('PartRef',$ids);
                 })
                 ->with('OrderItems')
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID','DESC')

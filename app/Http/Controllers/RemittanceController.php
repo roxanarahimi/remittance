@@ -330,29 +330,24 @@ class RemittanceController extends Controller
 
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->where('LGS3.InventoryVoucher.CounterpartStoreRef',$id)
-//                ->whereHas('OrderItems', function ($query) {
-//                    $query->whereHas('Part',function($q){
-//                        $q->where('Name','like', '%نودالیت%');
-//                    });
-//                })
+                ->whereHas('OrderItems', function ($query) {
+                    $query->whereHas('Part',function($q){
+                        $q->where('Name','like', '%نودالیت%');
+                    });
+                })
 //                ->with('OrderItems', function ($query) {
 //                    $query->whereHas('Part',function($q){
 //                        $q->where('Name','like', '%نودالیت%');
 //                    });
 //                })
-                ->whereHas('OkItems', function($q){
-                    $q->whereNot('InventoryVoucherItemID',null);
-                })
-                ->with('OkItems')
-                ->whereHas('OrderItems',function($query) use ($ids){
-                    $query->whereIn('PartRef',$ids);
-                })
-                ->with('OrderItems')
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
-                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
+//                ->whereHas('OkItems', function($q){
+//                    $q->whereNot('InventoryVoucherItemID',null);
+//                })
+//                ->whereHas('OrderItems',function($query) use ($ids){
+//                    $query->whereIn('PartRef',$ids);
+//                })
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
-
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID','DESC')
                 ->get();
 

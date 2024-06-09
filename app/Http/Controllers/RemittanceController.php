@@ -305,7 +305,7 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         $t = Store::
-            select("LGS3.Store.Name as SName", "GNR3.Address.Name as PName", "GNR3.Address.Details")
+            select("LGS3.Store.StoreID","LGS3.Store.Name as SName", "GNR3.Address.Name as PName", "GNR3.Address.Details")
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
             ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")//68, 69

@@ -10,6 +10,7 @@ use App\Models\InventoryVoucher;
 use App\Models\InventoryVoucherItem;
 use App\Models\Part;
 use App\Models\Remittance;
+use App\Models\Store;
 use http\Env\Response;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -303,6 +304,9 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
+        $t = Store::get()->count();
+        return $t;
+
         try {
             $search = 'نودالیت';
             $t = Part::where('Name','LIKE', '%نودالیت%')->pluck('PartID')->toArray();

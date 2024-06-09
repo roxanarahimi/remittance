@@ -310,7 +310,7 @@ class RemittanceController extends Controller
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
             ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")//68, 69
             ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")//68, 69
-            ->get()->count();
+            ->get();
         return $t;
 
         try {

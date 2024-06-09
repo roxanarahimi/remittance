@@ -342,7 +342,7 @@ class RemittanceController extends Controller
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
                 ->paginate(50);
 
-            return $x;
+            return response()->json($x);
             //$data = [];
 //            foreach ($x['data'] as $item) {
 //               // $data[] = InventoryVoucherResource::collection($item);

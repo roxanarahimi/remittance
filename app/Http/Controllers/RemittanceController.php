@@ -351,7 +351,7 @@ class RemittanceController extends Controller
                 ->take(100)->get();
             $t = InventoryVoucherResource::collection($x);
             $tt = array_filter(json_decode($t->toJson(), true), function ($item){
-                return count($item['OkItems'])>0;
+                return $item['OkItems'] != null;
             });
             //return count($tt);
 //            return response()->json(array_values($tt), 200);

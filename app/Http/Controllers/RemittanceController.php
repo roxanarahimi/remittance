@@ -329,7 +329,6 @@ class RemittanceController extends Controller
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
 
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-                ->where('LGS3.InventoryVoucher.State', 1)
                 ->where('LGS3.InventoryVoucher.CounterpartStoreRef',$id)
 //                ->whereHas('OrderItems', function ($query) {
 //                    $query->whereHas('Part',function($q){

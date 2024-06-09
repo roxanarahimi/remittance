@@ -304,14 +304,16 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-        $t = Store::
-            select("LGS3.Store.StoreID","LGS3.Store.Name as SName", "GNR3.Address.Name as PName", "GNR3.Address.Details")
-            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-            ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")//68, 69
-            ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")//68, 69
-            ->get();
-        return $t;
+//        $t = Store::
+//            select("LGS3.Store.StoreID","LGS3.Store.Name as SName", "GNR3.Address.Name as PName", "GNR3.Address.Details")
+//            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+//            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+//            ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")//68, 69
+//            ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")//68, 69
+//            ->get();
+//        return $t;
+
+        $id = $request['id'];
 
         try {
             $search = 'نودالیت';
@@ -330,15 +332,16 @@ class RemittanceController extends Controller
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-                ->where('LGS3.InventoryVoucher.CounterpartStoreRef')
-                ->whereHas('OrderItems', function ($query) {
-                    $query->whereHas('Part',function($q){
-                        $q->where('Name','like', '%نودالیت%');
-                    });
-                })
-                ->with('OkItems')
+                ->where('LGS3.InventoryVoucher.CounterpartStoreRef',$id)
+//                ->whereHas('OrderItems', function ($query) {
+//                    $query->whereHas('Part',function($q){
+//                        $q->where('Name','like', '%نودالیت%');
+//                    });
+//                })
+//                ->with('OkItems')
+
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID','DESC')
-                ->take(100)->get();
+                ->get()->count();
 
 
 //            return response()->json($x, 200);

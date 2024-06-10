@@ -307,6 +307,7 @@ class RemittanceController extends Controller
             $t = Store::select("LGS3.Store.StoreID", "LGS3.Store.Name as Name", "GNR3.Address.Details")
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                ->whereNot('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
                 ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
                 ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
                 ->whereNot('LGS3.Store.Name', 'LIKE', "%ضایعات%")
@@ -332,9 +333,8 @@ class RemittanceController extends Controller
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
 //                ->where('LGS3.InventoryVoucher.CounterpartStoreRef', $request['id'])
-                ->where('LGS3.Store.Name', 'LIKE', "%Hot%")//68, 69
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")//68, 69
-                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")//68, 69
+                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
                 ->whereHas('OrderItems', function ($query) {
                     $query->whereHas('Part', function ($q) {
                         $q->where('Name', 'like', '%نودالیت%');

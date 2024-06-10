@@ -8,8 +8,29 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
-    protected $hidden = ['Version'];
-    protected $connection= 'sqlsrv';
+
+    protected $connection = 'sqlsrv';
     protected $table = 'SLS3.Order';
+    protected $hidden = ['Version'];
+
+
+    public function OrderItems()
+    {
+        return $this->hasMany(OrderItem::class, 'OrderRef', 'OrderID')
+            ->whereHas('Product', function ($q) {
+                $q->where('Name', 'like', '%نودالیت%');
+            });
+    }
+
+    public function Sum()
+    {
+        return $this->OrderItems->sum('Quantity');
+    }
+
+    public function Store()
+    {
+        return $this->belongsTo(Customer::class, 'CustomerRef', 'CustomerID');
+    }
+
 
 }

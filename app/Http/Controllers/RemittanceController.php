@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Middleware\Token;
 use App\Http\Resources\InventoryVoucherResource;
+use App\Http\Resources\OrderResource;
 use App\Http\Resources\RemittanceResource;
 use App\Models\InventoryVoucher;
 use App\Models\InventoryVoucherItem;
+use App\Models\Order;
 use App\Models\Part;
 use App\Models\Remittance;
 use App\Models\Store;
@@ -332,6 +334,33 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         try {
+            $x = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
+                "SLS3.Order.CreationDate", "Date as DeliveryDate", "CustomerRef")
+//                ->select(["SLS3.Order.OrderID as OrderID", "SLS3.Order.Number as OrderNumber",
+//                    "GNR3.Address.Name as AddressName", "Details as Address", "Phone", "SLS3.Order.CreationDate", "DeliveryDate",
+//                ])
+                ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
+                ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
+
+                ->where('SLS3.Order.InventoryRef', 1)
+                ->where('SLS3.Order.State', 2)
+                ->where('SLS3.Order.FiscalYearRef', 1403)
+
+
+                ->whereHas('OrderItems', function ($query) {
+                    $query->whereHas('Product', function ($q) {
+                        $q->where('Name', 'like', '%نودالیت%');
+                    });
+                })
+//                ->whereHas('Sum', '>=', 50)
+                ->with('Sum')
+                ->orderBy('SLS3.Order.OrderID')
+
+                ->paginate(20);
+            $data = OrderResource::collection($x);
+            return response()->json($x, 200);
+
             $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
                 "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
                 ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')

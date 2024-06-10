@@ -7,13 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Address extends Model
 {
-    protected $connection= 'sqlsrv';
+    protected $connection = 'sqlsrv';
     protected $table = 'GNR3.Address';
     protected $hidden = ['Version'];
 
     public function Plant()
     {
-        return $this->belongsTo(Store::class,  'AddressRef','AddressID');
+        return $this->belongsTo(Store::class, 'AddressRef', 'AddressID');
+    }
+
+    public function CustomerAddress()
+    {
+        return $this->belongsTo(CustomerAddress::class, 'AddressRef', 'AddressID');
     }
 
 }

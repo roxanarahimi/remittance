@@ -5,22 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OrderItem extends Model
+class Customer extends Model
 {
     use HasFactory;
 
     protected $connection = 'sqlsrv';
-    protected $table = 'LGS3.InventoryVoucherItem';
+    protected $table = 'SLS3.Customer';
     protected $hidden = ['Version'];
 
     public function Order()
     {
-        return $this->belongsTo(Order::class, 'OrderRef', 'OrderID');
+        return $this->hasMany(Order::class, 'CustomerRef', 'CustomerID');
     }
 
-    public function Product()
+    public function CustomerAddress()
     {
-        return $this->hasOne(Product::class, 'ProductID', 'ProductRef');
+        return $this->hasOne(CustomerAddress::class, 'CustomerID', 'CustomerRef');
     }
-
 }

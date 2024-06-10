@@ -8,21 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class InventoryVoucher extends Model
 {
     //use HasFactory;
-    protected $connection= 'sqlsrv';
+    protected $connection = 'sqlsrv';
     protected $table = 'LGS3.InventoryVoucher';
     protected $hidden = ['Version'];
 
     public function OrderItems()
     {
-        return $this->hasMany(InventoryVoucherItem::class,  'InventoryVoucherRef','InventoryVoucherID')
-            ->whereHas('Part', function($q){
-                $q->where('Name','like', '%نودالیت%');
+        return $this->hasMany(InventoryVoucherItem::class, 'InventoryVoucherRef', 'InventoryVoucherID')
+            ->whereHas('Part', function ($q) {
+                $q->where('Name', 'like', '%نودالیت%');
             });
     }
+
     public function Store()
     {
-        return $this->belongsTo(Store::class, 'CounterpartStoreRef','StoreID');
+        return $this->belongsTo(Store::class, 'CounterpartStoreRef', 'StoreID');
     }
-
-
 }

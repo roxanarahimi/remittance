@@ -18,11 +18,11 @@ class InventoryVoucherResource extends JsonResource
             "OrderID" => $this->InventoryVoucherID,
             "OrderNumber" => $this->Number,
 
-            "AddressName" => $this->Store->Name. substr($this->InventoryVoucherID, -3),
+            "AddressName" => $this->Store->Name . substr($this->InventoryVoucherID, -3),
 
-        "Address" => $this->Store->Plant->Address->Details,
+            "Address" => $this->Store->Plant->Address->Details,
             "Phone" => $this->Store->Plant->Address->Phone,
-            "type" => "InventoryVoucher",
+            "Type" => "InventoryVoucher",
 
             "CreationDate" => $this->CreationDate,
             "DeliveryDate" => $this->CreationDate,

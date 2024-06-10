@@ -347,7 +347,7 @@ class RemittanceController extends Controller
                 })
 
                 ->orderBy('OrderID', 'DESC')
-                ->unuque()->paginate(20);
+                ->unique()->paginate(20);
 
             $data = OrderResource::collection($x);
             return response()->json($x, 200);

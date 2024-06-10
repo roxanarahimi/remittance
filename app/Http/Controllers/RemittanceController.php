@@ -343,10 +343,10 @@ class RemittanceController extends Controller
                         $q->where('Name', 'like', '%نودالیت%');
                     });
                 })
-                ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
-                ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
+                ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)
+                ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
-                ->paginate(100);
+                ->get();
 
 
             $offset = 0;

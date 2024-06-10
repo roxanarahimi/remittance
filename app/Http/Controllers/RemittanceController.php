@@ -349,7 +349,7 @@ class RemittanceController extends Controller
                 ->paginate(50);
 
 
-//            $data = InventoryVoucherResource::collection($x);
+            $data = InventoryVoucherResource::collection($x);
 //            $array = $x->toArray();
 //            $array['data'] = $data;
 //            $array['first_page_url'] = str_replace('http://5.34.204.23/api/info','/',$array['first_page_url']);

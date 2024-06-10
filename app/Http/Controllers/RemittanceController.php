@@ -335,7 +335,7 @@ class RemittanceController extends Controller
     {
         try {
             $x = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
-                "SLS3.Order.CreationDate", "Date as DeliveryDate", "CustomerRef")
+                "SLS3.Order.CreationDate", "Date as DeliveryDate")
 //                ->select(["SLS3.Order.OrderID as OrderID", "SLS3.Order.Number as OrderNumber",
 //                    "GNR3.Address.Name as AddressName", "Details as Address", "Phone", "SLS3.Order.CreationDate", "DeliveryDate",
 //                ])

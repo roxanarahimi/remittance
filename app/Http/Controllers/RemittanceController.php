@@ -352,7 +352,7 @@ class RemittanceController extends Controller
             $data = InventoryVoucherResource::collection($x);
             $array = $x->toArray();
             $array['data'] = $data;
-            $array['first_page_url'] = str_replace('http://5.34.204.23/api/info','/',$array['first_page_url']);
+            $array['first_page_url'] = 'xx';
 
 
             return response()->json($x, 200);

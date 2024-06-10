@@ -4,12 +4,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\Token;
-use App\Http\Resources\CustomerAddressResource;
 use App\Http\Resources\InventoryVoucherResource;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\RemittanceResource;
-use App\Models\Customer;
-use App\Models\CustomerAddress;
 use App\Models\InventoryVoucher;
 use App\Models\InventoryVoucherItem;
 use App\Models\Order;
@@ -336,26 +333,22 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         try {
-            $x = CustomerAddress::select("*")
-//                ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
-//                ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Order.CustomerRef')
+            $x = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
+                "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef')
+                ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
+                ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
+                ->where('SLS3.Order.InventoryRef', 1)
+                ->where('SLS3.Order.State', 2)
+                ->where('SLS3.Order.FiscalYearRef', 1403)
+                ->where('SLS3.CustomerAddress.Type', 2)
+                ->whereHas('OrderItems')
+                ->whereHas('OrderItems', function ($q) {
+                    $q->havingRaw('SUM(Quantity) >= ?', [50]);
+                })
 
-//                ->where('SLS3.Order.InventoryRef', 1)
-//                ->where('SLS3.Order.State', 2)
-//                ->where('SLS3.Order.FiscalYearRef', 1403)
-//                ->whereHas('OrderItems')
-//                ->whereHas('OrderItems', function ($q) {
-//                    $q->havingRaw('SUM(Quantity) >= ?', [50]);
-//                })
-//
-//                ->orderBy('OrderID', 'DESC')
-//                ->where('OrderID', '3388074')
-                ->where('CustomerRef', '66009')
-                ->get();
-            return response()->json($x, 200);
-
-//            ->paginate(20);
+                ->orderBy('OrderID', 'DESC')
+                ->paginate(20);
 
             $data = OrderResource::collection($x);
             return response()->json($x, 200);

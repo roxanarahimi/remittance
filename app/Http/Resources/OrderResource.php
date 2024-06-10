@@ -18,7 +18,7 @@ class OrderResource extends JsonResource
             "OrderID" => $this->OrderID,
             "OrderNumber" => $this->Number,
 
-            "AddressName" => $this->Customer->Address->Name . substr($this->OrderID, -3),
+            "AddressName" => $this->Customer->CustomerAddress->Address->Name . substr($this->OrderID, -3),
 
             "Address" => $this->Customer->CustomerAddress->Address->Details,
             "Phone" => $this->Customer->CustomerAddress->Address->Phone,

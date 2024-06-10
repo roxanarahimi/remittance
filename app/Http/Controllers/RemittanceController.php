@@ -349,13 +349,13 @@ class RemittanceController extends Controller
                 ->paginate(50);
 
 
-            $data = InventoryVoucherResource::collection($x);
+//            $data = InventoryVoucherResource::collection($x);
             $array = $x->toArray();
-            $array['data'] = $data;
+//            $array['data'] = $data;
             $array['first_page_url'] = str_replace('http://5.34.204.23/api/info','/',$array['first_page_url']);
 
 
-            return response()->json($x, 200);
+            return response()->json($array, 200);
 
             $offset = 0;
             $perPage = 50;

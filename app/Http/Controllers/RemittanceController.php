@@ -161,13 +161,14 @@ class RemittanceController extends Controller
 
 /// real place
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
-            ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+            ->select([
+                "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
+                "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",])
+                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-                ->select([
-                    "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
-                    "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",
-                ])
+                ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+
                 ->whereNot('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
                 ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
                 ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
@@ -175,7 +176,6 @@ class RemittanceController extends Controller
                 ->whereNot('LGS3.Store.Name', 'LIKE', "%برگشتی%")
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
-                ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get()->unique()->toArray();
             foreach ($dat as $item) {

@@ -7,6 +7,7 @@ use App\Http\Middleware\Token;
 use App\Http\Resources\InventoryVoucherResource;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\RemittanceResource;
+use App\Models\Customer;
 use App\Models\InventoryVoucher;
 use App\Models\InventoryVoucherItem;
 use App\Models\Order;
@@ -333,21 +334,22 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         try {
-            $x = Order::select("*")
-                ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
-                ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Order.CustomerRef')
-                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
+            $x = Customer::select("*")
+//                ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
+//                ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Order.CustomerRef')
+//                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
 
-                ->where('SLS3.Order.InventoryRef', 1)
-                ->where('SLS3.Order.State', 2)
-                ->where('SLS3.Order.FiscalYearRef', 1403)
+//                ->where('SLS3.Order.InventoryRef', 1)
+//                ->where('SLS3.Order.State', 2)
+//                ->where('SLS3.Order.FiscalYearRef', 1403)
 //                ->whereHas('OrderItems')
 //                ->whereHas('OrderItems', function ($q) {
 //                    $q->havingRaw('SUM(Quantity) >= ?', [50]);
 //                })
 //
 //                ->orderBy('OrderID', 'DESC')
-                ->where('OrderID', '3388074')
+//                ->where('OrderID', '3388074')
+                ->where('CustomerID', '66009')
                 ->get();
             return response()->json($x, 200);
 

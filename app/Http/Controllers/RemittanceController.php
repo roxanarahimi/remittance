@@ -347,28 +347,21 @@ class RemittanceController extends Controller
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
                 ->paginate(50);
-
-
             $data = InventoryVoucherResource::collection($x);
-//            $array = $x->toArray();
-//            $array['data'] = $data;
-//            $array['first_page_url'] = str_replace('http://5.34.204.23/api/info','/',$array['first_page_url']);
-
-
             return response()->json($x, 200);
-
-            $offset = 0;
-            $perPage = 50;
-            $t = InventoryVoucherResource::collection($x);
-
-            $input1 = json_decode($t->toJson(), true);
-            $input = $input1;
-            if ($request['page'] && $request['page'] > 1) {
-                $offset = ($request['page'] - 1) * $perPage;
-            }
-            $info = array_slice($input, $offset, $perPage);
-            $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
-            return response()->json($paginator, 200);
+//
+//            $offset = 0;
+//            $perPage = 50;
+//            $t = InventoryVoucherResource::collection($x);
+//
+//            $input1 = json_decode($t->toJson(), true);
+//            $input = $input1;
+//            if ($request['page'] && $request['page'] > 1) {
+//                $offset = ($request['page'] - 1) * $perPage;
+//            }
+//            $info = array_slice($input, $offset, $perPage);
+//            $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+//            return response()->json($paginator, 200);
 
 
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store

@@ -27,7 +27,7 @@ class Order extends Model
         return $this->OrderItems->sum('Quantity');
     }
 
-    public function Store()
+    public function Customer()
     {
         return $this->belongsTo(Customer::class, 'CustomerRef', 'CustomerID');
     }

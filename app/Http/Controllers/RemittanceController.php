@@ -353,8 +353,8 @@ class RemittanceController extends Controller
                         $q->where('Name', 'like', '%نودالیت%');
                     });
                 })
-                ->where(function ($query) {
-                    $query->OrderItems->sum('Quantity') >= 50;
+                ->whereHas('OrderItems', function($q){
+                    $q->sum('Quantity') >= 50;
                 })
                 ->orderBy('SLS3.Order.OrderID', 'DESC')
                 ->paginate(20);

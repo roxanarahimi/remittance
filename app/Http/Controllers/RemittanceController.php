@@ -333,8 +333,11 @@ class RemittanceController extends Controller
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
 //                ->where('LGS3.InventoryVoucher.CounterpartStoreRef', $request['id'])
+                ->whereNot('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
                 ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
                 ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
+                ->whereNot('LGS3.Store.Name', 'LIKE', "%ضایعات%")
+                ->whereNot('LGS3.Store.Name', 'LIKE', "%برگشتی%")
                 ->whereHas('OrderItems', function ($query) {
                     $query->whereHas('Part', function ($q) {
                         $q->where('Name', 'like', '%نودالیت%');

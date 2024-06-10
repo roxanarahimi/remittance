@@ -310,8 +310,9 @@ class RemittanceController extends Controller
 
 //                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
 //                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%ضایعات%")
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%برگشتی%");
+//                ->whereNot('LGS3.Store.Name', 'LIKE', "%ضایعات%")
+//                ->whereNot('LGS3.Store.Name', 'LIKE', "%برگشتی%")
+;
             if (isset($request['search'])) {
                 $t = $t->where('LGS3.Store.Name', 'LIKE', "%" . $request['search'] . "%")
                     ->orWhere('GNR3.Address.Details', 'LIKE', "%" . $request['search'] . "%");

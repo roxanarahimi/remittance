@@ -335,13 +335,13 @@ class RemittanceController extends Controller
     {
         try {
             $x = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
-                "SLS3.Order.CreationDate", "Date as DeliveryDate")
+                "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef')
 //                ->select(["SLS3.Order.OrderID as OrderID", "SLS3.Order.Number as OrderNumber",
 //                    "GNR3.Address.Name as AddressName", "Details as Address", "Phone", "SLS3.Order.CreationDate", "DeliveryDate",
 //                ])
                 ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
                 ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
-                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef', 'SLS3.Order.CustomerRef')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
 
                 ->where('SLS3.Order.InventoryRef', 1)
                 ->where('SLS3.Order.State', 2)

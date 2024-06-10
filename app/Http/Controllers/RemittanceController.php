@@ -333,13 +333,13 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         try {
-            $x = Order::select("* from SLS3.Order")
-                ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
-                ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
-                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
-//                ->where('SLS3.Order.InventoryRef', 1)
-//                ->where('SLS3.Order.State', 2)
-//                ->where('SLS3.Order.FiscalYearRef', 1403)
+            $x = Order::select("*")
+//                ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
+//                ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
+//                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
+                ->where('SLS3.Order.InventoryRef', 1)
+                ->where('SLS3.Order.State', 2)
+                ->where('SLS3.Order.FiscalYearRef', 1403)
 //                ->whereHas('OrderItems')
 //                ->whereHas('OrderItems', function ($q) {
 //                    $q->havingRaw('SUM(Quantity) >= ?', [50]);

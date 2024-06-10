@@ -344,11 +344,11 @@ class RemittanceController extends Controller
                 ->where('SLS3.Order.InventoryRef', 1)
                 ->where('SLS3.Order.State', 2)
                 ->where('SLS3.Order.FiscalYearRef', 1403)
-                ->whereHas('OrderItems', function ($query) {
-                    $query->whereHas('Product', function ($q) {
-                        $q->where('Name', 'like', '%نودالیت%');
-                    });
-                })
+//                ->whereHas('OrderItems', function ($query) {
+//                    $query->whereHas('Product', function ($q) {
+//                        $q->where('Name', 'like', '%نودالیت%');
+//                    });
+//                })
                 ->whereHas('OrderItems', function ($q) {
                         $q->sum('Quantity') >= 50;
                 })

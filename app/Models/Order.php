@@ -24,7 +24,7 @@ class Order extends Model
 
     public function Sum()
     {
-        return $this->OrderItems->sum('Quantity');
+        return $this->OrderItems()->sum('Quantity');
     }
 
     public function Customer()

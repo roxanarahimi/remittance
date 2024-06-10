@@ -333,7 +333,7 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         try {
-            $x = Order::select("*")
+            $x = Order::select("* from SLS3.Order")
                 ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
                 ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')

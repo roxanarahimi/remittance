@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $connection = 'sqlsrv';
-    protected $table = 'SLS3.Part';
+    protected $table = 'SLS3.Product';
     protected $hidden = ['Version'];
 
     public function Item()

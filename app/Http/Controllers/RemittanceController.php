@@ -350,7 +350,7 @@ class RemittanceController extends Controller
 
 
             $offset = 0;
-            $perPage = 100;
+            $perPage = 50;
             $t = InventoryVoucherResource::collection($x);
 
             $input1 = json_decode($t->toJson(), true);

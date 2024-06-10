@@ -339,7 +339,7 @@ class RemittanceController extends Controller
             $x = CustomerAddress::select("*")
 //                ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
 //                ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Order.CustomerRef')
-//                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
 
 //                ->where('SLS3.Order.InventoryRef', 1)
 //                ->where('SLS3.Order.State', 2)

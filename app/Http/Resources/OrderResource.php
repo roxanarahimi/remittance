@@ -23,7 +23,6 @@ class OrderResource extends JsonResource
             "Address" => $this->Customer->CustomerAddress->Address->Details,
             "Phone" => $this->Customer->CustomerAddress->Address->Phone,
             "Type" => "Order",
-
             'Sum' => $this->OrderItems->sum('Quantity'),
 
             "CreationDate" => $this->CreationDate,

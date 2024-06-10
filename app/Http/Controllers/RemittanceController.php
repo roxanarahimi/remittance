@@ -354,7 +354,7 @@ class RemittanceController extends Controller
                     });
                 })
 //                ->whereHas('Sum', '>=', 50)
-                ->with('Sum')
+//                ->with('Sum')
                 ->orderBy('SLS3.Order.OrderID', 'DESC')
                 ->paginate(20);
 

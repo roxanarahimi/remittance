@@ -350,7 +350,9 @@ class RemittanceController extends Controller
 //                    });
 //                })
                 ->whereHas('OrderItems', function ($q) {
-                        $q->sum('Quantity') >= 50;
+                        $q->where(function ($z){
+                            $z->sum('Quantity') >= 50;
+                        });
                 })
 //                    ->with('Sum')
                 ->orderBy('OrderID', 'DESC')

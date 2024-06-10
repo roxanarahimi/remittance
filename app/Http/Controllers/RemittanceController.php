@@ -355,9 +355,9 @@ class RemittanceController extends Controller
                 })
 //                ->whereHas('Sum', '>=', 50)
                 ->with('Sum')
-                ->orderBy('SLS3.Order.OrderID')
-
+                ->orderBy('SLS3.Order.OrderID', 'DESC')
                 ->paginate(20);
+
             $data = OrderResource::collection($x);
             return response()->json($x, 200);
 

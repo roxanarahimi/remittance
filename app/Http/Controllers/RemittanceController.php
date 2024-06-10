@@ -170,7 +170,6 @@ class RemittanceController extends Controller
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-
                 ->whereNot('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
                 ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
                 ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
@@ -193,7 +192,7 @@ class RemittanceController extends Controller
                         "LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity", "LGS3.Part.PartID as Id",
                         "LGS3.Part.Code as ProductNumber")
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
-                    ->where('LGS3.Part.Name','LIKE', '%نودالیت%')
+                    ->where('LGS3.Part.Name', 'LIKE', '%نودالیت%')
                     ->get();
 
                 $item->{'OrderItems'} = $details;
@@ -325,7 +324,7 @@ class RemittanceController extends Controller
                     ->orWhere('GNR3.Address.Details', 'LIKE', "%" . $request['search'] . "%");
             }
             $t = $t->get();
-            return response()->json($t,200);
+            return response()->json($t, 200);
         } catch (\Exception $exception) {
             return response($exception);
         }
@@ -342,19 +341,18 @@ class RemittanceController extends Controller
                 ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
                 ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
-
                 ->where('SLS3.Order.InventoryRef', 1)
                 ->where('SLS3.Order.State', 2)
                 ->where('SLS3.Order.FiscalYearRef', 1403)
-
-
                 ->whereHas('OrderItems', function ($query) {
                     $query->whereHas('Product', function ($q) {
                         $q->where('Name', 'like', '%نودالیت%');
                     });
                 })
-                ->whereHas('OrderItems', function($q){
-                    $q->sum('Quantity') >= 50;
+                ->whereHas('OrderItems', function ($q) {
+                    $q->where(function ($z) {
+                        $z->sum('Quantity') >= 50;
+                    });
                 })
                 ->orderBy('SLS3.Order.OrderID', 'DESC')
                 ->paginate(20);

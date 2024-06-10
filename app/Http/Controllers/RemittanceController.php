@@ -347,7 +347,10 @@ class RemittanceController extends Controller
 //
 //                ->orderBy('OrderID', 'DESC')
                 ->where('OrderID', '3388074')
-                ->paginate(20);
+                ->get();
+            return response()->json($x, 200);
+
+//            ->paginate(20);
 
             $data = OrderResource::collection($x);
             return response()->json($x, 200);

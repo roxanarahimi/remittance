@@ -4,10 +4,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\Token;
+use App\Http\Resources\CustomerAddressResource;
 use App\Http\Resources\InventoryVoucherResource;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\RemittanceResource;
 use App\Models\Customer;
+use App\Models\CustomerAddress;
 use App\Models\InventoryVoucher;
 use App\Models\InventoryVoucherItem;
 use App\Models\Order;
@@ -334,7 +336,7 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         try {
-            $x = Customer::select("*")
+            $x = CustomerAddress::select("*")
 //                ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
 //                ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Order.CustomerRef')
 //                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
@@ -349,7 +351,7 @@ class RemittanceController extends Controller
 //
 //                ->orderBy('OrderID', 'DESC')
 //                ->where('OrderID', '3388074')
-                ->where('CustomerID', '66009')
+                ->where('CustomerRef', '66009')
                 ->get();
             return response()->json($x, 200);
 

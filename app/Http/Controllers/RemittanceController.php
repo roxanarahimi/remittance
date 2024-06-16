@@ -160,7 +160,68 @@ class RemittanceController extends Controller
     public function readOnly(Request $request)
     {
         try {
+            $x = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
+                "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef')
+                ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
+                ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
+                ->where('SLS3.Order.InventoryRef', 1)
+                ->where('SLS3.Order.State', 2)
+                ->where('SLS3.Order.FiscalYearRef', 1403)
+                ->where('SLS3.CustomerAddress.Type', 2) //or 1?
+                ->whereHas('OrderItems')
+                ->whereHas('OrderItems', function ($q) {
+                    $q->havingRaw('SUM(Quantity) >= ?', [50]);
+                })
 
+                ->orderBy('OrderID', 'DESC')
+                ->paginate(20);
+
+            $data = OrderResource::collection($x);
+          //  return response()->json($x, 200);
+
+            $i = $x->{'last_page'};
+            return $i;
+          $j = {  "current_page": 1,
+    "data": $data,
+    "first_page_url": "/?page=1",
+    "from": 1,
+    "last_page": 3,
+    "last_page_url": "/?page=3",
+    "links": [
+        {
+            "url": null,
+            "label": "&laquo; Previous",
+            "active": false
+        },
+        {
+            "url": "/?page=1",
+            "label": "1",
+            "active": true
+        },
+        {
+            "url": "/?page=2",
+            "label": "2",
+            "active": false
+        },
+        {
+            "url": "/?page=3",
+            "label": "3",
+            "active": false
+        },
+        {
+            "url": "/?page=2",
+            "label": "Next &raquo;",
+            "active": false
+        }
+    ],
+    "next_page_url": "/?page=2",
+    "path": "/",
+    "per_page": 100,
+    "prev_page_url": null,
+    "to": 100,
+    "total": 241
+            };
 /// real place
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->select([

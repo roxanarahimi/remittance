@@ -241,10 +241,10 @@ class RemittanceController extends Controller
                 "last_page" => $last,
                 "last_page_url" => "/?page=" . $last,
                 "links" => $links,
-                "next_page_url" => $currentPage < $last ? $currentPage + 1 : null,
+                "next_page_url" => $currentPage == $last ? null : "/?page=" . $currentPage + 1 ,
                 "path" => "/",
                 "per_page" => $perPage,
-                "prev_page_url" => $currentPage > 1 ? $currentPage - 1 : null,
+                "prev_page_url" => $currentPage > 1 ?  "/?page=" .$currentPage - 1 : null,
                 "to" => $perPage * $currentPage,
                 "total" => $x->total(),
             ];

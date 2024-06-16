@@ -183,47 +183,73 @@ class RemittanceController extends Controller
                 ->paginate(20);
             $data = InventoryVoucherResource::collection($x);
 
-            return ceil($x->total()/100);
-//          $j = {  "current_page": 1,
-//    "data": $data,
-//    "first_page_url": "/?page=1",
-//    "from": 1,
-//    "last_page": 3,
-//    "last_page_url": "/?page=3",
-//    "links": [
-//        {
-//            "url": null,
-//            "label": "&laquo; Previous",
-//            "active": false
-//        },
-//        {
-//            "url": "/?page=1",
-//            "label": "1",
-//            "active": true
-//        },
-//        {
-//            "url": "/?page=2",
-//            "label": "2",
-//            "active": false
-//        },
-//        {
-//            "url": "/?page=3",
-//            "label": "3",
-//            "active": false
-//        },
-//        {
-//            "url": "/?page=2",
-//            "label": "Next &raquo;",
-//            "active": false
-//        }
-//    ],
-//    "next_page_url": "/?page=2",
-//    "path": "/",
-//    "per_page": 100,
-//    "prev_page_url": null,
-//    "to": 100,
-//    "total": 241
-//            };
+            //    return ceil($x->total()/100);
+
+            $perPage = 100;
+            $last = ceil($x->total() / 100);
+            $currentPage = $request['page'] || 1;
+            $links = [];
+            $links[] = json_encode( [
+                "url"=> null,
+                "label"=> "&laquo; Previous",
+                "active"=> false
+            ]);
+            for($i = 1; $i< $last; $i++){
+                $links[] = json_encode(  [
+                    "url"=> "/?page=".$i,
+                    "label"=> $i,
+                    "active"=> $currentPage === $i
+                ]);
+            }
+            $links[] = json_encode( [
+                "url"=> "/?page=".$currentPage + 1,
+                "label"=> "Next &raquo;",
+                "active"=> false
+            ]);
+//            $links = [
+//        [
+//            "url"=> null,
+//            "label"=> "&laquo; Previous",
+//            "active"=> false
+//        ],
+//        [
+//            "url"=> "/?page=1",
+//            "label"=> "1",
+//            "active"=> true
+//        ],
+//        [
+//            "url"=> "/?page=2",
+//            "label"=> "2",
+//            "active"=> false
+//        ],
+//        [
+//            "url"=> "/?page=3",
+//            "label"=> "3",
+//            "active"=> false
+//        ],
+//        [
+//            "url"=> "/?page=2",
+//            "label"=> "Next &raquo;",
+//            "active"=> false
+//        ]
+//    ];
+            $j = [
+                "current_page" => ($perPage * $currentPage) - ($perPage - 1),
+                "data" => $data,
+                "first_page_url" => "/?page=1",
+                "from" => 1,
+                "last_page" => $last,
+                "last_page_url" => "/?page=" . $last,
+                "links" => $links,
+                "next_page_url" => "/?page=".$currentPage + 1,
+                "path" => "/",
+                "per_page" => $perPage,
+                "prev_page_url" => null,
+                "to" => $perPage * $currentPage,
+                "total" => $x->total(),
+            ];
+            return response()->json($j, 200);
+
 /// real place
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->select([
@@ -409,7 +435,6 @@ class RemittanceController extends Controller
                 ->whereHas('OrderItems', function ($q) {
                     $q->havingRaw('SUM(Quantity) >= ?', [50]);
                 })
-
                 ->orderBy('OrderID', 'DESC')
                 ->paginate(20);
 

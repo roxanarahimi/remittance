@@ -223,7 +223,7 @@ class RemittanceController extends Controller
             }
 
             $filtered = array_filter($dat, function ($el) {
-                return $el->{'ok'} == 1;
+                return count($el->{'OrderItems'}) > 0;
             });
 //            $dat2 = DB::connection('sqlsrv')->table('SLS3.Order')
 //                ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')

@@ -182,39 +182,39 @@ class RemittanceController extends Controller
 
             $i = $x->{'last_page'};
             return $i;
-          $j = {  "current_page": 1,
-    "data": $data,
-    "first_page_url": "/?page=1",
-    "from": 1,
-    "last_page": 3,
-    "last_page_url": "/?page=3",
-    "links": [
-        {
-            "url": null,
-            "label": "&laquo; Previous",
-            "active": false
-        },
-        {
-            "url": "/?page=1",
-            "label": "1",
-            "active": true
-        },
-        {
-            "url": "/?page=2",
-            "label": "2",
-            "active": false
-        },
-        {
-            "url": "/?page=3",
-            "label": "3",
-            "active": false
-        },
-        {
-            "url": "/?page=2",
-            "label": "Next &raquo;",
-            "active": false
-        }
-    ],
+//          $j = {  "current_page": 1,
+//    "data": $data,
+//    "first_page_url": "/?page=1",
+//    "from": 1,
+//    "last_page": 3,
+//    "last_page_url": "/?page=3",
+//    "links": [
+//        {
+//            "url": null,
+//            "label": "&laquo; Previous",
+//            "active": false
+//        },
+//        {
+//            "url": "/?page=1",
+//            "label": "1",
+//            "active": true
+//        },
+//        {
+//            "url": "/?page=2",
+//            "label": "2",
+//            "active": false
+//        },
+//        {
+//            "url": "/?page=3",
+//            "label": "3",
+//            "active": false
+//        },
+//        {
+//            "url": "/?page=2",
+//            "label": "Next &raquo;",
+//            "active": false
+//        }
+//    ],
     "next_page_url": "/?page=2",
     "path": "/",
     "per_page": 100,

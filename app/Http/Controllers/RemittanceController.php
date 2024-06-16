@@ -160,97 +160,6 @@ class RemittanceController extends Controller
     public function readOnly(Request $request)
     {
         try {
-//            $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
-//                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
-//                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
-//                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-//                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-//                ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-////                ->where('LGS3.InventoryVoucher.CounterpartStoreRef', $request['id'])
-//                ->whereNot('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
-//                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
-//                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
-//                ->whereNot('LGS3.Store.Name', 'LIKE', "%ضایعات%")
-//                ->whereNot('LGS3.Store.Name', 'LIKE', "%برگشتی%")
-//                ->whereHas('OrderItems', function ($query) {
-//                    $query->whereHas('Part', function ($q) {
-//                        $q->where('Name', 'like', '%نودالیت%');
-//                    });
-//                })
-//                ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)
-//                ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)
-//                ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
-//                ->paginate(100);
-//            $data = InventoryVoucherResource::collection($x);
-//            return response()->json($x, 200);
-//
-//            //    return ceil($x->total()/100);
-//
-//            $perPage = 100;
-//            $last = ceil($x->total() / 100);
-//            $currentPage = $request['page']?$request['page'] : 1;
-//            $next =  $currentPage == $last ? null : "/?page=" . $currentPage + 1;
-//            $links = [];
-//            $links[] = [
-//                "url" => null,
-//                "label" => "&laquo; Previous",
-//                "active" => false
-//            ];
-//            for ($i = 1; $i <= $last; $i++) {
-//                $links[] = [
-//                    "url" => "/?page=" . $i,
-//                    "label" => (string)$i,
-//                    "active" => $currentPage == $i
-//                ];
-//            }
-//            $links[] = [
-//                "url" => "/?page=" . $currentPage + 1,
-//                "label" => "Next &raquo;",
-//                "active" => false
-//            ];
-////            $links = [
-////        [
-////            "url"=> null,
-////            "label"=> "&laquo; Previous",
-////            "active"=> false
-////        ],
-////        [
-////            "url"=> "/?page=1",
-////            "label"=> "1",
-////            "active"=> true
-////        ],
-////        [
-////            "url"=> "/?page=2",
-////            "label"=> "2",
-////            "active"=> false
-////        ],
-////        [
-////            "url"=> "/?page=3",
-////            "label"=> "3",
-////            "active"=> false
-////        ],
-////        [
-////            "url"=> "/?page=2",
-////            "label"=> "Next &raquo;",
-////            "active"=> false
-////        ]
-////    ];
-//            $j = [
-//                "current_page" => $currentPage,
-//                "data" => $data,
-//                "first_page_url" => "/?page=1",
-//                "from" => ($perPage * $currentPage) - ($perPage - 1),
-//                "last_page" => $last,
-//                "last_page_url" => "/?page=" . $last,
-//                "links" => $links,
-//                "next_page_url" => $next,
-//                "path" => "/",
-//                "per_page" => $perPage,
-//                "prev_page_url" => $currentPage > 1 ?  "/?page=" .$currentPage - 1 : null,
-//                "to" => $perPage * $currentPage,
-//                "total" => $x->total(),
-//            ];
-//            return response()->json($j, 200);
 
 /// real place
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
@@ -269,7 +178,7 @@ class RemittanceController extends Controller
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-                ->get()->toArray();
+                ->get()->unique()->toArray();
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 0;
@@ -432,11 +341,12 @@ class RemittanceController extends Controller
                 ->where('SLS3.Order.InventoryRef', 1)
                 ->where('SLS3.Order.State', 2)
                 ->where('SLS3.Order.FiscalYearRef', 1403)
-                ->where('SLS3.CustomerAddress.Type', 2) //or 1?
+                ->where('SLS3.CustomerAddress.Type', 2)
                 ->whereHas('OrderItems')
                 ->whereHas('OrderItems', function ($q) {
                     $q->havingRaw('SUM(Quantity) >= ?', [50]);
                 })
+
                 ->orderBy('OrderID', 'DESC')
                 ->paginate(20);
 

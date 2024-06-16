@@ -235,10 +235,10 @@ class RemittanceController extends Controller
 //        ]
 //    ];
             $j = [
-                "current_page" => ($perPage * $currentPage) - ($perPage - 1),
+                "current_page" => $currentPage,
                 "data" => $data,
                 "first_page_url" => "/?page=1",
-                "from" => 1,
+                "from" => ($perPage * $currentPage) - ($perPage - 1),
                 "last_page" => $last,
                 "last_page_url" => "/?page=" . $last,
                 "links" => $links,

@@ -189,23 +189,23 @@ class RemittanceController extends Controller
             $last = ceil($x->total() / 100);
             $currentPage = $request['page'] || 1;
             $links = [];
-            $links[] = {
-                "url": null,
-                "label": "&laquo; Previous",
-                "active": false
-            };
+            $links[] = [
+                "url"=> null,
+                "label"=> "&laquo; Previous",
+                "active"=> false
+            ];
             for($i = 1; $i< $last; $i++){
-                $links[] = {
-                    "url": "/?page=" . $i,
-                    "label": $i,
-                    "active": $currentPage === $i
-                };
+                $links[] =  [
+                    "url"=> "/?page=".$i,
+                    "label"=> $i,
+                    "active"=> $currentPage === $i
+                ];
             }
-            $links[] = {
-                "url"=> "/?page=" . $currentPage + 1,
+            $links[] = [
+                "url"=> "/?page=".$currentPage + 1,
                 "label"=> "Next &raquo;",
                 "active"=> false
-            };
+            ];
 //            $links = [
 //        [
 //            "url"=> null,

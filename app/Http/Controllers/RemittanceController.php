@@ -181,7 +181,7 @@ class RemittanceController extends Controller
           //  return response()->json($x, 200);
 
             $i = $x->links();
-            return $x->total();
+            return $x->next_page_url();
 //          $j = {  "current_page": 1,
 //    "data": $data,
 //    "first_page_url": "/?page=1",

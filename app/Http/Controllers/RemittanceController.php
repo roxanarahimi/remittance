@@ -193,19 +193,19 @@ class RemittanceController extends Controller
                 "url"=> null,
                 "label"=> "&laquo; Previous",
                 "active"=> false
-            ]);
+            ], true);
             for($i = 1; $i< $last; $i++){
                 $links[] = json_encode(  [
                     "url"=> "/?page=".$i,
                     "label"=> $i,
                     "active"=> $currentPage === $i
-                ]);
+                ], true);
             }
             $links[] = json_encode( [
                 "url"=> "/?page=".$currentPage + 1,
                 "label"=> "Next &raquo;",
                 "active"=> false
-            ]);
+            ], true);
 //            $links = [
 //        [
 //            "url"=> null,

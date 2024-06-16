@@ -162,20 +162,6 @@ class RemittanceController extends Controller
         try {
 
 /// real place
-            $t = Store::select("LGS3.Store.StoreID", "LGS3.Store.Name as Name", "GNR3.Address.Details")
-                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
-                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%ضایعات%")
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%برگشتی%");
-            if (isset($request['search'])) {
-                $t = $t->where('LGS3.Store.Name', 'LIKE', "%" . $request['search'] . "%")
-                    ->orWhere('GNR3.Address.Details', 'LIKE', "%" . $request['search'] . "%");
-            }
-            $t = $t->pluck('StoreID');
-
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->select([
                 "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
@@ -184,7 +170,11 @@ class RemittanceController extends Controller
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-                ->whereIn('LGS3.Store.StoreID', $t)
+                ->whereNot('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
+                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
+                ->whereNot('LGS3.Store.Name', 'LIKE', "%ضایعات%")
+                ->whereNot('LGS3.Store.Name', 'LIKE', "%برگشتی%")
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')

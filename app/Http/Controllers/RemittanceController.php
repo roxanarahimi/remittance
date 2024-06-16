@@ -180,7 +180,7 @@ class RemittanceController extends Controller
             $data = OrderResource::collection($x);
           //  return response()->json($x, 200);
 
-            return [$x->total(), $x->links, $x->links(), ];
+            return [$x->last_page() ];
 //          $j = {  "current_page": 1,
 //    "data": $data,
 //    "first_page_url": "/?page=1",

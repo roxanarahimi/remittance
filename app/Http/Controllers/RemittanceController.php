@@ -186,15 +186,17 @@ class RemittanceController extends Controller
                 $item->{'AddressName'} = $item->{'AddressName'} . substr($item->{'OrderID'}, -3);
                 $noodElite = 0;
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
+                    ->select(
+                    "LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity", "LGS3.Part.PartID as Id",
+                    "LGS3.Part.Code as ProductNumber")
                     ->join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItemTrackingFactor.PartRef')
-                    ->select(
-                        "LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity", "LGS3.Part.PartID as Id",
-                        "LGS3.Part.Code as ProductNumber")
+
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
-//                    ->where('LGS3.Part.Name', 'LIKE', '%نودالیت%')
+                    ->where('ProductName', 'LIKE', '%نودالیت%')
                     ->get();
 
+                $item->{'OrderItems'} = $details;
 
 
 //                foreach ($details as $it) {
@@ -213,7 +215,6 @@ class RemittanceController extends Controller
                 $x = array_filter($details->toArray(), function ($el) {
                     return str_contains($el->{'ProductName'}, 'نودالیت');
                 });
-                $item->{'OrderItems'} = $x;
                 if (count($x) > 0) {
                     $item->{'ok'} = 1;
                 }

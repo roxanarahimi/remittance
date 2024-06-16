@@ -215,13 +215,13 @@ class RemittanceController extends Controller
 //            "active": false
 //        }
 //    ],
-    "next_page_url": "/?page=2",
-    "path": "/",
-    "per_page": 100,
-    "prev_page_url": null,
-    "to": 100,
-    "total": 241
-            };
+//    "next_page_url": "/?page=2",
+//    "path": "/",
+//    "per_page": 100,
+//    "prev_page_url": null,
+//    "to": 100,
+//    "total": 241
+//            };
 /// real place
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->select([

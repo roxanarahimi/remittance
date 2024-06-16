@@ -198,7 +198,7 @@ class RemittanceController extends Controller
                 $links[] =  [
                     "url"=> "/?page=".$i,
                     "label"=> (string)$i,
-                    "active"=> $currentPage === $i
+                    "active"=> $currentPage == $i
                 ];
             }
             $links[] = [

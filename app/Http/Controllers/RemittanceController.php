@@ -194,7 +194,7 @@ class RemittanceController extends Controller
                 "label"=> "&laquo; Previous",
                 "active"=> false
             ];
-            for($i = 1; $i< $last; $i++){
+            for($i = 1; $i<= $last; $i++){
                 $links[] =  [
                     "url"=> "/?page=".$i,
                     "label"=> (string)$i,

@@ -178,7 +178,7 @@ class RemittanceController extends Controller
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-                ->get()->toArray();
+                ->get()->unique()->toArray();
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 0;
@@ -198,10 +198,30 @@ class RemittanceController extends Controller
                 $item->{'OrderItems'} = $details;
 
 
-                if (count($details) > 0) {
+//                foreach ($details as $it) {
+//                    if (str_contains($it->{'ProductName'}, 'نودالیت')) {
+//                        $noodElite += $it->{'Quantity'};
+//                    }
+//                }
+//                $item->{'noodElite'} = $noodElite;
+//
+//                if ($noodElite > 0) {
+//                    $item->{'ok'} = 1;
+//                }
+//                if (str_contains($item->{'AddressName'}, 'گرمدره')){
+//                    $item->{'ok'} = 0;
+//                }
+                $x = array_filter($details->toArray(), function ($el) {
+                    return str_contains($el->{'ProductName'}, 'نودالیت');
+                });
+                if (count($x) > 0) {
                     $item->{'ok'} = 1;
                 }
+//                if (str_contains($item->{'AddressName'}, 'گرمدره')){
+//                    $item->{'ok'} = 0;
+//                }
             }
+
             $filtered = array_filter($dat, function ($el) {
                 return $el->{'ok'} == 1;
             });

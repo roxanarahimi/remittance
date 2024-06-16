@@ -195,7 +195,6 @@ class RemittanceController extends Controller
 //                    ->where('LGS3.Part.Name', 'LIKE', '%نودالیت%')
                     ->get();
 
-                $item->{'OrderItems'} = $details;
 
 
 //                foreach ($details as $it) {
@@ -214,6 +213,7 @@ class RemittanceController extends Controller
                 $x = array_filter($details->toArray(), function ($el) {
                     return str_contains($el->{'ProductName'}, 'نودالیت');
                 });
+                $item->{'OrderItems'} = $x;
                 if (count($x) > 0) {
                     $item->{'ok'} = 1;
                 }

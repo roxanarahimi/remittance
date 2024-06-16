@@ -187,24 +187,24 @@ class RemittanceController extends Controller
 
             $perPage = 100;
             $last = ceil($x->total() / 100);
-            $currentPage = $request['page'] || 1;
+            $currentPage = (int)$request['page'] || 1;
             $links = [];
             $links[] = [
-                "url"=> null,
-                "label"=> "&laquo; Previous",
-                "active"=> false
+                "url" => null,
+                "label" => "&laquo; Previous",
+                "active" => false
             ];
-            for($i = 1; $i<= $last; $i++){
-                $links[] =  [
-                    "url"=> "/?page=".$i,
-                    "label"=> (string)$i,
-                    "active"=> $currentPage == $i
+            for ($i = 1; $i <= $last; $i++) {
+                $links[] = [
+                    "url" => "/?page=" . $i,
+                    "label" => (string)$i,
+                    "active" => $currentPage == $i
                 ];
             }
             $links[] = [
-                "url"=> "/?page=".$currentPage + 1,
-                "label"=> "Next &raquo;",
-                "active"=> false
+                "url" => "/?page=" . $currentPage + 1,
+                "label" => "Next &raquo;",
+                "active" => false
             ];
 //            $links = [
 //        [
@@ -241,10 +241,10 @@ class RemittanceController extends Controller
                 "last_page" => $last,
                 "last_page_url" => "/?page=" . $last,
                 "links" => $links,
-                "next_page_url" => $currentPage < $last ? $currentPage +1 : null,
+                "next_page_url" => $currentPage < $last ? $currentPage + 1 : null,
                 "path" => "/",
                 "per_page" => $perPage,
-                "prev_page_url" => $currentPage >1? $currentPage - 1 : null,
+                "prev_page_url" => $currentPage > 1 ? $currentPage - 1 : null,
                 "to" => $perPage * $currentPage,
                 "total" => $x->total(),
             ];

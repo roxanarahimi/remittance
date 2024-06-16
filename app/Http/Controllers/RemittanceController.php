@@ -189,6 +189,7 @@ class RemittanceController extends Controller
             $last = ceil($x->total() / 100);
             $currentPage = (int)$request['page'] || 1;
             $next =  $currentPage == $last ? null : "/?page=" . $currentPage + 1;
+            return [$currentPage , $last , $currentPage == $last];
             $links = [];
             $links[] = [
                 "url" => null,

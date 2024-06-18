@@ -178,7 +178,7 @@ class RemittanceController extends Controller
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-                ->take(500)->get()->toArray();
+                ->get()->toArray();
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 0;
@@ -277,7 +277,7 @@ class RemittanceController extends Controller
 //
             $input1 = array_values($filtered);
             $offset = 0;
-            $perPage = 100;
+            $perPage = 300;
 //
 //            $input2 = array_values($filtered2);
 

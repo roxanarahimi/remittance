@@ -274,12 +274,14 @@ class RemittanceController extends Controller
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get()->toArray();
-
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
-
+//            return $ids;
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';
+                $item->{'ok'} = 1;
+                $item->{'noodElite'} = '';
                 $item->{'AddressName'} = $item->{'AddressName'} . substr($item->{'OrderID'}, -3);
+                $noodElite = 0;
 
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                     ->select(
@@ -387,6 +389,7 @@ class RemittanceController extends Controller
 //                $input = $input1;
 //            }
 //            $input = $input1;
+
 
             if ($request['page'] && $request['page'] > 1) {
                 $offset = ($request['page'] - 1) * $perPage;

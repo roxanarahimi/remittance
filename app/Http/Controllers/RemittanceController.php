@@ -252,29 +252,29 @@ class RemittanceController extends Controller
 //            ];
 //            return response()->json($j, 200);
 
-            $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
-                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
-                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
-                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-                ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-//                ->where('LGS3.InventoryVoucher.CounterpartStoreRef', $request['id'])
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
-                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%ضایعات%")
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%برگشتی%")
-                ->whereHas('OrderItems', function ($query) {
-                    $query->whereHas('Part', function ($q) {
-                        $q->where('Name', 'like', '%نودالیت%');
-                    });
-                })
-                ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)
-                ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)
-                ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
-                ->paginate(100);
-            $data = InventoryVoucherResource::collection($x);
-            return response()->json($x, 200);
+//            $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+//                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
+//                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+//                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+//                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+//                ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+////                ->where('LGS3.InventoryVoucher.CounterpartStoreRef', $request['id'])
+//                ->whereNot('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
+//                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+//                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
+//                ->whereNot('LGS3.Store.Name', 'LIKE', "%ضایعات%")
+//                ->whereNot('LGS3.Store.Name', 'LIKE', "%برگشتی%")
+//                ->whereHas('OrderItems', function ($query) {
+//                    $query->whereHas('Part', function ($q) {
+//                        $q->where('Name', 'like', '%نودالیت%');
+//                    });
+//                })
+//                ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)
+//                ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)
+//                ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
+//                ->paginate(100);
+//            $data = InventoryVoucherResource::collection($x);
+//            return response()->json($x, 200);
 
 //
 
@@ -309,7 +309,7 @@ class RemittanceController extends Controller
                     ->join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItemTrackingFactor.PartRef')
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
-                    ->where('LGS3.Part.Name', 'like', '%نودالیت%')
+//                    ->where('LGS3.Part.Name', 'like', '%نودالیت%')
                     ->get();
 
                 $item->{'OrderItems'} = $details;
@@ -328,10 +328,11 @@ class RemittanceController extends Controller
 //                if (str_contains($item->{'AddressName'}, 'گرمدره')){
 //                    $item->{'ok'} = 0;
 //                }
-//                $x = array_filter($details->toArray(), function ($el) {
-//                    return str_contains($el->{'ProductName'}, 'نودالیت');
-//                });
-                if (count($details->toArray()) > 0) {
+                $x = array_filter($details->toArray(), function ($el) {
+                    return str_contains($el->{'ProductName'}, 'نودالیت');
+                });
+//                if (count($details->toArray()) > 0) {
+                if (count($x) > 0) {
                     $item->{'ok'} = 1;
                 }
 //                if (str_contains($item->{'AddressName'}, 'گرمدره')){

@@ -292,7 +292,31 @@ class RemittanceController extends Controller
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
                     ->whereIn('LGS3.Part.PartID', $partIDs)
                     ->get();
+
                 $item->{'OrderItems'} = $details;
+
+//                foreach ($details as $it) {
+//                    if (str_contains($it->{'ProductName'}, 'نودالیت')) {
+//                        $noodElite += $it->{'Quantity'};
+//                    }
+//                }
+//                $item->{'noodElite'} = $noodElite;
+//
+//                if ($noodElite > 0) {
+//                    $item->{'ok'} = 1;
+//                }
+//                if (str_contains($item->{'AddressName'}, 'گرمدره')){
+//                    $item->{'ok'} = 0;
+//                }
+//                $x = array_filter($details->toArray(), function ($el) {
+//                    return str_contains($el->{'ProductName'}, 'نودالیت');
+//                });
+                if (count($details->toArray()) > 0) {
+                    $item->{'ok'} = 1;
+                }
+//                if (str_contains($item->{'AddressName'}, 'گرمدره')){
+//                    $item->{'ok'} = 0;
+//                }
             }
 
             $filtered = array_filter($dat, function ($el) {
@@ -351,12 +375,30 @@ class RemittanceController extends Controller
             $input = array_values($filtered);
             $offset = 0;
             $perPage = 100;
+//
+//            $input2 = array_values($filtered2);
+
+
+//            if (!$request['type'] || $request['type'] == ''){
+//                $input = array_merge($input2,$input1);
+//            }
+//              if ($request['type'] && $request['type'] == 'Order'){
+//                $input = $input2;
+//            }
+//              if ($request['type'] && $request['type'] == 'InventoryVoucher'){
+//                $input = $input1;
+//            }
+            $input = $input1;
+
+
             if ($request['page'] && $request['page'] > 1) {
                 $offset = ($request['page'] - 1) * $perPage;
             }
             $info = array_slice($input, $offset, $perPage);
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+
             return response()->json($paginator, 200);
+
         } catch (\Exception $exception) {
             return response($exception);
         }

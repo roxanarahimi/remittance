@@ -303,7 +303,8 @@ class RemittanceController extends Controller
                 $item->{'AddressName'} = $item->{'AddressName'} . substr($item->{'OrderID'}, -3);
                 $noodElite = 0;
                 $ids = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
-                    ->where('LGS3.Part.Name', 'like', '%نودالیت%')
+                    ->where('Name', 'like', '%نودالیت%')
+                    return $ids;
 //->pluck("PartID")
                     ->get();
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')

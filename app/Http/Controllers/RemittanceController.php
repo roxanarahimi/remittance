@@ -161,15 +161,15 @@ class RemittanceController extends Controller
     {
         try {
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
-            $storeIDs = Store::
-                whereNot(function($query) {
-                    $query->where('Name', 'LIKE', "%مارکتینگ%")
-                        ->orWhere('Name', 'LIKE', "%گرمدره%")
-                        ->orWhere('Plant.Address',function ($q){
-                            $q->where('Details', 'LIKE', "%گرمدره%");
-                        })
-                        ->orWhere('Name', 'LIKE', "%ضایعات%")
-                        ->orWhere('Name', 'LIKE', "%برگشتی%");
+            $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
+                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                ->whereNot(function($query) {
+                    $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
+                        ->orWhere('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+                        ->orWhere('GNR3.Address.Details', 'LIKE', "%گرمدره%")
+                        ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
+                        ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
                 })
                 ->pluck('StoreID');
 

@@ -309,7 +309,7 @@ class RemittanceController extends Controller
                     ->join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItemTrackingFactor.PartRef')
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
-//                    ->where('LGS3.Part.Name', 'like', '%نودالیت%')
+                    ->where('LGS3.Part.Name', 'like', '%نودالیت%')
                     ->get();
 
                 $item->{'OrderItems'} = $details;
@@ -328,11 +328,10 @@ class RemittanceController extends Controller
 //                if (str_contains($item->{'AddressName'}, 'گرمدره')){
 //                    $item->{'ok'} = 0;
 //                }
-                $x = array_filter($details->toArray(), function ($el) {
-                    return str_contains($el->{'ProductName'}, 'نودالیت');
-                });
-//                if (count($details->toArray()) > 0) {
-                if (count($x) > 0) {
+//                $x = array_filter($details->toArray(), function ($el) {
+//                    return str_contains($el->{'ProductName'}, 'نودالیت');
+//                });
+                if (count($details->toArray()) > 0) {
                     $item->{'ok'} = 1;
                 }
 //                if (str_contains($item->{'AddressName'}, 'گرمدره')){
@@ -395,7 +394,7 @@ class RemittanceController extends Controller
 //
             $input1 = array_values($filtered);
             $offset = 0;
-            $perPage = 100;
+            $perPage = 500;
 //
 //            $input2 = array_values($filtered2);
 

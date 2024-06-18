@@ -220,32 +220,38 @@ class RemittanceController extends Controller
         }
     }
 
-    public function getStores(Request $request)
-    {
-
-        try {
-            $t = Store::select("LGS3.Store.StoreID", "LGS3.Store.Name as Name", "GNR3.Address.Details")
-                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
-                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%ضایعات%")
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%برگشتی%");
-            if (isset($request['search'])) {
-                $t = $t->where('LGS3.Store.Name', 'LIKE', "%" . $request['search'] . "%")
-                    ->orWhere('GNR3.Address.Details', 'LIKE', "%" . $request['search'] . "%");
-            }
-            $t = $t->get();
-            return response()->json($t, 200);
-        } catch (\Exception $exception) {
-            return response($exception);
-        }
-    }
 
     public function readOnly1(Request $request)
     {
         try {
+            $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
+            $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
+                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                ->whereNot(function($query) {
+                    $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
+                        ->orWhere('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+                        ->orWhere('GNR3.Address.Details', 'LIKE', "%گرمدره%")
+                        ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
+                        ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
+                })
+                ->pluck('StoreID');
+
+            $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
+                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+                ->whereIn('LGS3.Store.StoreID', $storeIDs)
+                ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
+                ->whereIn('LGS3.Part.PartID', $partIDs)
+                ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
+                ->paginate(100);
+            $data = InventoryVoucherResource::collection($x);
+            return response()->json($x, 200);
+
+
             $x = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
                 "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef')
                 ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
@@ -259,7 +265,6 @@ class RemittanceController extends Controller
                 ->whereHas('OrderItems', function ($q) {
                     $q->havingRaw('SUM(Quantity) >= ?', [50]);
                 })
-
                 ->orderBy('OrderID', 'DESC')
                 ->paginate(20);
 
@@ -335,29 +340,6 @@ class RemittanceController extends Controller
 //            ];
 //            return response()->json($j, 200);
 
-//            $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
-//                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
-//                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
-//                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-//                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-//                ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-////                ->where('LGS3.InventoryVoucher.CounterpartStoreRef', $request['id'])
-//                ->whereNot('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
-//                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
-//                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
-//                ->whereNot('LGS3.Store.Name', 'LIKE', "%ضایعات%")
-//                ->whereNot('LGS3.Store.Name', 'LIKE', "%برگشتی%")
-//                ->whereHas('OrderItems', function ($query) {
-//                    $query->whereHas('Part', function ($q) {
-//                        $q->where('Name', 'like', '%نودالیت%');
-//                    });
-//                })
-//                ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)
-//                ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)
-//                ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
-//                ->paginate(100);
-//            $data = InventoryVoucherResource::collection($x);
-//            return response()->json($x, 200);
 
 //
 
@@ -535,6 +517,29 @@ class RemittanceController extends Controller
 
             return response()->json($paginator, 200);
 
+        } catch (\Exception $exception) {
+            return response($exception);
+        }
+    }
+
+    public function getStores(Request $request)
+    {
+
+        try {
+            $t = Store::select("LGS3.Store.StoreID", "LGS3.Store.Name as Name", "GNR3.Address.Details")
+                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                ->whereNot('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
+                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
+                ->whereNot('LGS3.Store.Name', 'LIKE', "%ضایعات%")
+                ->whereNot('LGS3.Store.Name', 'LIKE', "%برگشتی%");
+            if (isset($request['search'])) {
+                $t = $t->where('LGS3.Store.Name', 'LIKE', "%" . $request['search'] . "%")
+                    ->orWhere('GNR3.Address.Details', 'LIKE', "%" . $request['search'] . "%");
+            }
+            $t = $t->get();
+            return response()->json($t, 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

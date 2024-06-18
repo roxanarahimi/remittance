@@ -372,7 +372,7 @@ class RemittanceController extends Controller
 //                return $el->{'ok'} == 1;
 //            });
 //
-            $input = array_values($filtered);
+            $input1 = array_values($filtered);
             $offset = 0;
             $perPage = 100;
 //

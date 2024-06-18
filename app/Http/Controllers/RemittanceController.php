@@ -160,6 +160,19 @@ class RemittanceController extends Controller
     public function readOnly(Request $request)
     {
         try {
+            $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
+            $storeIDs = Store::
+                whereNot(function($query) {
+                    $query->where('Name', 'LIKE', "%مارکتینگ%")
+                        ->orWhere('Name', 'LIKE', "%گرمدره%")
+                        ->orWhere('Plant.Address',function ($q){
+                            $q->where('Details', 'LIKE', "%گرمدره%");
+                        })
+                        ->orWhere('Name', 'LIKE', "%ضایعات%")
+                        ->orWhere('Name', 'LIKE', "%برگشتی%");
+                })
+                ->pluck('StoreID');
+
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')
             ->select([
                 "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
@@ -169,16 +182,10 @@ class RemittanceController extends Controller
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
-                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%ضایعات%")
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%برگشتی%")
-                ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)
-                ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)
+                ->whereIn('LGS3.Store.StoreID', $storeIDs)
+                ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get()->toArray();
-            $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 1;

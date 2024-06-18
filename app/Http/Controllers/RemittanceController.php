@@ -274,14 +274,12 @@ class RemittanceController extends Controller
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get()->toArray();
+
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
-//            return $ids;
+
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';
-                $item->{'ok'} = 0;
-                $item->{'noodElite'} = '';
                 $item->{'AddressName'} = $item->{'AddressName'} . substr($item->{'OrderID'}, -3);
-                $noodElite = 0;
 
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                     ->select(
@@ -311,9 +309,9 @@ class RemittanceController extends Controller
 //                $x = array_filter($details->toArray(), function ($el) {
 //                    return str_contains($el->{'ProductName'}, 'نودالیت');
 //                });
-                if (count($details->toArray()) > 0) {
-                    $item->{'ok'} = 1;
-                }
+//                if (count($details->toArray()) > 0) {
+//                    $item->{'ok'} = 1;
+//                }
 //                if (str_contains($item->{'AddressName'}, 'گرمدره')){
 //                    $item->{'ok'} = 0;
 //                }
@@ -372,7 +370,7 @@ class RemittanceController extends Controller
 //                return $el->{'ok'} == 1;
 //            });
 //
-            $input1 = array_values($filtered);
+            $input = array_values($filtered);
             $offset = 0;
             $perPage = 100;
 //
@@ -388,8 +386,7 @@ class RemittanceController extends Controller
 //              if ($request['type'] && $request['type'] == 'InventoryVoucher'){
 //                $input = $input1;
 //            }
-            $input = $input1;
-
+//            $input = $input1;
 
             if ($request['page'] && $request['page'] > 1) {
                 $offset = ($request['page'] - 1) * $perPage;

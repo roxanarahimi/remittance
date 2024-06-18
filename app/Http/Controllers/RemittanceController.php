@@ -374,7 +374,7 @@ class RemittanceController extends Controller
 //
             $input1 = array_values($filtered);
             $offset = 0;
-            $perPage = 500;
+            $perPage = 100;
 //
 //            $input2 = array_values($filtered2);
 

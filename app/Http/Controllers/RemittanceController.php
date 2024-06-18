@@ -275,10 +275,14 @@ class RemittanceController extends Controller
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get()->toArray();
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
+//            return $ids;
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';
+                $item->{'ok'} = 0;
                 $item->{'noodElite'} = '';
                 $item->{'AddressName'} = $item->{'AddressName'} . substr($item->{'OrderID'}, -3);
+                $noodElite = 0;
+
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                     ->select(
                     "LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity", "LGS3.Part.PartID as Id",
@@ -288,15 +292,106 @@ class RemittanceController extends Controller
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
                     ->whereIn('LGS3.Part.PartID', $partIDs)
                     ->get();
+
                 $item->{'OrderItems'} = $details;
+
+
+//                foreach ($details as $it) {
+//                    if (str_contains($it->{'ProductName'}, 'نودالیت')) {
+//                        $noodElite += $it->{'Quantity'};
+//                    }
+//                }
+//                $item->{'noodElite'} = $noodElite;
+//
+//                if ($noodElite > 0) {
+//                    $item->{'ok'} = 1;
+//                }
+//                if (str_contains($item->{'AddressName'}, 'گرمدره')){
+//                    $item->{'ok'} = 0;
+//                }
+//                $x = array_filter($details->toArray(), function ($el) {
+//                    return str_contains($el->{'ProductName'}, 'نودالیت');
+//                });
+                if (count($details->toArray()) > 0) {
+                    $item->{'ok'} = 1;
+                }
+//                if (str_contains($item->{'AddressName'}, 'گرمدره')){
+//                    $item->{'ok'} = 0;
+//                }
             }
+
             $filtered = array_filter($dat, function ($el) {
                 return count($el->{'OrderItems'}) > 0;
             });
-
-            $input = array_values($filtered);
+//            $dat2 = DB::connection('sqlsrv')->table('SLS3.Order')
+//                ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
+//                ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
+//                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
+//                ->select(["SLS3.Order.OrderID as OrderID", "SLS3.Order.Number as OrderNumber",
+//                    "GNR3.Address.Name as AddressName", "Details as Address", "Phone", "SLS3.Order.CreationDate", "DeliveryDate",
+//                ])
+//                ->where('SLS3.Order.InventoryRef', 1)
+//                ->where('SLS3.Order.State', 2)
+//                ->where('SLS3.Order.FiscalYearRef', 1403)
+//                ->orderBy('SLS3.Order.OrderID')
+//                ->get()->unique()->toArray();
+//
+//            $dat2 = array_values($dat2);
+//
+//            foreach ($dat2 as $item) {
+//                $item->{'type'} = 'Order';
+//                $item->{'ok'} = 0;
+//                $item->{'noodElite'} = '';
+//                $noodElite = 0;
+//                $details = DB::connection('sqlsrv')->table('SLS3.OrderItem')
+//                    ->select("SLS3.Product.Name as ProductName", "Quantity", "SLS3.Product.ProductID as Id", "SLS3.Product.Number as ProductNumber",
+//                        //"SLS3.Product.SecondCode",
+//                     //   "SLS3.OrderItem.MajorUnitQuantity", "SLS3.OrderItem.InitialQuantity", "SLS3.OrderItem.MajorUnitInitialQuantity"
+//                     //
+//                        )
+//                    ->join('SLS3.Product', 'SLS3.Product.ProductID', '=', 'SLS3.OrderItem.ProductRef')
+//                    ->where('OrderRef', $item->{'OrderID'})->get();
+//
+//                $item->{'OrderItems'} = $details;
+//                foreach ($details as $it) {
+//                    if (str_contains($it->{'ProductName'}, 'نودالیت')) {
+////                        if(str_contains($it->{'ProductName'},'پک 5 ع')){
+//                        $noodElite += $it->{'Quantity'};
+////                        }else{
+////                            $noodElite+= $it->{'Quantity'};
+////                        }
+//                    }
+//                }
+//                $item->{'noodElite'} = $noodElite;
+//
+//                if ($noodElite >= 50) {
+//                    $item->{'ok'} = 1;
+//                }
+//            }
+//
+//            $filtered2 = array_filter($dat2, function ($el) {
+//                return $el->{'ok'} == 1;
+//            });
+//
+            $input1 = array_values($filtered);
             $offset = 0;
-            $perPage = 100;
+            $perPage = 500;
+//
+//            $input2 = array_values($filtered2);
+
+
+//            if (!$request['type'] || $request['type'] == ''){
+//                $input = array_merge($input2,$input1);
+//            }
+//              if ($request['type'] && $request['type'] == 'Order'){
+//                $input = $input2;
+//            }
+//              if ($request['type'] && $request['type'] == 'InventoryVoucher'){
+//                $input = $input1;
+//            }
+            $input = $input1;
+
+
             if ($request['page'] && $request['page'] > 1) {
                 $offset = ($request['page'] - 1) * $perPage;
             }

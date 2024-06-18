@@ -274,8 +274,8 @@ class RemittanceController extends Controller
                 ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get()->toArray();
-            $ids = Part::where('Name', 'like', '%نودالیت%')->get();
-            return $ids;
+            $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
+//            return $ids;
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 0;
@@ -293,7 +293,7 @@ class RemittanceController extends Controller
                     ->join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItemTrackingFactor.PartRef')
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
-                    ->where('LGS3.Part.Name', 'like', '%نودالیت%')
+                    ->whereIn('LGS3.Part.PartID', $partIDs)
                     ->get();
 
                 $item->{'OrderItems'} = $details;

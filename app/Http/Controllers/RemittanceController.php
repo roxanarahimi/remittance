@@ -224,7 +224,6 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         try {
-            $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -236,6 +235,7 @@ class RemittanceController extends Controller
                         ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
                 })
                 ->pluck('StoreID');
+            $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
 
             $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
                 "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
@@ -245,7 +245,12 @@ class RemittanceController extends Controller
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->whereIn('LGS3.Store.StoreID', $storeIDs)
                 ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
-                ->whereIn('LGS3.Part.PartID', $partIDs)
+                ->whereHas('OrderItems', function ($query) use ($partIDs) {
+                    $query->whereHas('Part', function ($q) use ($partIDs) {
+                        $q->whereIn('PartID', $partIDs);
+                    });
+                })
+
                 ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
                 ->paginate(100);
             $data = InventoryVoucherResource::collection($x);

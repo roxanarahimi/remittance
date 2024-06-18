@@ -275,7 +275,7 @@ class RemittanceController extends Controller
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get()->toArray();
             $ids = DB::connection('sqlsrv')->table('LGS3.Part')
-                ->where('LGS3.Part.Name', 'like', '%نودالیت%')->get();
+                ->where('Name', 'like', '%نودالیت%')->get();
             return $ids;
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';

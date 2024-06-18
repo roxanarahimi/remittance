@@ -191,13 +191,11 @@ class RemittanceController extends Controller
                 $item->{'ok'} = 1;
                 $item->{'AddressName'} = $item->{'AddressName'} . substr($item->{'OrderID'}, -3);
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
-                    ->select(
-                    "LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity", "LGS3.Part.PartID as Id",
-                    "LGS3.Part.Code as ProductNumber")
-                    ->join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')
-                    ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItemTrackingFactor.PartRef')
+                    ->select(["LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
+                        "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
+                    ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
-                    ->whereIn('LGS3.Part.PartID', $partIDs)
+                    ->whereIn('PartRef', $partIDs)
                     ->get();
                 $item->{'OrderItems'} = $details;
             }

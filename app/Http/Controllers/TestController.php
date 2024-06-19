@@ -74,7 +74,6 @@ class TestController extends Controller
             $tests = Test::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
             return response(TestResource::collection($tests), 201);
         } catch (\Exception $exception) {
-            return $exception;
             for ($i = 0; $i < 3; $i++) {
                 try {
                     foreach ($orderItems as $item) {

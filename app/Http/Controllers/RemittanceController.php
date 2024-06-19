@@ -240,16 +240,58 @@ class RemittanceController extends Controller
                 ->whereHas('Store',function($q) use ($storeIDs) {
                     $q->whereIn('StoreID', $storeIDs);
                 })
-                ->whereHas('OrderItems', function ($query) use ($partIDs) {
-                    $query->whereHas('Part', function ($q) use ($partIDs) {
-                        $q->whereIn('PartID', $partIDs);
-                    });
+                ->whereHas('OrderItems', function ($q) use ($partIDs) {
+                    $q->whereIn('PartRef', $partIDs);
                 })
                 ->orderByDesc('InventoryVoucherID')
                 ->paginate(100);
             $data = InventoryVoucherResource::collection($x);
             return response()->json($x, 200);
 
+            $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
+                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+                ->whereIn('LGS3.Store.StoreID', $storeIDs)
+                ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
+                ->whereHas('OrderItems', function ($q) use ($partIDs) {
+                    $q->whereIn('PartRef', $partIDs);
+                })
+                ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
+                ->paginate(100);
+            $data = InventoryVoucherResource::collection($x);
+            return response()->json($x, 200);
+
+
+
+            $x = InventoryVoucher::where('FiscalYearRef', 1403)
+                ->whereIn('InventoryVoucherSpecificationRef', [68, 69])
+                ->whereHas('Store',function($q) use ($storeIDs) {
+                    $q->whereIn('StoreID', $storeIDs);
+                })
+                ->whereHas('OrderItems', function ($q) use ($partIDs) {
+                        $q->whereIn('PartRef', $partIDs);
+                })
+                ->orderByDesc('InventoryVoucherID')
+                ->paginate(100);
+            $data = InventoryVoucherResource::collection($x);
+            return response()->json($x, 200);
+
+            $x = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
+                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+                ->whereIn('LGS3.Store.StoreID', $storeIDs)
+                ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
+                ->whereIn('LGS3.Part.PartID', $partIDs)
+                ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID', 'DESC')
+                ->paginate(100);
+            $data = InventoryVoucherResource::collection($x);
+            return response()->json($x, 200);
 
             $x = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
                 "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef')

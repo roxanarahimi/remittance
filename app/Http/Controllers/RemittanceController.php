@@ -36,7 +36,6 @@ class RemittanceController extends Controller
         $this->middleware(Token::class)->except('readOnly1');
     }
 
-
     public function index(Request $request)
     {
         try {

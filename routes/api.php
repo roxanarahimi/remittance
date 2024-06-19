@@ -32,3 +32,12 @@ Route::controller(App\Http\Controllers\RemittanceController::class)->group(funct
     Route::post('/product/{id}', 'showProduct');
 
 });
+Route::controller(App\Http\Controllers\TestController::class)->group(function () {
+    Route::prefix('test')->group(function () {
+        Route::post('/', 'index');
+        Route::post('/show/{test}', 'show');
+        Route::post('/store', 'store');
+        Route::post('/update/{test}', 'update');
+        Route::post('/destroy/{test}', 'destroy');
+    });
+});

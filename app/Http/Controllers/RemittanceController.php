@@ -189,7 +189,6 @@ class RemittanceController extends Controller
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 1;
-                $item->{'AddressName'} = $item->{'AddressName'} . substr($item->{'OrderID'}, -3);
                 $item->{'AddressName'} = $item->{'AddressName'} .' '. $item->{'OrderNumber'};
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                     ->select(["LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",

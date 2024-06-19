@@ -6,6 +6,7 @@ use App\Http\Middleware\Token;
 use App\Http\Resources\TestResource;
 use App\Models\Test;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class TestController extends Controller
 {

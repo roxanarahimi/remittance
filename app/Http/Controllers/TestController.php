@@ -41,24 +41,24 @@ class TestController extends Controller
             'name' => $request['name'],
         ]);
         $id = $request['OrderID'];
-//        $info = Redis::get($request['OrderID']);
-//        if (isset($info)) {
-//            $id = $request['OrderID'] . '-' . substr(explode(',', $request['OrderItems'])[0], -4);
-//        }
-//        Redis::set($id, $data);
-//        $value = Redis::get($id);
-//        $json = json_decode($value);
-//        $orderId = $json->{'OrderID'};
-//        $items = explode(',', $json->{'OrderItems'});
-//        $name = $json->{'name'};
-//        $myfile = fopen('../storage/logs/failed_data_entries/' . $id . ".log", "w") or die("Unable to open file!");
-//        $txt = json_encode([
-//            'OrderID' => $orderId,
-//            'name' => $name,
-//            'OrderItems' => $items
-//        ]);
-//        fwrite($myfile, $txt);
-//        fclose($myfile);
+        $info = Redis::get($request['OrderID']);
+        if (isset($info)) {
+            $id = $request['OrderID'] . '-' . substr(explode(',', $request['OrderItems'])[0], -4);
+        }
+        Redis::set($id, $data);
+        $value = Redis::get($id);
+        $json = json_decode($value);
+        $orderId = $json->{'OrderID'};
+        $items = explode(',', $json->{'OrderItems'});
+        $name = $json->{'name'};
+        $myfile = fopen('../storage/logs/failed_data_entries/' . $id . ".log", "w") or die("Unable to open file!");
+        $txt = json_encode([
+            'OrderID' => $orderId,
+            'name' => $name,
+            'OrderItems' => $items
+        ]);
+        fwrite($myfile, $txt);
+        fclose($myfile);
 
         $str = str_replace(' ', '', str_replace('"', '', $request['OrderItems']));
         $orderItems = explode(',', $str);

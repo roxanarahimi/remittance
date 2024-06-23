@@ -231,25 +231,17 @@ class RemittanceController extends Controller
                 ->whereIn('SLS3.Product.ProductID', $productIDs)
                 ->get();
             $item->{'OrderItems'} = $details;
-            $noodElite = $details->sum('Quantity');
-            $item->{'noodElite'} = $noodElite;
-            if ($noodElite >= 50) {
-                $item->{'ok'} = 1;
-            }
+            $item->{'noodElite'} = $details->sum('Quantity');
         }
 
         $filtered2 = array_filter($dat2, function ($el) {
-            return $el->{'ok'} == 1;
+            return $el->{'OrderItems'}->sum('Quantity') >= 50;
         });
 
-        $input1 = array_values($filtered);
         $offset = 0;
         $perPage = 100;
-
+        $input1 = array_values($filtered);
         $input2 = array_values($filtered2);
-
-
-
         $input = array_merge($input2,$input1);
 
         if ($request['page'] && $request['page'] > 1) {

@@ -227,44 +227,27 @@ class RemittanceController extends Controller
 
         foreach ($dat2 as $item) {
             $item->{'type'} = 'Order';
-            $item->{'ok'} = 0;
+            $item->{'ok'} = 1;
             $item->{'noodElite'} = '';
+            $item->{'AddressName'} = $item->{'AddressName'} .' '. $item->{'OrderNumber'};
             $noodElite = 0;
             $details = DB::connection('sqlsrv')->table('SLS3.OrderItem')
-                ->select("SLS3.Product.Name as ProductName", "Quantity", "SLS3.Product.ProductID as Id", "SLS3.Product.Number as ProductNumber",
-                //"SLS3.Product.SecondCode",
-                //   "SLS3.OrderItem.MajorUnitQuantity", "SLS3.OrderItem.InitialQuantity", "SLS3.OrderItem.MajorUnitInitialQuantity"
-                //
-                )
+                ->select("SLS3.Product.Name as ProductName", "Quantity", "SLS3.Product.ProductID as Id", "SLS3.Product.Number as ProductNumber",)
                 ->join('SLS3.Product', 'SLS3.Product.ProductID', '=', 'SLS3.OrderItem.ProductRef')
                 ->where('OrderRef', $item->{'OrderID'})->get();
-
             $item->{'OrderItems'} = $details;
-            foreach ($details as $it) {
-                if (str_contains($it->{'ProductName'}, 'نودالیت')) {
-//                        if(str_contains($it->{'ProductName'},'پک 5 ع')){
-                    $noodElite += $it->{'Quantity'};
-//                        }else{
-//                            $noodElite+= $it->{'Quantity'};
-//                        }
-                }
-            }
-            $item->{'noodElite'} = $noodElite;
-
-            if ($noodElite >= 50) {
-                $item->{'ok'} = 1;
-            }
         }
 
-        $filtered2 = array_filter($dat2, function ($el) {
-            return $el->{'ok'} == 1;
-        });
+//        $filtered2 = array_filter($dat2, function ($el) {
+//            return $el->{'ok'} == 1;
+//        });
 
         $input1 = array_values($filtered);
         $offset = 0;
         $perPage = 100;
 
-        $input2 = array_values($filtered2);
+//        $input2 = array_values($filtered2);
+        $input2 = array_values($dat2);
 
 //
 //            if (!$request['type'] || $request['type'] == ''){

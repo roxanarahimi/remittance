@@ -176,8 +176,7 @@ class RemittanceController extends Controller
                 ])
                 ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
-                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
+                ->whereIn('LGS3.Store.StoreID', $storeIDs)
                 ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68,69])//68, 69
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get()->unique()->toArray();

@@ -15,6 +15,7 @@ use App\Models\Remittance;
 use App\Models\Store;
 use http\Env\Response;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -268,8 +269,8 @@ class RemittanceController extends Controller
 
 
             $input = [];
-            $input1= OrderResource::collection($y);
-//            $input2= InventoryVoucherResource::collection($dat)->{'data'};
+            $input1= OrderResource::collection($y)->{'data'};
+            $input2= InventoryVoucherResource::collection($dat)->{'data'};
 
 //            foreach($input1 as $item){
 //                $input[] = $item;
@@ -277,7 +278,8 @@ class RemittanceController extends Controller
 //            foreach($input2 as $item){
 //                $input[] = $item;
 //            }
-            return json_decode((string)$input1);
+            $combined = new Collection();
+            return $combined->concat($input1)->concat($input2);
             $offset = 0;
             $perPage = 100;
             if ($request['page'] && $request['page'] > 1) {

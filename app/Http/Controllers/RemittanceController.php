@@ -165,15 +165,16 @@ class RemittanceController extends Controller
             })
             ->pluck('StoreID');
 
-        $dat = InventoryVoucher::select([
-            "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
-            "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",
-        ])
-            ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+        $dat = InventoryVoucher::
+        join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-            ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
+            ->select([
+                "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
+                "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",
+            ])
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+            ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
             ->whereIn('LGS3.Store.StoreID', $storeIDs)
             ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
             ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
@@ -182,24 +183,41 @@ class RemittanceController extends Controller
             $item->{'type'} = 'InventoryVoucher';
             $item->{'ok'} = 0;
             $item->{'noodElite'} = '';
-            $item->{'AddressName'} = $item->{'AddressName'} .' '. $item->{'OrderNumber'};
+            $item->{'AddressName'} = $item->{'AddressName'} . substr($item->{'OrderID'}, -3);
             $noodElite = 0;
-            $details = InventoryVoucherItem::
-                join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')
+            $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
+                ->join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')
                 ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItemTrackingFactor.PartRef')
-                ->select("LGS3.Part.Name as ProductName",
-                    "LGS3.InventoryVoucherItem.Quantity as Quantity", "LGS3.InventoryVoucherItem.Barcode as Barcode",
-                    "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber")
-                ->where('LGS3.Part.Name', 'like', '%نودالیت%')
+                ->select(
+                    "LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity", "LGS3.InventoryVoucherItem.Barcode as Barcode", "LGS3.Part.PartID as Id",
+                    "LGS3.Part.Code as ProductNumber")
                 ->where('InventoryVoucherRef', $item->{'OrderID'})->get();
 
             $item->{'OrderItems'} = $details;
+
+
+//                foreach ($details as $it) {
+//                    if (str_contains($it->{'ProductName'}, 'نودالیت')) {
+//                        $noodElite += $it->{'Quantity'};
+//                    }
+//                }
+//                $item->{'noodElite'} = $noodElite;
+//
+//                if ($noodElite > 0) {
+//                    $item->{'ok'} = 1;
+//                }
+//                if (str_contains($item->{'AddressName'}, 'گرمدره')){
+//                    $item->{'ok'} = 0;
+//                }
             $x = array_filter($details->toArray(), function ($el) {
                 return str_contains($el->{'ProductName'}, 'نودالیت');
             });
-            if (count($details) > 0) {
+            if (count($x) > 0) {
                 $item->{'ok'} = 1;
             }
+//                if (str_contains($item->{'AddressName'}, 'گرمدره')){
+//                    $item->{'ok'} = 0;
+//                }
         }
 
         $filtered = array_filter($dat, function ($el) {

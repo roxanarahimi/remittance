@@ -15,7 +15,8 @@ class InventoryVoucherResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "OrderID" => $this->InventoryVoucherID || $this->OrderID,
+//            "OrderID" => $this->InventoryVoucherID,
+            "OrderID" => $this->OrderID,
             "OrderNumber" => $this->Number,
 
 //            "AddressName" => $this->Store->Name . substr($this->InventoryVoucherID, -3),

@@ -224,11 +224,12 @@ class RemittanceController extends Controller
             $details = DB::connection('sqlsrv')->table('SLS3.OrderItem')
                 ->join('SLS3.Product', 'SLS3.Product.ProductID', '=', 'SLS3.OrderItem.ProductRef')
                 ->select("SLS3.Product.Name as ProductName", "Quantity", "SLS3.Product.ProductID as Id",
-                    "SLS3.Product.Number as ProductNumber")
-//                ->selectRaw('SUM(Quantity) as total_amount')
-                ->havingRaw('SUM(Quantity) >= ?', [50])
+                    "SLS3.Product.Number as ProductNumber",
+                    DB::raw('SUM(Quantity) as total_quantity'),
+                )
                 ->whereIn('SLS3.Product.ProductID', $productIDs)
                 ->where('OrderRef', $item->{'OrderID'})
+                ->havingRaw('SUM(Quantity) > ?', [49])
                 ->get();
             $item->{'OrderItems'} = $details;
 //            foreach ($details as $it) {

@@ -270,8 +270,9 @@ class RemittanceController extends Controller
 //            foreach($input2 as $item){
 //                $input[] = $item;
 //            }
+            return $input2;
             $combined = new Collection();
-            return $combined->concat((array)$input1)[0]->concat((array)$input2[0]);
+            return $combined->concat((array)$input1)[0]->concat((array)$input2);
             $offset = 0;
             $perPage = 100;
             if ($request['page'] && $request['page'] > 1) {

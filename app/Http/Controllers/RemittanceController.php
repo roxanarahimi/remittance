@@ -220,7 +220,7 @@ class RemittanceController extends Controller
 
         foreach ($dat2 as $item) {
             $item->{'type'} = 'Order';
-            $item->{'ok'} = 1;
+            $item->{'ok'} = 0;
             $item->{'AddressName'} = $item->{'AddressName'} . ' '.$item->{'OrderNumber'};
             $item->{'noodElite'} = '';
             $noodElite = 0;
@@ -238,9 +238,9 @@ class RemittanceController extends Controller
             }
             $item->{'noodElite'} = $noodElite;
 
-//            if ($noodElite >= 50) {
-//                $item->{'ok'} = 1;
-//            }
+            if ($noodElite >= 50) {
+                $item->{'ok'} = 1;
+            }
         }
 
         $filtered2 = array_filter($dat2, function ($el) {

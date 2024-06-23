@@ -270,7 +270,7 @@ class RemittanceController extends Controller
 //            foreach($input2 as $item){
 //                $input[] = $item;
 //            }
-            return $input2->{'data'};
+            return (array)$input2;
             $combined = new Collection();
             return $combined->concat((array)$input1)[0]->concat((array)$input2);
             $offset = 0;

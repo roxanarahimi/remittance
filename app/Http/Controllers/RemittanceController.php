@@ -231,7 +231,7 @@ class RemittanceController extends Controller
                 $item->{'noodElite'} = $sum;
             }
             $filtered2 = array_filter($dat2, function ($el) {
-                return $el->{'OrderITems'}->sum('Quantity') >= 50;
+                return $el->{'OrderItems'}->sum('Quantity') >= 50;
             });
 
             $offset = 0;

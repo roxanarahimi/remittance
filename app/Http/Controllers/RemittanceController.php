@@ -236,7 +236,7 @@ class RemittanceController extends Controller
                     $q->havingRaw('SUM(Quantity) >= ?', [50]);
                 })
                 ->with('OrderItems')
-                ->with('Store')
+                ->with('Customer')
                 ->orderBy('OrderID', 'DESC')
                 ->get()->toArray();
 

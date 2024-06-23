@@ -154,6 +154,7 @@ class RemittanceController extends Controller
     {
         try {
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
+            $productIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("ProductID");
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -214,62 +215,29 @@ class RemittanceController extends Controller
                 ->orderBy('SLS3.Order.OrderID')
                 ->get()->toArray();
 
-//            $dat2 = array_values($dat2);
-
             foreach ($dat2 as $item) {
                 $item->{'type'} = 'Order';
-                $item->{'ok'} = 0;
+                $item->{'ok'} = 1;
                 $item->{'AddressName'} = $item->{'AddressName'} . ' ' . $item->{'OrderNumber'};
-                $item->{'noodElite'} = '';
-                $noodElite = 0;
                 $details = DB::connection('sqlsrv')->table('SLS3.OrderItem')
-                    ->select("SLS3.Product.Name as ProductName", "Quantity", "SLS3.Product.ProductID as Id", "SLS3.Product.Number as ProductNumber",
-                    //"SLS3.Product.SecondCode",
-                    //   "SLS3.OrderItem.MajorUnitQuantity", "SLS3.OrderItem.InitialQuantity", "SLS3.OrderItem.MajorUnitInitialQuantity"
-                    //
-                    )
+                    ->select("SLS3.Product.Name as ProductName", "Quantity", "SLS3.Product.ProductID as Id", "SLS3.Product.Number as ProductNumber",)
                     ->join('SLS3.Product', 'SLS3.Product.ProductID', '=', 'SLS3.OrderItem.ProductRef')
-                    ->where('OrderRef', $item->{'OrderID'})->get();
+                    ->whereIn('SLS3.Product.ProductId', $productIDs)
+                    ->where('OrderRef', $item->{'OrderID'})
+                    ->get();
 
                 $item->{'OrderItems'} = $details;
-                foreach ($details as $it) {
-                    if (str_contains($it->{'ProductName'}, 'نودالیت')) {
-//                        if(str_contains($it->{'ProductName'},'پک 5 ع')){
-                        $noodElite += $it->{'Quantity'};
-//                        }else{
-//                            $noodElite+= $it->{'Quantity'};
-//                        }
-                    }
-                }
-                $item->{'noodElite'} = $noodElite;
-
-                if ($noodElite >= 50) {
-                    $item->{'ok'} = 1;
-                }
+                $sum = $details->sum('Quantity');
+                $item->{'noodElite'} = $sum;
             }
-
             $filtered2 = array_filter($dat2, function ($el) {
-                return $el->{'ok'} == 1;
+                return $el->{'OrderITems'}->sum('Quantity') >= 50;
             });
 
-            $input1 = array_values($filtered);
             $offset = 0;
             $perPage = 100;
-
+            $input1 = array_values($filtered);
             $input2 = array_values($filtered2);
-
-//
-//            if (!$request['type'] || $request['type'] == ''){
-//                $input = array_merge($input2,$input1);
-//            }
-//              if ($request['type'] && $request['type'] == 'Order'){
-//                $input = $input2;
-//            }
-//              if ($request['type'] && $request['type'] == 'InventoryVoucher'){
-//                $input = $input1;
-//            }
-            // $input = $input1;
-
             $input = array_merge($input2, $input1);
 
             if ($request['page'] && $request['page'] > 1) {

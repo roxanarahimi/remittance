@@ -236,9 +236,10 @@ class RemittanceController extends Controller
                     $q->havingRaw('SUM(Quantity) >= ?', [50]);
                 })
                 ->orderBy('OrderID', 'DESC')
-                ->get();
+                ->paginate(100);
 
-            return response()->json(OrderResource::collection($x), 200);
+            $data = OrderResource::collection($x);
+            return response()->json($x, 200);
 
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')

@@ -229,20 +229,19 @@ class RemittanceController extends Controller
                 )
                 ->where('OrderRef', $item->{'OrderID'})
                 ->whereIn('SLS3.Product.ProductID', $productIDs)
-                ->havingRaw('SUM(Quantity) > ?', [49])
                 ->get();
 
             $item->{'OrderItems'} = $details;
-//            foreach ($details as $it) {
-//                if (str_contains($it->{'ProductName'}, 'نودالیت')) {
-//                    $noodElite += $it->{'Quantity'};
-//                }
-//            }
-//            $item->{'noodElite'} = $noodElite;
-//
-//            if ($noodElite >= 50) {
-//                $item->{'ok'} = 1;
-//            }
+            foreach ($details as $it) {
+                if (str_contains($it->{'ProductName'}, 'نودالیت')) {
+                    $noodElite += $it->{'Quantity'};
+                }
+            }
+            $item->{'noodElite'} = $noodElite;
+
+            if ($noodElite >= 50) {
+                $item->{'ok'} = 1;
+            }
         }
 
         $filtered2 = array_filter($dat2, function ($el) {

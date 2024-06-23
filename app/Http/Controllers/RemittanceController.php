@@ -266,10 +266,10 @@ class RemittanceController extends Controller
                 ->get()->toArray();
 
 
-            $input = array_merge(
-                (array)OrderResource::collection($y),
-                (array)InventoryVoucherResource::collection($dat)
-            );
+            $input = [];
+            $input[]= OrderResource::collection($y);
+            $input[]= InventoryVoucherResource::collection($dat);
+
             return $input;
             $offset = 0;
             $perPage = 100;

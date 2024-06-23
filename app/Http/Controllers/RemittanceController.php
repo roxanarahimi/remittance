@@ -268,8 +268,8 @@ class RemittanceController extends Controller
 
 
             $input = [];
-            $input1= (array)OrderResource::collection($y);
-            $input2= (array)InventoryVoucherResource::collection($dat);
+            $input1= OrderResource::collection($y);
+            $input2= InventoryVoucherResource::collection($dat);
 
             foreach($input1 as $item){
                 $input[] = $item;

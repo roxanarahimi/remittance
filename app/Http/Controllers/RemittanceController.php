@@ -199,22 +199,19 @@ class RemittanceController extends Controller
             return count($el->{'OrderItems'}) > 0;
         });
         $productIDs = Product::where('Name', 'like', '%نودالیت%')->pluck("ProductID");
-        $dat2 = Order::
-        join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
+        $dat2 = DB::connection('sqlsrv')->table('SLS3.Order')
+            ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
             ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
             ->select(["SLS3.Order.OrderID as OrderID", "SLS3.Order.Number as OrderNumber",
                 "GNR3.Address.Name as AddressName", "Details as Address", "Phone", "SLS3.Order.CreationDate", "DeliveryDate",
             ])
-            ->whereHas('OrderItems', function ($q) {
-                $q->havingRaw('SUM(Quantity) >= ?', [50]);
-            })
-//            ->where('SLS3.CustomerAddress.Type', 2)
+            ->where('SLS3.CustomerAddress.Type', 2)
+            ->where('SLS3.Order.FiscalYearRef', 1403)
             ->where('SLS3.Order.InventoryRef', 1)
             ->where('SLS3.Order.State', 2)
-            ->where('SLS3.Order.FiscalYearRef', 1403)
             ->orderBy('SLS3.Order.OrderID')
-            ->get()->unique()->toArray();
+            ->get()->toArray();
 
         $dat2 = array_values($dat2);
 
@@ -222,18 +219,28 @@ class RemittanceController extends Controller
             $item->{'type'} = 'Order';
             $item->{'AddressName'} = $item->{'AddressName'} . ' '.$item->{'OrderNumber'};
             $item->{'noodElite'} = '';
+            $noodElite = 0;
             $details = DB::connection('sqlsrv')->table('SLS3.OrderItem')
                 ->select("SLS3.Product.Name as ProductName", "Quantity", "SLS3.Product.ProductID as Id",
                     "SLS3.Product.Number as ProductNumber")
                 ->join('SLS3.Product', 'SLS3.Product.ProductID', '=', 'SLS3.OrderItem.ProductRef')
                 ->whereIn('SLS3.Product.ProductID', $productIDs)
                 ->where('OrderRef', $item->{'OrderID'})->get();
-
             $item->{'OrderItems'} = $details;
+            foreach ($details as $it) {
+                if (str_contains($it->{'ProductName'}, 'نودالیت')) {
+                    $noodElite += $it->{'Quantity'};
+                }
+            }
+            $item->{'noodElite'} = $noodElite;
+
+            if ($noodElite >= 50) {
+                $item->{'ok'} = 1;
+            }
         }
 
         $filtered2 = array_filter($dat2, function ($el) {
-            return count($el->{'OrderItems'}) > 0;
+            return $el->{'ok'} == 1;
         });
 
         $input1 = array_values($filtered);

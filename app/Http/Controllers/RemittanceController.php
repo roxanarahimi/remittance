@@ -209,6 +209,7 @@ class RemittanceController extends Controller
             ->whereHas('OrderItems', function ($q) {
                 $q->havingRaw('SUM(Quantity) >= ?', [50]);
             })
+//            ->where('SLS3.CustomerAddress.Type', 2)
             ->where('SLS3.Order.InventoryRef', 1)
             ->where('SLS3.Order.State', 2)
             ->where('SLS3.Order.FiscalYearRef', 1403)

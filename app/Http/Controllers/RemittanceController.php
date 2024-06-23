@@ -199,7 +199,7 @@ class RemittanceController extends Controller
             }
         }
 
-        $filtered = array_filter($dat, function ($el) {
+        $filtered = array_filter((array)$dat, function ($el) {
             return $el->{'ok'} == 1;
         });
         $dat2 = Order::

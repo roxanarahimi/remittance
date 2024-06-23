@@ -217,7 +217,7 @@ class RemittanceController extends Controller
 
         foreach ($dat2 as $item) {
             $item->{'type'} = 'Order';
-            $item->{'ok'} = 0;
+            $item->{'ok'} = 1;
             $item->{'AddressName'} = $item->{'AddressName'} . ' '.$item->{'OrderNumber'};
             $item->{'noodElite'} = '';
             $noodElite = 0;
@@ -231,16 +231,16 @@ class RemittanceController extends Controller
                 ->where('OrderRef', $item->{'OrderID'})
                 ->get();
             $item->{'OrderItems'} = $details;
-            foreach ($details as $it) {
-                if (str_contains($it->{'ProductName'}, 'نودالیت')) {
-                    $noodElite += $it->{'Quantity'};
-                }
-            }
-            $item->{'noodElite'} = $noodElite;
-
-            if ($noodElite >= 50) {
-                $item->{'ok'} = 1;
-            }
+//            foreach ($details as $it) {
+//                if (str_contains($it->{'ProductName'}, 'نودالیت')) {
+//                    $noodElite += $it->{'Quantity'};
+//                }
+//            }
+//            $item->{'noodElite'} = $noodElite;
+//
+//            if ($noodElite >= 50) {
+//                $item->{'ok'} = 1;
+//            }
         }
 
         $filtered2 = array_filter($dat2, function ($el) {

@@ -271,7 +271,7 @@ class RemittanceController extends Controller
 //                $input[] = $item;
 //            }
             $combined = new Collection();
-            return $combined->concat((array)$input1)->concat((array)$input2);
+            return $combined->concat((array)$input1)[0]->concat((array)$input2[0]);
             $offset = 0;
             $perPage = 100;
             if ($request['page'] && $request['page'] > 1) {

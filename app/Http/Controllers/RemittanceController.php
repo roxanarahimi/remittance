@@ -225,6 +225,7 @@ class RemittanceController extends Controller
                     "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
                     "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",
                 ])
+                ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
                 ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")//68, 69
                 ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")//68, 69
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69

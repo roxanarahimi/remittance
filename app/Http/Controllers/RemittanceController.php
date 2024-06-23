@@ -184,9 +184,7 @@ class RemittanceController extends Controller
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 0;
-                $item->{'noodElite'} = '';
                 $item->{'AddressName'} = $item->{'AddressName'} . ' '.$item->{'OrderNumber'};
-                $noodElite = 0;
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                     ->select("LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
                         "LGS3.InventoryVoucherItem.Barcode as Barcode", "LGS3.Part.PartID as Id",
@@ -196,15 +194,10 @@ class RemittanceController extends Controller
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
                     ->whereIn('LGS3.Part.PartID', $partIDs)
                     ->get();
-
                 $item->{'OrderItems'} = $details;
-                if (count($details) > 0) {
-                    $item->{'ok'} = 1;
-                }
             }
-
             $filtered = array_filter($dat, function ($el) {
-                return $el->{'ok'} == 1;
+                return count($el->{'OrderItems'}) > 0;
             });
             $dat2 = DB::connection('sqlsrv')->table('SLS3.Order')
                 ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')

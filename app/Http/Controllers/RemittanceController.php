@@ -236,7 +236,7 @@ class RemittanceController extends Controller
                     $q->havingRaw('SUM(Quantity) >= ?', [50]);
                 })
                 ->orderBy('OrderID', 'DESC')
-                ->take(2)->get();
+                ->get();
 
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')

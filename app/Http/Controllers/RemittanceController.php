@@ -230,14 +230,9 @@ class RemittanceController extends Controller
                 ->where('OrderRef', $item->{'OrderID'})
                 ->whereIn('SLS3.Product.ProductID', $productIDs)
                 ->get();
-
             $item->{'OrderItems'} = $details;
-//            foreach ($details as $it) {
-//                    $noodElite += $it->{'Quantity'};
-//            }
-//            $item->{'noodElite'} = $noodElite;
-
             $noodElite = $details->sum('Quantity');
+            $item->{'noodElite'} = $noodElite;
             if ($noodElite >= 50) {
                 $item->{'ok'} = 1;
             }

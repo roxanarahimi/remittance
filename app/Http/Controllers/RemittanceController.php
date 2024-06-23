@@ -282,12 +282,13 @@ class RemittanceController extends Controller
             });
 //            $input1 = InventoryVoucherResource::collection(array_values($filtered));
             $input1 = array_values($filtered);
-            $input2 = OrderResource::collection($y);
+            $input2 = (array)OrderResource::collection($y);
 //            $input = array_merge((array)$input2, $input1);
 
-            $input[] = array_values((array)$input2);
-            $input[] = array_values($input1);
-            return $input;
+            foreach($input1 as $item){
+                $input2[] = $item;
+            }
+            return $input2;
             $offset = 0;
             $perPage = 100;
             if ($request['page'] && $request['page'] > 1) {

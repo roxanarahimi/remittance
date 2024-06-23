@@ -19,7 +19,6 @@ class OrderItemResource extends JsonResource
             "ProductName" => $this->Product->Name,
             "ProductNumber" => $this->Product->Number,
             "Quantity" => $this->Quantity,
-            "QuantityInt" => (int)$this->Quantity
             ];
     }
 }

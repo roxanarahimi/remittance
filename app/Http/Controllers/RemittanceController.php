@@ -257,7 +257,7 @@ class RemittanceController extends Controller
                     $q->whereIn('PartRef', $partIDs);
                 })
 //                ->where('LGS3.InventoryVoucher.CreationDate','>=',now()->subDays(7)->startOfDay()->format('d/m/Y h:i:s'))
-                ->where('LGS3.InventoryVoucher.CreationDate','>=',today()->subDays(2))
+                ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(2))
 //                ->where(function($q){
 //                    $x= date($)
 //                })

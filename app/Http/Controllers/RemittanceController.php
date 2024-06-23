@@ -258,7 +258,7 @@ class RemittanceController extends Controller
                 })
                 ->where('LGS3.InventoryVoucher.CreationDate','>=',now()->subDays(3)->startOfDay()->format('d/m/Y h:i:s'))
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-                ->paginate(100);
+                ->get();
             return $dat;
 
 

@@ -152,13 +152,6 @@ class RemittanceController extends Controller
     }
 
     public function readOnly(Request $request){
-    use Illuminate\Support\Facades\DB;
-    use Illuminate\Pagination\LengthAwarePaginator;
-    use App\Models\Part;
-    use App\Models\Product;
-
-        public function getData(Request $request)
-        {
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
             $productIDs = Product::where('Name', 'like', '%نودالیت%')->pluck("ProductID");
 

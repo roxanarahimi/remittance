@@ -284,17 +284,14 @@ class RemittanceController extends Controller
             $filtered = array_filter($dat, function ($el) {
                 return count($el->{'OrderItems'}) > 0;
             });
-
-            $filtered = array_filter($dat, function ($el) {
-                return count($el->{'OrderItems'}) > 0;
-            });
             $vals = array_values($filtered);
 //            $input1 = InventoryVoucherResource::collection($vals);
 //            $input2 = OrderResource::collection($y);
 
             $input1 = $vals;
+
             $input2 = $y;
-            $input = array_merge((array)$input2, $input1);
+            $input = array_merge((array)$input2, (array)$input1);
 
             $offset = 0;
             $perPage = 100;

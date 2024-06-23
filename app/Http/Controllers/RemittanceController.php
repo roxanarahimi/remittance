@@ -165,14 +165,13 @@ class RemittanceController extends Controller
             })
             ->pluck('StoreID');
 
-        $dat = InventoryVoucher::
-        join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+        $dat = InventoryVoucher::select([
+            "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
+            "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",
+        ])
+            ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-            ->select([
-                "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
-                "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",
-            ])
             ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
             ->whereIn('LGS3.Store.StoreID', $storeIDs)
@@ -183,7 +182,7 @@ class RemittanceController extends Controller
             $item->{'type'} = 'InventoryVoucher';
             $item->{'ok'} = 0;
             $item->{'noodElite'} = '';
-            $item->{'AddressName'} = $item->{'AddressName'} . substr($item->{'OrderID'}, -3);
+            $item->{'AddressName'} = $item->{'AddressName'} .' '. $item->{'Number'};
             $noodElite = 0;
             $details = InventoryVoucherItem::
                 join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')

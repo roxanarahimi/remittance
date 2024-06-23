@@ -268,7 +268,7 @@ class RemittanceController extends Controller
 
             $input = array_merge(
                 (array)OrderResource::collection($y),
-                (array)InventoryVoucherResource::collection(array_values($dat))
+                (array)InventoryVoucherResource::collection($dat)
             );
             return $input;
             $offset = 0;

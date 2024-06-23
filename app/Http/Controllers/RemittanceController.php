@@ -152,7 +152,8 @@ class RemittanceController extends Controller
         }
     }
 
-    public function readOnly(Request $request){
+    public function readOnly(Request $request)
+    {
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
@@ -174,16 +175,15 @@ class RemittanceController extends Controller
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-
-            ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
+            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
             ->whereIn('LGS3.Store.StoreID', $storeIDs)
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-            ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68,69])
+            ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
             ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get()->toArray();
         foreach ($dat as $item) {
             $item->{'type'} = 'InventoryVoucher';
-            $item->{'AddressName'} = $item->{'AddressName'} . ' '.$item->{'OrderNumber'};
+            $item->{'AddressName'} = $item->{'AddressName'} . ' ' . $item->{'OrderNumber'};
             $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                 ->select("LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
                     "LGS3.InventoryVoucherItem.Barcode as Barcode", "LGS3.Part.PartID as Id",
@@ -221,7 +221,7 @@ class RemittanceController extends Controller
         foreach ($dat2 as $item) {
             $item->{'type'} = 'Order';
             $item->{'ok'} = 1;
-            $item->{'AddressName'} = $item->{'AddressName'} . ' '.$item->{'OrderNumber'};
+            $item->{'AddressName'} = $item->{'AddressName'} . ' ' . $item->{'OrderNumber'};
             $item->{'noodElite'} = '';
             $noodElite = 0;
             $details = DB::connection('sqlsrv')->table('SLS3.OrderItem')
@@ -229,9 +229,11 @@ class RemittanceController extends Controller
                     "SLS3.Product.Number as ProductNumber")
                 ->join('SLS3.Product', 'SLS3.Product.ProductID', '=', 'SLS3.OrderItem.ProductRef')
                 ->whereIn('SLS3.Product.ProductID', $productIDs)
-                ->where(function ($q){
-                    $q->havingRaw('SUM(Quantity) >= ?', [50]);
-                })
+//                ->where(function ($q){
+//                    $q->havingRaw('SUM(Quantity) >= ?', [50]);
+//                })
+                ->selectRaw('SUM(Quantity) as total_amount')
+                ->havingRaw('total_amount = ?', [50])
                 ->where('OrderRef', $item->{'OrderID'})->get();
             $item->{'OrderItems'} = $details;
             foreach ($details as $it) {
@@ -268,7 +270,7 @@ class RemittanceController extends Controller
 //            }
         // $input = $input1;
 
-        $input = array_merge($input2,$input1);
+        $input = array_merge($input2, $input1);
 
         if ($request['page'] && $request['page'] > 1) {
             $offset = ($request['page'] - 1) * $perPage;
@@ -279,6 +281,7 @@ class RemittanceController extends Controller
         return response()->json($paginator, 200);
 
     }
+
     public function readOnly0(Request $request)
     {
         try {
@@ -306,7 +309,7 @@ class RemittanceController extends Controller
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-                ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
+                ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
                 ->whereIn('LGS3.Store.StoreID', $storeIDs)
                 ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
@@ -355,7 +358,7 @@ class RemittanceController extends Controller
                     "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
                     "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",
                 ])
-                ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
+                ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
                 ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")//68, 69
                 ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")//68, 69
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
@@ -429,10 +432,10 @@ class RemittanceController extends Controller
                 $noodElite = 0;
                 $details = DB::connection('sqlsrv')->table('SLS3.OrderItem')
                     ->select("SLS3.Product.Name as ProductName", "Quantity", "SLS3.Product.ProductID as Id", "SLS3.Product.Number as ProductNumber",
-                        //"SLS3.Product.SecondCode",
-                     //   "SLS3.OrderItem.MajorUnitQuantity", "SLS3.OrderItem.InitialQuantity", "SLS3.OrderItem.MajorUnitInitialQuantity"
-                     //
-                        )
+                    //"SLS3.Product.SecondCode",
+                    //   "SLS3.OrderItem.MajorUnitQuantity", "SLS3.OrderItem.InitialQuantity", "SLS3.OrderItem.MajorUnitInitialQuantity"
+                    //
+                    )
                     ->join('SLS3.Product', 'SLS3.Product.ProductID', '=', 'SLS3.OrderItem.ProductRef')
                     ->where('OrderRef', $item->{'OrderID'})->get();
 
@@ -473,9 +476,9 @@ class RemittanceController extends Controller
 //              if ($request['type'] && $request['type'] == 'InventoryVoucher'){
 //                $input = $input1;
 //            }
-           // $input = $input1;
+            // $input = $input1;
 
-                $input = array_merge($input2,$input1);
+            $input = array_merge($input2, $input1);
 
             if ($request['page'] && $request['page'] > 1) {
                 $offset = ($request['page'] - 1) * $perPage;
@@ -521,7 +524,7 @@ class RemittanceController extends Controller
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-                ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
+                ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
                 ->whereIn('LGS3.Store.StoreID', $storeIDs)
                 ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
                 ->whereHas('OrderItems', function ($q) use ($partIDs) {

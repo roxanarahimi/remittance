@@ -232,11 +232,12 @@ class RemittanceController extends Controller
                 ->select(["SLS3.Order.OrderID as OrderID", "SLS3.Order.Number as OrderNumber",
                     "GNR3.Address.Name as AddressName", "Details as Address", "Phone", "SLS3.Order.CreationDate", "DeliveryDate",
                 ])
+                ->where('SLS3.CustomerAddress.Type', 2)
                 ->where('SLS3.Order.InventoryRef', 1)
                 ->where('SLS3.Order.State', 2)
                 ->where('SLS3.Order.FiscalYearRef', 1403)
                 ->orderBy('SLS3.Order.OrderID')
-                ->get()->unique()->toArray();
+                ->get()->toArray();
 
             $dat2 = array_values($dat2);
 

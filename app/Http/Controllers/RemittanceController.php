@@ -256,8 +256,10 @@ class RemittanceController extends Controller
                 ->whereHas('OrderItems', function ($q) use ($partIDs) {
                     $q->whereIn('PartRef', $partIDs);
                 })
+                ->whereDate('Date','>=',now()->subDays(7)->startOfDay()->format('d/m/Y'))
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get();
+            return $dat;
 
 
             $input = [];

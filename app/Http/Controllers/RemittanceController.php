@@ -188,29 +188,19 @@ class RemittanceController extends Controller
                 $item->{'AddressName'} = $item->{'AddressName'} . ' '.$item->{'OrderNumber'};
                 $noodElite = 0;
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
+                    ->select("LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
+                        "LGS3.InventoryVoucherItem.Barcode as Barcode", "LGS3.Part.PartID as Id",
+                        "LGS3.Part.Code as ProductNumber")
                     ->join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItemTrackingFactor.PartRef')
-                    ->select(
-                        "LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity", "LGS3.InventoryVoucherItem.Barcode as Barcode", "LGS3.Part.PartID as Id",
-                        "LGS3.Part.Code as ProductNumber")
-                    ->where('InventoryVoucherRef', $item->{'OrderID'})->get();
+                    ->where('InventoryVoucherRef', $item->{'OrderID'})
+                    ->where('LGS3.Part.Name', 'like','%نودالیت%')
+                    ->get();
 
                 $item->{'OrderItems'} = $details;
 
 
-//                foreach ($details as $it) {
-//                    if (str_contains($it->{'ProductName'}, 'نودالیت')) {
-//                        $noodElite += $it->{'Quantity'};
-//                    }
-//                }
-//                $item->{'noodElite'} = $noodElite;
-//
-//                if ($noodElite > 0) {
-//                    $item->{'ok'} = 1;
-//                }
-//                if (str_contains($item->{'AddressName'}, 'گرمدره')){
-//                    $item->{'ok'} = 0;
-//                }
+
                 $x = array_filter($details->toArray(), function ($el) {
                     return str_contains($el->{'ProductName'}, 'نودالیت');
                 });

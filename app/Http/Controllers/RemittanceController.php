@@ -220,7 +220,7 @@ class RemittanceController extends Controller
 
         foreach ($dat2 as $item) {
             $item->{'type'} = 'Order';
-            $item->{'ok'} = 1;
+            $item->{'ok'} = 0;
             $item->{'AddressName'} = $item->{'AddressName'} . ' ' . $item->{'OrderNumber'};
             $item->{'noodElite'} = '';
             $noodElite = 0;
@@ -229,20 +229,13 @@ class RemittanceController extends Controller
                     "SLS3.Product.Number as ProductNumber")
                 ->join('SLS3.Product', 'SLS3.Product.ProductID', '=', 'SLS3.OrderItem.ProductRef')
                 ->whereIn('SLS3.Product.ProductID', $productIDs)
-//                ->selectRaw('SUM(Quantity) as total')
                 ->havingRaw('SUM(Quantity) >= ?', [50])
                 ->where('OrderRef', $item->{'OrderID'})->get();
             $item->{'OrderItems'} = $details;
-            foreach ($details as $it) {
-                if (str_contains($it->{'ProductName'}, 'نودالیت')) {
-                    $noodElite += $it->{'Quantity'};
-                }
+            $sum = $details->sum('Quantity');
+            if($sum >= 50){
+                $item->{'ok'} = 1;
             }
-            $item->{'noodElite'} = $noodElite;
-
-//            if ($noodElite >= 50) {
-//                $item->{'ok'} = 1;
-//            }
         }
 
         $filtered2 = array_filter($dat2, function ($el) {

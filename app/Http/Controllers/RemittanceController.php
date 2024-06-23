@@ -11,6 +11,7 @@ use App\Models\InventoryVoucher;
 use App\Models\InventoryVoucherItem;
 use App\Models\Order;
 use App\Models\Part;
+use App\Models\Product;
 use App\Models\Remittance;
 use App\Models\Store;
 use Illuminate\Http\Request;

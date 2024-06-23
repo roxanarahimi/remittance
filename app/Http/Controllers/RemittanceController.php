@@ -154,7 +154,7 @@ class RemittanceController extends Controller
     {
         try {
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
-            $productIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("ProductID");
+            $productIDs = Product::where('Name', 'like', '%نودالیت%')->pluck("ProductID");
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')

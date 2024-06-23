@@ -270,7 +270,12 @@ class RemittanceController extends Controller
 //            foreach($input2 as $item){
 //                $input[] = $item;
 //            }
-            return [$input1,$input2];
+            $t= [$input1,$input2];
+            $c = [];
+            $c[]= $t[0];
+            $c[]= $t[1];
+            return $c;
+
             $offset = 0;
             $perPage = 100;
             if ($request['page'] && $request['page'] > 1) {

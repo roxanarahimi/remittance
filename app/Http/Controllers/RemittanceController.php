@@ -151,7 +151,7 @@ class RemittanceController extends Controller
         }
     }
 
-    public function readOnly(Request $request){
+    public function readOnly3(Request $request){
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
             $productIDs = Product::where('Name', 'like', '%نودالیت%')->pluck("ProductID");
 
@@ -193,7 +193,6 @@ class RemittanceController extends Controller
                 $item->type = 'InventoryVoucher';
                 $item->ok = 1;
                 $item->AddressName = $item->AddressName . ' ' . $item->OrderNumber;
-
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                     ->select("LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
                         "LGS3.InventoryVoucherItem.Barcode as Barcode", "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber")
@@ -359,7 +358,7 @@ class RemittanceController extends Controller
         return response()->json($paginator, 200);
 
     }
-    public function readOnly0(Request $request)
+    public function readOnly(Request $request)
     {
         try {
 

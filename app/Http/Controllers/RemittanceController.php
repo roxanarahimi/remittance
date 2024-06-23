@@ -267,8 +267,8 @@ class RemittanceController extends Controller
 
 
             $input = [];
-            $input[]= OrderResource::collection($y);
-            $input[]= InventoryVoucherResource::collection($dat);
+            $input[]= OrderResource::collection($y)[0];
+            $input[]= InventoryVoucherResource::collection($dat)[0];
 
             return $input;
             $offset = 0;

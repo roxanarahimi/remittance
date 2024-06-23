@@ -166,7 +166,7 @@ class RemittanceController extends Controller
                 })
                 ->pluck('StoreID');
 
-            $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')
+            $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -176,10 +176,11 @@ class RemittanceController extends Controller
                 ])
                 ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-                ->whereIn('LGS3.Store.StoreID', $request)
+                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")
                 ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68,69])//68, 69
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-                ->get()->toArray();
+                ->get()->unique()->toArray();
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 0;

@@ -236,7 +236,7 @@ class RemittanceController extends Controller
                     $q->havingRaw('SUM(Quantity) >= ?', [50]);
                 })
                 ->orderBy('OrderID', 'DESC')
-                ->get()->toArray();
+                ->get();
 
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
@@ -251,7 +251,7 @@ class RemittanceController extends Controller
                 })
                 ->pluck('StoreID');
 
-            $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number",
+            $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
                 "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
                 ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
@@ -263,7 +263,7 @@ class RemittanceController extends Controller
                     $q->whereIn('PartRef', $partIDs);
                 })
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-                ->get()->toArray();
+                ->get();
 
 
             $input = [];

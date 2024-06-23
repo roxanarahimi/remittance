@@ -217,7 +217,7 @@ class RemittanceController extends Controller
 
         foreach ($dat2 as $item) {
             $item->{'type'} = 'Order';
-            $item->{'ok'} = 1;
+            $item->{'ok'} = 0;
             $item->{'AddressName'} = $item->{'AddressName'} . ' '.$item->{'OrderNumber'};
             $item->{'noodElite'} = '';
             $noodElite = 0;

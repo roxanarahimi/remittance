@@ -260,7 +260,6 @@ class RemittanceController extends Controller
                 })
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get();
-            return $dat;
 
 
             $input = [];

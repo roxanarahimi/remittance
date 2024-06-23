@@ -152,7 +152,70 @@ class RemittanceController extends Controller
 
     public function readOnly(Request $request)
     {
-        try {
+        try {$y = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
+            "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef')
+            ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
+            ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
+            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
+            ->where('SLS3.Order.InventoryRef', 1)
+            ->where('SLS3.Order.State', 2)
+            ->where('SLS3.Order.FiscalYearRef', 1403)
+            ->where('SLS3.CustomerAddress.Type', 2)
+            ->whereHas('OrderItems')
+            ->whereHas('OrderItems', function ($q) {
+                $q->havingRaw('SUM(Quantity) >= ?', [50]);
+            })
+            ->orderBy('OrderID', 'DESC')
+            ->get();
+
+            $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
+            $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
+                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                ->whereNot(function ($query) {
+                    $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
+                        ->orWhere('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+                        ->orWhere('GNR3.Address.Details', 'LIKE', "%گرمدره%")
+                        ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
+                        ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
+                })
+                ->pluck('StoreID');
+
+            $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
+                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+                ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
+                ->whereIn('LGS3.Store.StoreID', $storeIDs)
+                ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
+                ->whereHas('OrderItems', function ($q) use ($partIDs) {
+                    $q->whereIn('PartRef', $partIDs);
+                })
+                ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
+                ->get();
+
+
+            $input = [];
+            $input1 = OrderResource::collection($y);
+            $input2 = InventoryVoucherResource::collection($dat);
+            foreach ($input1 as $item) {
+                $input[] = $item;
+            }
+            foreach ($input2 as $item) {
+                $input[] = $item;
+            }
+            $offset = 0;
+            $perPage = 100;
+            if ($request['page'] && $request['page'] > 1) {
+                $offset = ($request['page'] - 1) * $perPage;
+            }
+            $info = array_slice($input, $offset, $perPage);
+            $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+            return response()->json($paginator, 200);
+
+
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')

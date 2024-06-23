@@ -221,6 +221,25 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         try {
+
+            $x = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
+                "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef')
+                ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
+                ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
+                ->where('SLS3.Order.InventoryRef', 1)
+                ->where('SLS3.Order.State', 2)
+                ->where('SLS3.Order.FiscalYearRef', 1403)
+                ->where('SLS3.CustomerAddress.Type', 2)
+                ->whereHas('OrderItems')
+                ->whereHas('OrderItems', function ($q) {
+                    $q->havingRaw('SUM(Quantity) >= ?', [50]);
+                })
+                ->orderBy('OrderID', 'DESC')
+                ->get();
+
+            return response()->json(OrderResource::collection($x), 200);
+
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')

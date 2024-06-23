@@ -199,8 +199,8 @@ class RemittanceController extends Controller
             return count($el->{'OrderItems'}) > 0;
         });
         $productIDs = Product::where('Name', 'like', '%نودالیت%')->pluck("ProductID");
-        $dat2 = Order::
-            join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
+        $dat2 = DB::connection('sqlsrv')->table('SLS3.Order')
+            ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
             ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
             ->select(["SLS3.Order.OrderID as OrderID", "SLS3.Order.Number as OrderNumber",
@@ -220,7 +220,7 @@ class RemittanceController extends Controller
 
         foreach ($dat2 as $item) {
             $item->{'type'} = 'Order';
-            $item->{'ok'} = 0;
+            $item->{'ok'} = 1;
             $item->{'AddressName'} = $item->{'AddressName'} . ' '.$item->{'OrderNumber'};
             $item->{'noodElite'} = '';
             $noodElite = 0;
@@ -229,6 +229,9 @@ class RemittanceController extends Controller
                     "SLS3.Product.Number as ProductNumber")
                 ->join('SLS3.Product', 'SLS3.Product.ProductID', '=', 'SLS3.OrderItem.ProductRef')
                 ->whereIn('SLS3.Product.ProductID', $productIDs)
+                ->where(function ($q) {
+                    $q->havingRaw('SUM(Quantity) >= ?', [50]);
+                })
                 ->where('OrderRef', $item->{'OrderID'})->get();
             $item->{'OrderItems'} = $details;
             foreach ($details as $it) {
@@ -238,9 +241,9 @@ class RemittanceController extends Controller
             }
             $item->{'noodElite'} = $noodElite;
 
-            if ($noodElite >= 50) {
-                $item->{'ok'} = 1;
-            }
+//            if ($noodElite >= 50) {
+//                $item->{'ok'} = 1;
+//            }
         }
 
         $filtered2 = array_filter($dat2, function ($el) {

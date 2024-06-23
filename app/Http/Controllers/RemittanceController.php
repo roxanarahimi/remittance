@@ -217,30 +217,31 @@ class RemittanceController extends Controller
 
         foreach ($dat2 as $item) {
             $item->{'type'} = 'Order';
-            $item->{'ok'} = 1;
+            $item->{'ok'} = 0;
             $item->{'AddressName'} = $item->{'AddressName'} . ' '.$item->{'OrderNumber'};
             $item->{'noodElite'} = '';
             $noodElite = 0;
             $details = DB::connection('sqlsrv')->table('SLS3.OrderItem')
                 ->join('SLS3.Product', 'SLS3.Product.ProductID', '=', 'SLS3.OrderItem.ProductRef')
-                ->select("SLS3.Product.Name as ProductName", "Quantity", "SLS3.Product.ProductID as Id",
-                    "SLS3.Product.Number as ProductNumber")
-                ->selectRaw('SUM(Quantity) as total_amount')
-                ->havingRaw('total_amount >= ?', [50])
-                ->whereIn('SLS3.Product.ProductID', $productIDs)
+                ->select("SLS3.Product.Name as ProductName", "Quantity",
+                    "SLS3.Product.ProductID as Id",
+                    "SLS3.Product.Number as ProductNumber"
+                )
                 ->where('OrderRef', $item->{'OrderID'})
+                ->whereIn('SLS3.Product.ProductID', $productIDs)
                 ->get();
+
             $item->{'OrderItems'} = $details;
-//            foreach ($details as $it) {
-//                if (str_contains($it->{'ProductName'}, 'نودالیت')) {
-//                    $noodElite += $it->{'Quantity'};
-//                }
-//            }
-//            $item->{'noodElite'} = $noodElite;
-//
-//            if ($noodElite >= 50) {
-//                $item->{'ok'} = 1;
-//            }
+            foreach ($details as $it) {
+                if (str_contains($it->{'ProductName'}, 'نودالیت')) {
+                    $noodElite += $it->{'Quantity'};
+                }
+            }
+            $item->{'noodElite'} = $noodElite;
+
+            if ($noodElite >= 50) {
+                $item->{'ok'} = 1;
+            }
         }
 
         $filtered2 = array_filter($dat2, function ($el) {

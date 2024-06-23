@@ -200,7 +200,7 @@ class RemittanceController extends Controller
         }
 
         $filtered = array_filter((array)$dat, function ($el) {
-            return $el->{'ok'} == 1;
+            return $el['ok'] == 1;
         });
         $dat2 = Order::
         join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')

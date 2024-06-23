@@ -235,6 +235,8 @@ class RemittanceController extends Controller
                 ->whereHas('OrderItems', function ($q) {
                     $q->havingRaw('SUM(Quantity) >= ?', [50]);
                 })
+                ->with('OrderItems')
+                ->with('Stores')
                 ->orderBy('OrderID', 'DESC')
                 ->get()->toArray();
 
@@ -251,7 +253,7 @@ class RemittanceController extends Controller
                 })
                 ->pluck('StoreID');
 
-            $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as Number",
+            $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
                 "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
                 ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
@@ -262,13 +264,15 @@ class RemittanceController extends Controller
                 ->whereHas('OrderItems', function ($q) use ($partIDs) {
                     $q->whereIn('PartRef', $partIDs);
                 })
+                ->with('OrderItems')
+                ->with('Stores')
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get()->toArray();
 
 
             $input = [];
-            $input[]= OrderResource::collection($y);
-            $input[]= InventoryVoucherResource::collection($dat);
+            $input[]= $y;
+            $input[]= $dat;
 
             return $input;
             $offset = 0;

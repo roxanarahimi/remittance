@@ -236,10 +236,7 @@ class RemittanceController extends Controller
                     $q->havingRaw('SUM(Quantity) >= ?', [50]);
                 })
                 ->orderBy('OrderID', 'DESC')
-                ->get();
-
-            $y = OrderResource::collection($y);
-            //return response()->json($x, 200);
+                ->take(2)->get();
 
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
@@ -277,21 +274,16 @@ class RemittanceController extends Controller
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
                     ->whereIn('PartRef', $partIDs)
-                    ->get();
+                    ->take(2)->get();
                 $item->{'OrderItems'} = $details;
             }
 
             $filtered = array_filter($dat, function ($el) {
                 return count($el->{'OrderItems'}) > 0;
             });
-            $vals = array_values($filtered);
-//            $input1 = InventoryVoucherResource::collection($vals);
-//            $input2 = OrderResource::collection($y);
-
-            $input1 = $vals;
-
-            $input2 = $y;
-            $input = array_merge((array)$input2, $input1);
+            $input1 = InventoryVoucherResource::collection(array_values($filtered));
+            $input2 = OrderResource::collection($y);
+            $input = array_merge((array)$input2, (array)$input1);
 
             $offset = 0;
             $perPage = 100;

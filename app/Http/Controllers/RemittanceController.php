@@ -269,8 +269,8 @@ class RemittanceController extends Controller
 
 
             $input = [];
-            $input1= OrderResource::collection($y)->{'data'};
-            $input2= InventoryVoucherResource::collection($dat)->{'data'};
+            $input1= OrderResource::collection($y);
+            $input2= InventoryVoucherResource::collection($dat);
 
 //            foreach($input1 as $item){
 //                $input[] = $item;
@@ -279,7 +279,7 @@ class RemittanceController extends Controller
 //                $input[] = $item;
 //            }
             $combined = new Collection();
-            return $combined->concat($input1)->concat($input2);
+            return $combined->concat((array)$input1)->concat((array)$input2);
             $offset = 0;
             $perPage = 100;
             if ($request['page'] && $request['page'] > 1) {

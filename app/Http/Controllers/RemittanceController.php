@@ -229,7 +229,9 @@ class RemittanceController extends Controller
                     "SLS3.Product.Number as ProductNumber")
                 ->join('SLS3.Product', 'SLS3.Product.ProductID', '=', 'SLS3.OrderItem.ProductRef')
                 ->whereIn('SLS3.Product.ProductID', $productIDs)
-                ->where('SUM(Quantity)', '>=', 50)
+                ->where(function ($q){
+                    $q->whereRaw('SUM(Quantity) >= ?', [50]);
+                })
                 ->where('OrderRef', $item->{'OrderID'})->get();
             $item->{'OrderItems'} = $details;
             foreach ($details as $it) {

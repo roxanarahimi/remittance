@@ -222,7 +222,7 @@ class RemittanceController extends Controller
                 $details = DB::connection('sqlsrv')->table('SLS3.OrderItem')
                     ->select("SLS3.Product.Name as ProductName", "Quantity", "SLS3.Product.ProductID as Id", "SLS3.Product.Number as ProductNumber",)
                     ->join('SLS3.Product', 'SLS3.Product.ProductID', '=', 'SLS3.OrderItem.ProductRef')
-                    ->whereIn('SLS3.Product.ProductId', $productIDs)
+                    ->whereIn('SLS3.Product.ProductID', $productIDs)
                     ->where('OrderRef', $item->{'OrderID'})
                     ->get();
 

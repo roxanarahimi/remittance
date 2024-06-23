@@ -213,7 +213,7 @@ class RemittanceController extends Controller
             ->orderBy('SLS3.Order.OrderID')
             ->get()->toArray();
 
-//        $dat2 = array_values($dat2);
+        $dat2 = array_values($dat2);
 
         foreach ($dat2 as $item) {
             $item->{'type'} = 'Order';

@@ -166,24 +166,24 @@ class RemittanceController extends Controller
                 })
                 ->pluck('StoreID');
 
-            $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
-            ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+            $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')
+                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
                 ->select([
                     "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
                     "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",
                 ])
-                ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
+                ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->whereIn('LGS3.Store.StoreID', $storeIDs)
-                ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68,69])//68, 69
+                ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get()->toArray();
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 1;
-                $item->{'AddressName'} = $item->{'AddressName'} . ' '.$item->{'OrderNumber'};
+                $item->{'AddressName'} = $item->{'AddressName'} . ' ' . $item->{'OrderNumber'};
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                     ->join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItemTrackingFactor.PartRef')
@@ -218,7 +218,7 @@ class RemittanceController extends Controller
             foreach ($dat2 as $item) {
                 $item->{'type'} = 'Order';
                 $item->{'ok'} = 0;
-                $item->{'AddressName'} = $item->{'AddressName'} . ' '.$item->{'OrderNumber'};
+                $item->{'AddressName'} = $item->{'AddressName'} . ' ' . $item->{'OrderNumber'};
                 $item->{'noodElite'} = '';
                 $noodElite = 0;
                 $details = DB::connection('sqlsrv')->table('SLS3.OrderItem')
@@ -269,7 +269,7 @@ class RemittanceController extends Controller
 //            }
             // $input = $input1;
 
-            $input = array_merge($input2,$input1);
+            $input = array_merge($input2, $input1);
 
             if ($request['page'] && $request['page'] > 1) {
                 $offset = ($request['page'] - 1) * $perPage;
@@ -302,7 +302,7 @@ class RemittanceController extends Controller
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-                ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
+                ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
                 ->whereIn('LGS3.Store.StoreID', $storeIDs)
                 ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
@@ -351,7 +351,7 @@ class RemittanceController extends Controller
                     "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
                     "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",
                 ])
-                ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
+                ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
                 ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")//68, 69
                 ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")//68, 69
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
@@ -471,7 +471,7 @@ class RemittanceController extends Controller
 //            }
             // $input = $input1;
 
-            $input = array_merge($input2,$input1);
+            $input = array_merge($input2, $input1);
 
             if ($request['page'] && $request['page'] > 1) {
                 $offset = ($request['page'] - 1) * $perPage;
@@ -517,7 +517,7 @@ class RemittanceController extends Controller
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-                ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
+                ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
                 ->whereIn('LGS3.Store.StoreID', $storeIDs)
                 ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
                 ->whereHas('OrderItems', function ($q) use ($partIDs) {

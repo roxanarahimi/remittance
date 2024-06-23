@@ -200,16 +200,16 @@ class RemittanceController extends Controller
         });
         $productIDs = Product::where('Name', 'like', '%نودالیت%')->pluck("ProductID");
         $dat2 = DB::connection('sqlsrv')->table('SLS3.Order')
-            ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
-            ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
-            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
             ->select(["SLS3.Order.OrderID as OrderID", "SLS3.Order.Number as OrderNumber",
                 "GNR3.Address.Name as AddressName", "Details as Address", "Phone", "SLS3.Order.CreationDate", "DeliveryDate",
             ])
-            ->where('SLS3.CustomerAddress.Type', 2)
-            ->where('SLS3.Order.FiscalYearRef', 1403)
+            ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
+            ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
+            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
             ->where('SLS3.Order.InventoryRef', 1)
+            ->where('SLS3.Order.FiscalYearRef', 1403)
             ->where('SLS3.Order.State', 2)
+            ->where('SLS3.CustomerAddress.Type', 2)
             ->orderBy('SLS3.Order.OrderID')
             ->get()->toArray();
 
@@ -217,7 +217,7 @@ class RemittanceController extends Controller
 
         foreach ($dat2 as $item) {
             $item->{'type'} = 'Order';
-            $item->{'ok'} = 1;
+            $item->{'ok'} = 0;
             $item->{'AddressName'} = $item->{'AddressName'} . ' '.$item->{'OrderNumber'};
             $item->{'noodElite'} = '';
             $noodElite = 0;
@@ -231,40 +231,17 @@ class RemittanceController extends Controller
                 ->whereIn('SLS3.Product.ProductID', $productIDs)
                 ->get();
             $item->{'OrderItems'} = $details;
-//            foreach ($details as $it) {
-//                if (str_contains($it->{'ProductName'}, 'نودالیت')) {
-//                    $noodElite += $it->{'Quantity'};
-//                }
-//            }
-//            $item->{'noodElite'} = $noodElite;
-//
-//            if ($noodElite >= 50) {
-//                $item->{'ok'} = 1;
-//            }
+            $item->{'noodElite'} = $details->sum('Quantity');
         }
 
         $filtered2 = array_filter($dat2, function ($el) {
             return $el->{'OrderItems'}->sum('Quantity') >= 50;
         });
 
-        $input1 = array_values($filtered);
         $offset = 0;
         $perPage = 100;
-
+        $input1 = array_values($filtered);
         $input2 = array_values($filtered2);
-
-//
-//            if (!$request['type'] || $request['type'] == ''){
-//                $input = array_merge($input2,$input1);
-//            }
-//              if ($request['type'] && $request['type'] == 'Order'){
-//                $input = $input2;
-//            }
-//              if ($request['type'] && $request['type'] == 'InventoryVoucher'){
-//                $input = $input1;
-//            }
-        // $input = $input1;
-
         $input = array_merge($input2,$input1);
 
         if ($request['page'] && $request['page'] > 1) {
@@ -426,10 +403,10 @@ class RemittanceController extends Controller
                 $noodElite = 0;
                 $details = DB::connection('sqlsrv')->table('SLS3.OrderItem')
                     ->select("SLS3.Product.Name as ProductName", "Quantity", "SLS3.Product.ProductID as Id", "SLS3.Product.Number as ProductNumber",
-                        //"SLS3.Product.SecondCode",
-                     //   "SLS3.OrderItem.MajorUnitQuantity", "SLS3.OrderItem.InitialQuantity", "SLS3.OrderItem.MajorUnitInitialQuantity"
-                     //
-                        )
+                    //"SLS3.Product.SecondCode",
+                    //   "SLS3.OrderItem.MajorUnitQuantity", "SLS3.OrderItem.InitialQuantity", "SLS3.OrderItem.MajorUnitInitialQuantity"
+                    //
+                    )
                     ->join('SLS3.Product', 'SLS3.Product.ProductID', '=', 'SLS3.OrderItem.ProductRef')
                     ->where('OrderRef', $item->{'OrderID'})->get();
 
@@ -470,9 +447,9 @@ class RemittanceController extends Controller
 //              if ($request['type'] && $request['type'] == 'InventoryVoucher'){
 //                $input = $input1;
 //            }
-           // $input = $input1;
+            // $input = $input1;
 
-                $input = array_merge($input2,$input1);
+            $input = array_merge($input2,$input1);
 
             if ($request['page'] && $request['page'] > 1) {
                 $offset = ($request['page'] - 1) * $perPage;

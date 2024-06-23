@@ -286,9 +286,7 @@ class RemittanceController extends Controller
 //            $input = array_merge((array)$input2, $input1);
 
             $input = [];
-            $input[] = $input2;
-            $input[] = $input1;
-            return $input2.$input1;
+            return [array_values($input2), array_values($input1)];
             $offset = 0;
             $perPage = 100;
             if ($request['page'] && $request['page'] > 1) {

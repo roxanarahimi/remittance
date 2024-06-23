@@ -167,16 +167,17 @@ class RemittanceController extends Controller
             ->pluck('StoreID');
 
         $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')
-            ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
-            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
             ->select([
                 "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
                 "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",
             ])
+            ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+
             ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
-            ->whereIn('LGS3.Store.StoreID', $storeIDs)
             ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
+            ->whereIn('LGS3.Store.StoreID', $storeIDs)
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
             ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get()->toArray();
@@ -185,11 +186,11 @@ class RemittanceController extends Controller
             $item->{'ok'} = 1;
             $item->{'AddressName'} = $item->{'AddressName'} . ' ' . $item->{'OrderNumber'};
             $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
-                ->join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')
-                ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItemTrackingFactor.PartRef')
                 ->select("LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
                     "LGS3.InventoryVoucherItem.Barcode as Barcode", "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber")
-                ->where('InventoryVoucherRef', $item->{'OrderID'})
+                ->join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')
+                ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItemTrackingFactor.PartRef')
+               ->where('InventoryVoucherRef', $item->{'OrderID'})
                 ->whereIn('LGS3.Part.PartID', $partIDs)
                 ->get();
             $item->{'noodElite'} = count($details);
@@ -200,12 +201,11 @@ class RemittanceController extends Controller
             return count($el->{'OrderItems'}) > 0;
         });
         $dat2 = DB::connection('sqlsrv')->table('SLS3.Order')
+            ->select(["SLS3.Order.OrderID as OrderID", "SLS3.Order.Number as OrderNumber",
+                "GNR3.Address.Name as AddressName", "Details as Address", "Phone", "SLS3.Order.CreationDate", "DeliveryDate",])
             ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
             ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
-            ->select(["SLS3.Order.OrderID as OrderID", "SLS3.Order.Number as OrderNumber",
-                "GNR3.Address.Name as AddressName", "Details as Address", "Phone", "SLS3.Order.CreationDate", "DeliveryDate",
-            ])
             ->where('SLS3.Order.FiscalYearRef', 1403)
             ->where('SLS3.Order.InventoryRef', 1)
             ->where('SLS3.Order.State', 2)

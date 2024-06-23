@@ -232,12 +232,11 @@ class RemittanceController extends Controller
                 ->select(["SLS3.Order.OrderID as OrderID", "SLS3.Order.Number as OrderNumber",
                     "GNR3.Address.Name as AddressName", "Details as Address", "Phone", "SLS3.Order.CreationDate", "DeliveryDate",
                 ])
-                ->where('SLS3.CustomerAddress.Type', 2)
                 ->where('SLS3.Order.InventoryRef', 1)
                 ->where('SLS3.Order.State', 2)
                 ->where('SLS3.Order.FiscalYearRef', 1403)
                 ->orderBy('SLS3.Order.OrderID')
-                ->get()->toArray();
+                ->get()->unique()->toArray();
 
             $dat2 = array_values($dat2);
 
@@ -245,7 +244,6 @@ class RemittanceController extends Controller
                 $item->{'type'} = 'Order';
                 $item->{'ok'} = 0;
                 $item->{'noodElite'} = '';
-                $item->{'AddressName'} = $item->{'AddressName'} .' '.$item->{'OrderNumber'};
                 $noodElite = 0;
                 $details = DB::connection('sqlsrv')->table('SLS3.OrderItem')
                     ->select("SLS3.Product.Name as ProductName", "Quantity", "SLS3.Product.ProductID as Id", "SLS3.Product.Number as ProductNumber",
@@ -257,7 +255,6 @@ class RemittanceController extends Controller
                     ->where('OrderRef', $item->{'OrderID'})->get();
 
                 $item->{'OrderItems'} = $details;
-
                 foreach ($details as $it) {
                     if (str_contains($it->{'ProductName'}, 'نودالیت')) {
 //                        if(str_contains($it->{'ProductName'},'پک 5 ع')){

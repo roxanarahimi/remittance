@@ -192,7 +192,6 @@ class RemittanceController extends Controller
                     ->select(
                         "LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity", "LGS3.InventoryVoucherItem.Barcode as Barcode", "LGS3.Part.PartID as Id",
                         "LGS3.Part.Code as ProductNumber")
-                    ->where('LGS3.Part.name', 'like','%نودالیت%')
                     ->where('InventoryVoucherRef', $item->{'OrderID'})->get();
 
                 $item->{'OrderItems'} = $details;

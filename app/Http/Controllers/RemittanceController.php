@@ -267,10 +267,11 @@ class RemittanceController extends Controller
 
 
 
-            $input1= OrderResource::collection($y)[0];
-            $input2= InventoryVoucherResource::collection($dat)[0];
+            $input1= OrderResource::collection($y);
+            $input2= InventoryVoucherResource::collection($dat);
 
-            return array_merge($input1, $input2);
+            $input = array_merge((array)$input1, (array)$input2);
+            return $input;
             $offset = 0;
             $perPage = 100;
             if ($request['page'] && $request['page'] > 1) {

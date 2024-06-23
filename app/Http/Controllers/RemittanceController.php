@@ -182,7 +182,7 @@ class RemittanceController extends Controller
                 ->get()->unique()->toArray();
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';
-                $item->{'ok'} = 0;
+                $item->{'ok'} = 1;
                 $item->{'noodElite'} = '';
                 $item->{'AddressName'} = $item->{'AddressName'} . ' '.$item->{'OrderNumber'};
                 $noodElite = 0;

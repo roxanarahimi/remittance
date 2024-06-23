@@ -288,7 +288,7 @@ class RemittanceController extends Controller
             $input = [];
             $input[] = $input2;
             $input[] = $input1;
-            return $input;
+            return $input2.$input1;
             $offset = 0;
             $perPage = 100;
             if ($request['page'] && $request['page'] > 1) {

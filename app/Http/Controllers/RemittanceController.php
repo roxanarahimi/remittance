@@ -244,7 +244,7 @@ class RemittanceController extends Controller
         }
 
         $filtered2 = array_filter($dat2, function ($el) {
-            return $el->{'ok'} == 1;
+            return count($el->{'OrderItems'}) > 0;
         });
 
         $input1 = array_values($filtered);

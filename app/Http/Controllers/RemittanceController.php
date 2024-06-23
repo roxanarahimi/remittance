@@ -222,15 +222,12 @@ class RemittanceController extends Controller
             $item->{'noodElite'} = '';
             $noodElite = 0;
             $details = DB::connection('sqlsrv')->table('SLS3.OrderItem')
+                ->select("SLS3.Product.Name as ProductName", "Quantity", "SLS3.Product.ProductID as Id",
+                    "SLS3.Product.Number as ProductNumber")
                 ->join('SLS3.Product', 'SLS3.Product.ProductID', '=', 'SLS3.OrderItem.ProductRef')
-                ->select("SLS3.Product.Name as ProductName", "Quantity",
-                    "SLS3.Product.ProductID as Id",
-                    "SLS3.Product.Number as ProductNumber"
-                )
-                ->where('OrderRef', $item->{'OrderID'})
                 ->whereIn('SLS3.Product.ProductID', $productIDs)
-                ->get();
 
+                ->where('OrderRef', $item->{'OrderID'})->get();
             $item->{'OrderItems'} = $details;
             foreach ($details as $it) {
                 if (str_contains($it->{'ProductName'}, 'نودالیت')) {

@@ -177,7 +177,7 @@ class RemittanceController extends Controller
             ->whereIn('LGS3.Store.StoreID', $storeIDs)
             ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
             ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-            ->get()->toArray();
+            ->get();
         foreach ($dat as $item) {
             $item->{'type'} = 'InventoryVoucher';
             $item->{'ok'} = 0;

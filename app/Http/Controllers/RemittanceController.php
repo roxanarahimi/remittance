@@ -153,6 +153,19 @@ class RemittanceController extends Controller
     public function readOnly(Request $request)
     {
         try {
+            $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
+            $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
+                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                ->whereNot(function ($query) {
+                    $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
+                        ->orWhere('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+                        ->orWhere('GNR3.Address.Details', 'LIKE', "%گرمدره%")
+                        ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
+                        ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
+                })
+                ->pluck('StoreID');
+
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')//InventoryVoucherItem//InventoryVoucherItemTrackingFactor//Part//Plant//Store
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
@@ -161,14 +174,12 @@ class RemittanceController extends Controller
                     "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
                     "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",
                 ])
-                ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
-                ->whereNot('LGS3.Store.Name', 'LIKE', "%گرمدره%")//68, 69
-                ->whereNot('GNR3.Address.Details', 'LIKE', "%گرمدره%")//68, 69
-                ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 68)//68, 69
-                ->orWhere('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', '=', 69)//68, 69
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+                ->where('LGS3.InventoryVoucher.Date','>=',today()->subDays(7))
+                ->whereIn('LGS3.Store.StoreID', $storeIDs)
+                ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-                ->get()->unique()->toArray();
+                ->get()->toArray();
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 0;
@@ -213,8 +224,8 @@ class RemittanceController extends Controller
             $filtered = array_filter($dat, function ($el) {
                 return $el->{'ok'} == 1;
             });
-            $dat2 = DB::connection('sqlsrv')->table('SLS3.Order')
-                ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
+            $dat2 = Order::
+                join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
                 ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
                 ->select(["SLS3.Order.OrderID as OrderID", "SLS3.Order.Number as OrderNumber",
@@ -223,8 +234,13 @@ class RemittanceController extends Controller
                 ->where('SLS3.Order.InventoryRef', 1)
                 ->where('SLS3.Order.State', 2)
                 ->where('SLS3.Order.FiscalYearRef', 1403)
-                ->orderBy('SLS3.Order.OrderID')
-                ->get()->unique()->toArray();
+                ->where('SLS3.CustomerAddress.Type', 2)
+                ->whereHas('OrderItems')
+                ->whereHas('OrderItems', function ($q) {
+                    $q->havingRaw('SUM(Quantity) >= ?', [50]);
+                })
+                ->orderBy('OrderID', 'DESC')
+                ->get()->toArray();
 
             $dat2 = array_values($dat2);
 

@@ -194,9 +194,6 @@ class RemittanceController extends Controller
                 ->where('InventoryVoucherRef', $item->{'OrderID'})->get();
 
             $item->{'OrderItems'} = $details;
-            $x = array_filter($details->toArray(), function ($el) {
-                return str_contains($el->{'ProductName'}, 'نودالیت');
-            });
             if (count($details) > 0) {
                 $item->{'ok'} = 1;
             }

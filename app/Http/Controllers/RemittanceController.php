@@ -200,16 +200,16 @@ class RemittanceController extends Controller
         });
         $productIDs = Product::where('Name', 'like', '%نودالیت%')->pluck("ProductID");
         $dat2 = DB::connection('sqlsrv')->table('SLS3.Order')
-            ->select(["SLS3.Order.OrderID as OrderID", "SLS3.Order.Number as OrderNumber",
-                "GNR3.Address.Name as AddressName", "Details as Address", "Phone", "SLS3.Order.CreationDate", "DeliveryDate",
-            ])
             ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
             ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
-            ->where('SLS3.Order.InventoryRef', 1)
-            ->where('SLS3.Order.FiscalYearRef', 1403)
-            ->where('SLS3.Order.State', 2)
+            ->select(["SLS3.Order.OrderID as OrderID", "SLS3.Order.Number as OrderNumber",
+                "GNR3.Address.Name as AddressName", "Details as Address", "Phone", "SLS3.Order.CreationDate", "DeliveryDate",
+            ])
             ->where('SLS3.CustomerAddress.Type', 2)
+            ->where('SLS3.Order.FiscalYearRef', 1403)
+            ->where('SLS3.Order.InventoryRef', 1)
+            ->where('SLS3.Order.State', 2)
             ->orderBy('SLS3.Order.OrderID')
             ->get()->toArray();
 
@@ -224,24 +224,49 @@ class RemittanceController extends Controller
             $details = DB::connection('sqlsrv')->table('SLS3.OrderItem')
                 ->join('SLS3.Product', 'SLS3.Product.ProductID', '=', 'SLS3.OrderItem.ProductRef')
                 ->select("SLS3.Product.Name as ProductName", "Quantity",
+                    DB::raw('SUM(SLS3.OrderItem.Quantity) as total_amount'),
                     "SLS3.Product.ProductID as Id",
                     "SLS3.Product.Number as ProductNumber"
                 )
                 ->where('OrderRef', $item->{'OrderID'})
                 ->whereIn('SLS3.Product.ProductID', $productIDs)
+                ->havingRaw('SUM(total_amount) > ?', [49])
                 ->get();
             $item->{'OrderItems'} = $details;
-            $item->{'noodElite'} = $details->sum('Quantity');
+//            foreach ($details as $it) {
+//                if (str_contains($it->{'ProductName'}, 'نودالیت')) {
+//                    $noodElite += $it->{'Quantity'};
+//                }
+//            }
+//            $item->{'noodElite'} = $noodElite;
+//
+//            if ($noodElite >= 50) {
+//                $item->{'ok'} = 1;
+//            }
         }
 
         $filtered2 = array_filter($dat2, function ($el) {
             return $el->{'OrderItems'}->sum('Quantity') >= 50;
         });
 
+        $input1 = array_values($filtered);
         $offset = 0;
         $perPage = 100;
-        $input1 = array_values($filtered);
+
         $input2 = array_values($filtered2);
+
+//
+//            if (!$request['type'] || $request['type'] == ''){
+//                $input = array_merge($input2,$input1);
+//            }
+//              if ($request['type'] && $request['type'] == 'Order'){
+//                $input = $input2;
+//            }
+//              if ($request['type'] && $request['type'] == 'InventoryVoucher'){
+//                $input = $input1;
+//            }
+        // $input = $input1;
+
         $input = array_merge($input2,$input1);
 
         if ($request['page'] && $request['page'] > 1) {

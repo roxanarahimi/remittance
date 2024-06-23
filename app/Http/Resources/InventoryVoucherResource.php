@@ -17,7 +17,8 @@ class InventoryVoucherResource extends JsonResource
         return [
 //            "OrderID" => $this->InventoryVoucherID,
             "OrderID" => $this->OrderID,
-            "OrderNumber" => $this->Number,
+//            "OrderNumber" => $this->Number,
+            "OrderNumber" => $this->OrderNumber,
 
 //            "AddressName" => $this->Store->Name . substr($this->InventoryVoucherID, -3),
             "AddressName" => $this->Store->Name . ' ' .$this->Number,

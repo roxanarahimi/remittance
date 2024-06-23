@@ -274,10 +274,9 @@ class RemittanceController extends Controller
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
                     ->whereIn('PartRef', $partIDs)
-                    ->take(2)->get();
+                    ->get();
                 $item->{'OrderItems'} = $details;
             }
-
             $filtered = array_filter($dat, function ($el) {
                 return count($el->{'OrderItems'}) > 0;
             });

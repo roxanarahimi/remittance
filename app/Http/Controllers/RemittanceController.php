@@ -285,6 +285,7 @@ class RemittanceController extends Controller
                 return count($el->{'OrderItems'}) > 0;
             });
             $vals = array_values($filtered);
+            return $vals;
 //            $input1 = InventoryVoucherResource::collection($vals);
 //            $input2 = OrderResource::collection($y);
 

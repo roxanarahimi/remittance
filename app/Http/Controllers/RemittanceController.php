@@ -235,8 +235,8 @@ class RemittanceController extends Controller
                 ->whereHas('OrderItems', function ($q) {
                     $q->havingRaw('SUM(Quantity) >= ?', [50]);
                 })
-                ->with('OrderItems')
-                ->with('Customer')
+                ->with('OrderItems as OrderItems')
+                ->with('Customer as Store')
                 ->orderBy('OrderID', 'DESC')
                 ->get()->toArray();
 
@@ -264,8 +264,8 @@ class RemittanceController extends Controller
                 ->whereHas('OrderItems', function ($q) use ($partIDs) {
                     $q->whereIn('PartRef', $partIDs);
                 })
-                ->with('OrderItems')
-                ->with('Store')
+                ->with('OrderItems as OrderItems')
+                ->with('Store as Store')
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get()->toArray();
 

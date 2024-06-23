@@ -184,7 +184,7 @@ class RemittanceController extends Controller
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 0;
                 $item->{'noodElite'} = '';
-                $item->{'AddressName'} = $item->{'AddressName'} .' '.$item->{'OrderNumber'};
+                $item->{'AddressName'} = $item->{'AddressName'} . substr($item->{'OrderID'}, -3);
                 $noodElite = 0;
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                     ->join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')

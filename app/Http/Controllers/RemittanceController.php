@@ -194,22 +194,13 @@ class RemittanceController extends Controller
                     ->join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItemTrackingFactor.PartRef')
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
-                    ->where('LGS3.Part.Name', 'like','%نودالیت%')
+                    ->whereIn('LGS3.Part.PartID', $partIDs)
                     ->get();
 
                 $item->{'OrderItems'} = $details;
-
-
-
-                $x = array_filter($details->toArray(), function ($el) {
-                    return str_contains($el->{'ProductName'}, 'نودالیت');
-                });
-                if (count($x) > 0) {
+                if (count($details) > 0) {
                     $item->{'ok'} = 1;
                 }
-//                if (str_contains($item->{'AddressName'}, 'گرمدره')){
-//                    $item->{'ok'} = 0;
-//                }
             }
 
             $filtered = array_filter($dat, function ($el) {

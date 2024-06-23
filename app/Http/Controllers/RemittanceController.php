@@ -277,7 +277,7 @@ class RemittanceController extends Controller
 //            foreach($input2 as $item){
 //                $input[] = $item;
 //            }
-            return $input1->{'data'};
+            return json_encode($input1,true);
             $offset = 0;
             $perPage = 100;
             if ($request['page'] && $request['page'] > 1) {

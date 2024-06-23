@@ -179,13 +179,11 @@ class RemittanceController extends Controller
                 ->whereIn('LGS3.Store.StoreID', $storeIDs)
                 ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68,69])//68, 69
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-                ->get()->unique()->toArray();
+                ->get()->toArray();
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 1;
-                $item->{'noodElite'} = '';
                 $item->{'AddressName'} = $item->{'AddressName'} . ' '.$item->{'OrderNumber'};
-                $noodElite = 0;
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                     ->join('LGS3.InventoryVoucherItemTrackingFactor', 'LGS3.InventoryVoucherItemTrackingFactor.InventoryVoucherItemRef', '=', 'LGS3.InventoryVoucherItem.InventoryVoucherItemID')
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItemTrackingFactor.PartRef')
@@ -195,7 +193,7 @@ class RemittanceController extends Controller
                     ->whereIn('LGS3.Part.PartID', $partIDs)
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
                     ->get();
-
+                $item->{'noodElite'} = count($details);
                 $item->{'OrderItems'} = $details;
             }
 

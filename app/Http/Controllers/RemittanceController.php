@@ -285,8 +285,9 @@ class RemittanceController extends Controller
             $input2 = OrderResource::collection($y);
 //            $input = array_merge((array)$input2, $input1);
 
-            $input = [];
-            return array_merge(array_values((array)$input2), array_values($input1));
+            $input[] = array_values((array)$input2);
+            $input[] = array_values($input1);
+            return $input1;
             $offset = 0;
             $perPage = 100;
             if ($request['page'] && $request['page'] > 1) {

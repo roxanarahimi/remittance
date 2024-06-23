@@ -206,6 +206,8 @@ class RemittanceController extends Controller
             ->select(["SLS3.Order.OrderID as OrderID", "SLS3.Order.Number as OrderNumber",
                 "GNR3.Address.Name as AddressName", "Details as Address", "Phone", "SLS3.Order.CreationDate", "DeliveryDate",
             ])
+            ->selectRaw('SUM(Quantity) as total_amount')
+            ->havingRaw('total_amount >= ?', [50])
             ->where('SLS3.CustomerAddress.Type', 2)
             ->where('SLS3.Order.FiscalYearRef', 1403)
             ->where('SLS3.Order.InventoryRef', 1)

@@ -178,12 +178,12 @@ class RemittanceController extends Controller
         ->whereIn('LGS3.Store.StoreID', $storeIDs)
         ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
         ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-        ->get()->toArray();
+        ->get();
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
         foreach ($dat as $item) {
-            $item['type'] = 'InventoryVoucher';
-            $item['ok'] = 1;
-            $item['AddressName'] = $item['AddressName'] . ' ' . $item['OrderNumber'];
+            $item->{'type'} = 'InventoryVoucher';
+            $item->{'ok'} = 1;
+            $item->{'AddressName'} = $item->{'AddressName'} . ' ' . $item->{'OrderNumber'};
             $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                 ->select("LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
                     "LGS3.InventoryVoucherItem.Barcode as Barcode", "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber")
@@ -192,8 +192,8 @@ class RemittanceController extends Controller
                 ->where('InventoryVoucherRef', $item->{'OrderID'})
                 ->whereIn('LGS3.Part.PartID', $partIDs)
                 ->get();
-            $item['noodElite'] = count($details);
-            $item['OrderItems'] = $details;
+            $item->{'noodElite'} = count($details);
+            $item->{'OrderItems'} = $details;
         }
         return $dat;
     }

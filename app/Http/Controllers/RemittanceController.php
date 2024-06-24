@@ -236,7 +236,7 @@ class RemittanceController extends Controller
 
         $dat = $this->getInventoryVouchers();
         $dat2 = $this->getOrders();
-        $filtered = array_filter((array)$dat, function ($el) {return count($el->{'OrderItems'}) > 0;});
+        $filtered = array_filter((array)$dat, function ($el) {return count($el['OrderItems']) > 0;});
         $filtered2 = array_filter($dat2, function ($el) {return $el->{'OrderItems'}->sum('Quantity') >= 50;});
         $input1 = array_values($filtered);
         $input2 = array_values($filtered2);

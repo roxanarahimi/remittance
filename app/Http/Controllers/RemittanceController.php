@@ -170,9 +170,9 @@ class RemittanceController extends Controller
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
             ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
             ->whereIn('LGS3.Store.StoreID', $storeIDs)
+            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
             ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
                 $q->whereIn('PartRef', $partIDs);

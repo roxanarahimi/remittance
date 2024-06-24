@@ -181,7 +181,7 @@ class RemittanceController extends Controller
         ->get()->toArray();
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
         foreach ($dat as $item) {
-            $item->{'type'} = 'InventoryVoucher';
+            $item['type'] = 'InventoryVoucher';
             $item->{'ok'} = 1;
             $item->{'AddressName'} = $item->{'AddressName'} . ' ' . $item->{'OrderNumber'};
             $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')

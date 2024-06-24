@@ -164,8 +164,8 @@ class RemittanceController extends Controller
                     ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
             })
             ->pluck('StoreID');
-        $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')
-        ->select([
+        $dat = InventoryVoucher::
+        select([
             "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
             "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone", "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate",
         ])

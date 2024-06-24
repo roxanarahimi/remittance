@@ -232,7 +232,6 @@ class RemittanceController extends Controller
     public function readOnly(Request $request)
     {
         try {
-
             //Mainnnnnnnnn
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
@@ -950,6 +949,9 @@ class RemittanceController extends Controller
             return response($exception);
         }
     }
+
+
+
 
     public function getStores(Request $request)
     {

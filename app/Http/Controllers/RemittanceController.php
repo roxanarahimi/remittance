@@ -206,7 +206,7 @@ class RemittanceController extends Controller
         return $dat2;
     }
 
-    public function readOnly(Request $request)
+    public function readOnly1(Request $request)
     {
 
         $dat = $this->getInventoryVouchers();
@@ -229,7 +229,7 @@ class RemittanceController extends Controller
         return response()->json($paginator, 200);
 
     }
-    public function readOnly0000(Request $request)
+    public function readOnly(Request $request)
     {
         try {
 
@@ -404,8 +404,6 @@ class RemittanceController extends Controller
 
         return response()->json($paginator, 200);
     }
-
-
 
     public function readOnly11111(Request $request)
     {

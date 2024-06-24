@@ -19,6 +19,7 @@ class OrderResource extends JsonResource
             "OrderNumber" => $this->Number,
 
             "AddressName" => $this->Customer->CustomerAddress->Address->Name . ' ' .$this->Number,
+            "ok" => 1,
 
             "Address" => $this->Customer->CustomerAddress->Address->Details,
             "Phone" => $this->Customer->CustomerAddress->Address->Phone,

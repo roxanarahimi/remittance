@@ -186,8 +186,6 @@ class RemittanceController extends Controller
 
     public function getOrders()
     {
-        $productIDs = Product::where('Name', 'like', '%نودالیت%')->pluck("ProductID");
-
         $dat2 =  Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
             "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef')
             ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
@@ -204,7 +202,7 @@ class RemittanceController extends Controller
             ->orderBy('OrderID', 'DESC')
             ->get();
 
-        $dat2 = InventoryVoucherResource::collection($dat2);
+        $dat2 = OrderResource::collection($dat2);
         return $dat2;
     }
 

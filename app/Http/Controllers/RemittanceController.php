@@ -180,7 +180,7 @@ class RemittanceController extends Controller
             ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get();
 
-        $data = InventoryVoucherResource::collection($dat);
+        $dat = InventoryVoucherResource::collection($dat);
         return $dat;
     }
 
@@ -228,7 +228,7 @@ class RemittanceController extends Controller
 //            return count((array)$el->{'OrderItems'}) > 0;
 //        });
         $filtered = $dat;
-        return $dat;
+        return $dat['data'];
 
         $filtered2 = array_filter($dat2, function ($el) {
             return $el->{'OrderItems'}->sum('Quantity') >= 50;

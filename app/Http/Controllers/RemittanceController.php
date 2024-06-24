@@ -228,7 +228,7 @@ class RemittanceController extends Controller
 //            return count((array)$el->{'OrderItems'}) > 0;
 //        });
         $filtered = $dat;
-        return json_decode($dat, true);
+        return json_decode(json_encode($dat));
 
         $filtered2 = array_filter($dat2, function ($el) {
             return $el->{'OrderItems'}->sum('Quantity') >= 50;

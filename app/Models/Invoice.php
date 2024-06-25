@@ -15,7 +15,7 @@ class Invoice extends Model
     }
     public function address()
     {
-        return $this->hasMany(InvoiceAddress::class, 'AddressID', 'AddressID');
+        return $this->hasOne(InvoiceAddress::class, 'AddressID', 'AddressID');
     }
 
 }

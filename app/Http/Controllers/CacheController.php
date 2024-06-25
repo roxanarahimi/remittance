@@ -21,7 +21,7 @@ use Illuminate\Validation\Rules\In;
 
 class CacheController extends Controller
 {
-    public function getInventoryVouchers($inventoryVoucherIDs): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    public function getInventoryVouchers($inventoryVoucherIDs)
     {
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
@@ -54,7 +54,7 @@ class CacheController extends Controller
         return $dat;
     }
 
-    public function getOrders($orderIDs): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    public function getOrders($orderIDs)
     {
         $dat2 = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
             "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef')

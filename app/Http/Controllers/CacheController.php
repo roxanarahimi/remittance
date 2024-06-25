@@ -79,7 +79,7 @@ class CacheController extends Controller
         return $dat2;
     }
 
-    public function cacheInvoice(Request $request): \Illuminate\Http\JsonResponse
+    public function cacheInvoice(Request $request)
     {
         $inventoryVoucherIDs = Invoice::where('DeliveryDate', '>=', today()->subDays(2))
             ->where('Type','InventoryVoucher')->orderByDesc('id')->pluck('OrderID');
@@ -89,7 +89,7 @@ class CacheController extends Controller
         $d1 = $this->getInventoryVouchers($inventoryVoucherIDs);
         $d2 = $this->getOrders($orderIDs);
 
-        return response()->json([$d1,$d2], 200);
+        return $d1;
 
         foreach($d1 as $item){
             Invoice::create([

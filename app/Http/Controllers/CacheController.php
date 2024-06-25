@@ -86,6 +86,7 @@ class CacheController extends Controller
         $d1 = $this->getInventoryVouchers($inventoryVoucherIDs);
         $d2 = $this->getOrders($orderIDs);
 
+        return [$d1,$d2];
         foreach($d1 as $item){
             Invoice::cteate([
                 'Type'=>'InventoryVoucher',

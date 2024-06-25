@@ -18,8 +18,8 @@ class OrderResource extends JsonResource
             "OrderID" => $this->OrderID,
             "OrderNumber" => $this->Number,
 
+            "AddressID" => $this->Customer->CustomerAddress->Address->AddressID,
             "AddressName" => $this->Customer->CustomerAddress->Address->Name . ' ' .$this->Number,
-            "ok" => 1,
 
             "Address" => $this->Customer->CustomerAddress->Address->Details,
             "Phone" => $this->Customer->CustomerAddress->Address->Phone,
@@ -29,6 +29,8 @@ class OrderResource extends JsonResource
             "CreationDate" => $this->CreationDate,
             "DeliveryDate" => $this->CreationDate,
             "OrderItems" => OrderItemResource::collection($this->OrderItems),
+            "ok" => 1,//
+
         ];
     }
 }

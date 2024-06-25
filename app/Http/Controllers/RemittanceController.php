@@ -209,7 +209,6 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-
         $dat = $this->getInventoryVouchers();
         $dat2 = $this->getOrders();
         $filtered = json_decode(json_encode($dat));

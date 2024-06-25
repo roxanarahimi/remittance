@@ -163,9 +163,10 @@ class CacheController extends Controller
                     }
                 }
             }
-            $d3 = Invoice::orderByDesc('id')->orderByDesc('OrderID')->orderByDesc('Type')->paginate(100);
-            $data = InvoiceResource::collection($d3);
-            return response()->json($d3, 200);
+//            $d3 = Invoice::orderByDesc('id')->orderByDesc('OrderID')->orderByDesc('Type')->paginate(100);
+//            $data = InvoiceResource::collection($d3);
+//            return response()->json($d3, 200);
+            return response('cache is ok', 200);
         }catch (\Exception $exception){
             return $exception;
         }

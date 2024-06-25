@@ -118,9 +118,9 @@ class CacheController extends Controller
                 if(!$product){
                     InvoiceProduct::create([
                         'Type'=> 'Part',
-                        'ProductID'=>$item2->ProductRef,
-                        'ProductName'=>$item2->ProductName,
-                        'ProductNumber'=>$item2->ProductNumber
+                        'ProductID'=>$item2->Part->PartID,
+                        'ProductName'=>$item2->Part->Name,
+                        'ProductNumber'=>$item2->Part->Code
                     ]);
                 }
             }
@@ -154,8 +154,8 @@ class CacheController extends Controller
                 if(!$product){
                     InvoiceProduct::create([
                         'Type'=> 'Product',
-                        'ProductID'=>$item2->ProductRef,
-                        'ProductName'=>$item2->ProductName,
+                        'ProductID'=>$item2->Product->ProductID,
+                        'ProductName'=>$item2->Product->ProductName,
                         'ProductNumber'=>$item2->ProductNumber
                     ]);
                 }

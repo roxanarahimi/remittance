@@ -156,10 +156,10 @@ class CacheController extends Controller
                     }
                 }
             }
-            return '
+            echo '
 ' . now()->format('Y-m-d h:i:s') . ' - UTC: cache is ok';
         }catch (\Exception $exception){
-            return $exception->getMessage();
+            echo $exception->getMessage();
         }
 //where('DeliveryDate', '>=', today()->subDays(7))
 

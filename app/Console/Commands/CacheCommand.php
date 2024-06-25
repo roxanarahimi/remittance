@@ -27,7 +27,7 @@ class CacheCommand extends Command
     {
 
         echo '
-' . now()->format('Y-m-d h:i:s') . ': cache created successfully!
+' . now()->format('Y-m-d h:i:s') . ' - UTC: cache created successfully!
 ';
     }
 }

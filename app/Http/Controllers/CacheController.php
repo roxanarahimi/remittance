@@ -92,7 +92,7 @@ class CacheController extends Controller
 //        return response()->json([$d1,$d2], 200);
 
         foreach($d1 as $item){
-            Invoice::cteate([
+            Invoice::create([
                 'Type'=>'InventoryVoucher',
                 'OrderID'=>$item['OrderID'],
                 'OrderNumber'=>$item['OrderNumber'],
@@ -127,7 +127,7 @@ class CacheController extends Controller
 
         }
         foreach($d2 as $item){
-            Invoice::cteate([
+            Invoice::create([
                 'Type'=>'Order',
                 'OrderID'=>$item['OrderID'],
                 'OrderNumber'=>$item['OrderNumber'],

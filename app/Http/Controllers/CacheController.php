@@ -162,7 +162,7 @@ class CacheController extends Controller
                 }
             }
         }
-        $d3 = Invoice::orderByDesc('id')->get();
+        $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))->orderByDesc('OrderID')->orderByDesc('Type')->get();
         return response()->json(InvoiceResource::collection($d3), 200);
     }
 

@@ -80,7 +80,6 @@ class CacheController extends Controller
 
     public function cacheInvoice(Request $request)
     {
-        return 'this is a test';
         try {
             $inventoryVoucherIDs = Invoice::
 //        where('DeliveryDate', '>=', today()->subDays(7))->
@@ -91,7 +90,6 @@ class CacheController extends Controller
             where('Type','Order')->orderByDesc('id')->pluck('OrderID');
             $d1 = $this->getInventoryVouchers($inventoryVoucherIDs);
             $d2 = $this->getOrders($orderIDs);
-
 
             foreach($d1 as $item){
                 $invoice = Invoice::create([
@@ -164,12 +162,10 @@ class CacheController extends Controller
                     }
                 }
             }
-//            $d3 = Invoice::orderByDesc('id')->orderByDesc('OrderID')->orderByDesc('Type')->paginate(100);
-//            $data = InvoiceResource::collection($d3);
-//            return response()->json($d3, 200);
-            return response('cache is ok', 200);
+            return '
+' . now()->format('Y-m-d h:i:s') . ' - UTC: cache is ok';
         }catch (\Exception $exception){
-            return $exception;
+            return $exception->getMessage();
         }
 
 //where('DeliveryDate', '>=', today()->subDays(7))

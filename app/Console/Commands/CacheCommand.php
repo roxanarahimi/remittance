@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\CacheController;
 
 class CacheCommand extends Command
 {
@@ -25,8 +26,7 @@ class CacheCommand extends Command
      */
     public function handle()
     {
-
-        $result = (new \App\Http\Controllers\CacheController)->cacheInvoice();
+        $result = CacheController::cacheInvoice();
         echo $result;
 //        if ($result) {
 //            echo '

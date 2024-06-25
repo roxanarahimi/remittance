@@ -78,7 +78,7 @@ class CacheController extends Controller
         return $dat2;
     }
 
-    public function cacheInvoice(Request $request)
+    public function cacheInvoice()
     {
         try {
             $inventoryVoucherIDs = Invoice::

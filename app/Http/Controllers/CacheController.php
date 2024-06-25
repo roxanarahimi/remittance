@@ -85,6 +85,7 @@ class CacheController extends Controller
             ->where('Type','InventoryVoucher')->orderByDesc('id')->pluck('OrderID');
         $orderIDs = Invoice::where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))
             ->where('Type','Order')->orderByDesc('id')->pluck('OrderID');
+        return [$inventoryVoucherIDs,$orderIDs];
         $d1 = $this->getInventoryVouchers($inventoryVoucherIDs);
         $d2 = $this->getOrders($orderIDs);
 

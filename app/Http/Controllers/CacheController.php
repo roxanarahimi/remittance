@@ -84,20 +84,18 @@ class CacheController extends Controller
             ->where('Type','InventoryVoucher')->orderByDesc('id')->pluck('OrderID');
         $orderIDs = Invoice::where('DeliveryDate', '>=', today()->subDays(2))
             ->where('Type','Order')->orderByDesc('id')->pluck('OrderID');
-//        return [$inventoryVoucherIDs,$orderIDs];
         $d1 = $this->getInventoryVouchers($inventoryVoucherIDs);
         $d2 = $this->getOrders($orderIDs);
 
 
         foreach($d1 as $item){
-            return $item->InventoryVoucherID;
             Invoice::create([
                 'Type'=>'InventoryVoucher',
-                'OrderID'=>$item->OrderID,
+                'OrderID'=>$item->InventoryVoucherID,
                 'OrderNumber'=>$item->OrderNumber,
                 'AddressID'=>$item->Store->Plant->Address->AddressID,
                 'Sum'=>$item->OrderItems->sum('Quantity'),
-                'DeliveryDate'=>$item['DeliveryDate']
+                'DeliveryDate'=>$item->DeliveryDate
             ]);
             $address = InvoiceAddress::where('AddressID',$item->Store->Plant->Address->AddressID)->first();
             if(!$address){
@@ -111,7 +109,7 @@ class CacheController extends Controller
             foreach($item->OrderItems as $item2){
                 InvoiceItem::create([
                     'ProductID'=>$item2->Part->PartID,
-                    'Quantity'=>$item2['Quantity'],
+                    'Quantity'=>$item2->Quantity,
                 ]);
                 $product = InvoiceProduct::where('ProductID',$item2->Id)->where('Type','Part')->first();
                 if(!$product){

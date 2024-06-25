@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Middleware\Token;
 use App\Http\Resources\InventoryVoucherResource;
+use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\RemittanceResource;
 use App\Models\InventoryVoucher;
 use App\Models\InventoryVoucherItem;
+use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Part;
 use App\Models\Product;
@@ -233,6 +235,8 @@ class RemittanceController extends Controller
     public function readOnly(Request $request)
     {
         try {
+            $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))->orderByDesc('OrderID')->orderByDesc('Type')->get();
+            return response()->json(InvoiceResource::collection($d3), 200);
             //Mainnnnnnnnn
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')

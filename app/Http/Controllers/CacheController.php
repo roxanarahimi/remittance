@@ -90,7 +90,7 @@ class CacheController extends Controller
 
 
         foreach($d1 as $item){
-            return $item->address->AddressName;
+            return $item->Store->Name;
 
             Invoice::create([
                 'Type'=>'InventoryVoucher',

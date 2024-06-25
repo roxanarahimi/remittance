@@ -14,11 +14,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('app:cache')
             ->everyFiveSeconds()
-            ->appendOutputTo('scheduler.log');
-    }
-    public function scheduleTimezone(): string
-    {
-        return 'Asia/Tehran';
+            ->appendOutputTo('scheduler.log')
+            ->timezone('Asia/Tehran');
     }
 
     /**

@@ -146,14 +146,14 @@ class CacheController extends Controller
             foreach($item->OrderItems as $item2){
                 InvoiceItem::create([
                     'invoice_id'=>$invoice->id,
-                    'ProductID'=>$item->Product->ProductID,
+                    'ProductID'=>$item->Id,
                     'Quantity'=>$item2->Quantity,
                 ]);
                 $product = InvoiceProduct::where('ProductID',$item2->Id)->where('Type','Product')->first();
                 if(!$product){
                     InvoiceProduct::create([
                         'Type'=> 'Product',
-                        'ProductID'=>$item2->Product->ProductID,
+                        'ProductID'=>$item2->Id,
                         'ProductName'=>$item2->Product->ProductName,
                         'ProductNumber'=>$item2->Product->ProductNumber
                     ]);

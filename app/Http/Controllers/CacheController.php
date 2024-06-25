@@ -91,7 +91,7 @@ class CacheController extends Controller
 
 
         foreach($d1 as $item){
-            return $item;
+            return json_decode($item);
 
             Invoice::create([
                 'Type'=>'InventoryVoucher',

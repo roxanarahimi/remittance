@@ -108,7 +108,6 @@ class CacheController extends Controller
                 ]);
             }
             foreach($item->OrderItems as $item2){
-                return [$item2, $item2->ProductRef,$item2->Product->Id];
                 InvoiceItem::create([
                     'invoice_id'=>$invoice->id,
                     'ProductID'=>$item2->ProductRef,

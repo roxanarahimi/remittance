@@ -20,7 +20,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-use Illuminate\Support\Facades\Redis;
 // error_reporting(E_ALL);
 // ini_set('display_errors', '1');
 
@@ -52,27 +51,12 @@ class RemittanceController extends Controller
 
     public function store(Request $request)
     {
-        $data = json_encode([
+
+        $myfile = fopen('../storage/logs/failed_data_entries/' . $request['OrderID'] . ".log", "w") or die("Unable to open file!");
+        $txt = json_encode([
             'OrderID' => $request['OrderID'],
             'OrderItems' => $request['OrderItems'],
             'name' => $request['name'],
-        ]);
-        $id = $request['OrderID'];
-        $info = Redis::get($request['OrderID']);
-        if (isset($info)) {
-            $id = $request['OrderID'] . '-' . substr(explode(',', $request['OrderItems'])[0], -4);
-        }
-        Redis::set($id, $data);
-        $value = Redis::get($id);
-        $json = json_decode($value);
-        $orderId = $json->{'OrderID'};
-        $items = explode(',', $json->{'OrderItems'});
-        $name = $json->{'name'};
-        $myfile = fopen('../storage/logs/failed_data_entries/' . $id . ".log", "w") or die("Unable to open file!");
-        $txt = json_encode([
-            'OrderID' => $orderId,
-            'name' => $name,
-            'OrderItems' => $items
         ]);
         fwrite($myfile, $txt);
         fclose($myfile);
@@ -107,7 +91,7 @@ class RemittanceController extends Controller
                 } catch (\Exception $exception) {
                     return response(['message' =>
                         'خطای پایگاه داده. لطفا کد '
-                        . $id .
+                        . $request['OrderID'] .
                         ' را یادداشت کرده و جهت ثبت بارکد ها به پشتیبانی اطلاع دهید'], 500);
                 }
             }

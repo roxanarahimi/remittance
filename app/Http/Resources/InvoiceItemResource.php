@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use function Symfony\Component\String\s;
 
 class InvoiceItemResource extends JsonResource
 {
@@ -18,7 +19,7 @@ class InvoiceItemResource extends JsonResource
             "Id" => $this->ProductID,
             "ProductName" => $this->product->ProductName,
             "ProductNumber" => $this->product->ProductNumber,
-            "Quantity" => $this->Quantity,
+            "Quantity" => (string)$this->Quantity,
             "Barcodes" => $this->barcodes
         ];
     }

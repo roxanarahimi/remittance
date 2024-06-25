@@ -26,7 +26,8 @@ class CacheCommand extends Command
     public function handle()
     {
 
-        echo now()->format('Y-m-d h:i:s').': cache created successfully!
+        echo '
+' . now()->format('Y-m-d h:i:s') . ': cache created successfully!
 ';
     }
 }

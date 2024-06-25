@@ -88,9 +88,10 @@ class CacheCommand extends Command
         return $dat2;
     }
 
-    public function cacheInvoice()
+    public function handle()
     {
-         return 'im here!';
+        //(new \App\Http\Controllers\CacheController)->cacheInvoice();
+        return 'im here!';
         try {
             $inventoryVoucherIDs = Invoice::
 //        where('DeliveryDate', '>=', today()->subDays(7))->
@@ -178,13 +179,5 @@ class CacheCommand extends Command
         }catch (\Exception $exception){
             echo $exception->getMessage();
         }
-//where('DeliveryDate', '>=', today()->subDays(7))
-
-    }
-    public function handle()
-    {
-        //(new \App\Http\Controllers\CacheController)->cacheInvoice();
-        $this->cacheInvoice();
-
     }
 }

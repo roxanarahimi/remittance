@@ -156,7 +156,7 @@ class CacheController extends Controller
                         'Type'=> 'Product',
                         'ProductID'=>$item2->Product->ProductID,
                         'ProductName'=>$item2->Product->Name,
-                        'ProductNumber'=>$item2->Number
+                        'ProductNumber'=>$item2->Product->Number
                     ]);
                 }
             }

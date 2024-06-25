@@ -236,7 +236,17 @@ class RemittanceController extends Controller
     {
         try {
             $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))->orderByDesc('OrderID')->orderByDesc('Type')->get();
-            return response()->json(InvoiceResource::collection($d3), 200);
+            $input = InvoiceResource::collection($d3);
+            $offset = 0;
+            $perPage = 100;
+            if ($request['page'] && $request['page'] > 1) {
+                $offset = ($request['page'] - 1) * $perPage;
+            }
+            $info = array_slice($input, $offset, $perPage);
+            $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+            return response()->json($paginator, 200);
+
+
             //Mainnnnnnnnn
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')

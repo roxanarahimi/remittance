@@ -92,13 +92,13 @@ class CacheController extends Controller
         foreach($d1 as $item){
             Invoice::create([
                 'Type'=>'InventoryVoucher',
-                'OrderID'=>$item['OrderID'],
-                'OrderNumber'=>$item['OrderNumber'],
+                'OrderID'=>$item->OrderID,
+                'OrderNumber'=>$item->OrderNumber,
                 'AddressID'=>$item->Store->Plant->Address->AddressID,
                 'Sum'=>$item->OrderItems->sum('Quantity'),
                 'DeliveryDate'=>$item['DeliveryDate']
             ]);
-            $address = InvoiceAddress::where('AddressID',$item['AddressID'])->first();
+            $address = InvoiceAddress::where('AddressID',$item->Store->Plant->Address->AddressID)->first();
             if(!$address){
                 InvoiceAddress::create([
                     'AddressID'=>$item->Store->Plant->Address->AddressID,
@@ -107,12 +107,12 @@ class CacheController extends Controller
                     'Phone'=>$item->Store->Plant->Address->Phone
                 ]);
             }
-            foreach($item['OrderItems'] as $item2){
+            foreach($item->OrderItems as $item2){
                 InvoiceItem::create([
                     'ProductID'=>$item2->Part->PartID,
                     'Quantity'=>$item2['Quantity'],
                 ]);
-                $product = InvoiceProduct::where('ProductID',$item2['Id'])->where('Type','Part')->first();
+                $product = InvoiceProduct::where('ProductID',$item2->Id)->where('Type','Part')->first();
                 if(!$product){
                     InvoiceProduct::create([
                         'Type'=> 'Part',
@@ -127,13 +127,13 @@ class CacheController extends Controller
         foreach($d2 as $item){
             Invoice::create([
                 'Type'=>'Order',
-                'OrderID'=>$item['OrderID'],
-                'OrderNumber'=>$item['OrderNumber'],
+                'OrderID'=>$item->OrderID,
+                'OrderNumber'=>$item->OrderNumber,
                 'AddressID'=>$item->Customer->CustomerAddress->Address->AddressID,
                 'Sum'=>$item->OrderItems->sum('Quantity'),
-                'DeliveryDate'=>$item['DeliveryDate']
+                'DeliveryDate'=>$item->DeliveryDate
             ]);
-            $address = InvoiceAddress::where('AddressID',$item['AddressID'])->first();
+            $address = InvoiceAddress::where('AddressID',$item->Customer->CustomerAddress->Address->AddressID)->first();
             if(!$address){
                 InvoiceAddress::create([
                     'AddressID'=>$item->Customer->CustomerAddress->Address->AddressID,
@@ -142,12 +142,12 @@ class CacheController extends Controller
                     'Phone'=>$item->Customer->CustomerAddress->Address->Phone
                 ]);
             }
-            foreach($item['OrderItems'] as $item2){
+            foreach($item->OrderItems as $item2){
                 InvoiceItem::create([
                     'ProductID'=>$item->Product->ProductID,
-                    'Quantity'=>$item2['Quantity'],
+                    'Quantity'=>$item2->Quantity,
                 ]);
-                $product = InvoiceProduct::where('ProductID',$item2['Id'])->where('Type','Product')->first();
+                $product = InvoiceProduct::where('ProductID',$item2->Id)->where('Type','Product')->first();
                 if(!$product){
                     InvoiceProduct::create([
                         'Type'=> 'Product',

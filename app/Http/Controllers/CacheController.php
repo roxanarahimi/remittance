@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\InventoryVoucherResource;
-use App\Http\Resources\InvoiceProductResource;
-use App\Http\Resources\InvoiceResource;
-use App\Http\Resources\OrderResource;
+
 use App\Models\InventoryVoucher;
 use App\Models\Invoice;
 use App\Models\InvoiceAddress;
@@ -13,11 +10,7 @@ use App\Models\InvoiceItem;
 use App\Models\InvoiceProduct;
 use App\Models\Order;
 use App\Models\Part;
-use App\Models\Store;
-use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rules\In;
 
 class CacheController extends Controller
 {
@@ -80,6 +73,7 @@ class CacheController extends Controller
 
     public function cacheInvoice()
     {
+        return 'im here!';
         try {
             $inventoryVoucherIDs = Invoice::
 //        where('DeliveryDate', '>=', today()->subDays(7))->

@@ -9,7 +9,6 @@ use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\RemittanceResource;
 use App\Models\InventoryVoucher;
-use App\Models\InventoryVoucherItem;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Part;
@@ -20,9 +19,8 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Collection;
 
+use Illuminate\Support\Facades\Redis;
 // error_reporting(E_ALL);
 // ini_set('display_errors', '1');
 

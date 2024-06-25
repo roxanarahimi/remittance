@@ -26,8 +26,8 @@ class InvoiceResource extends JsonResource
             "Type" => $this->Type,
             'Sum' => $this->Sum,
 
-            "CreationDate" => $this->CreationDate,//
-            "DeliveryDate" => $this->CreationDate,
+            "CreationDate" => $this->DeliveryDate,//
+            "DeliveryDate" => $this->DeliveryDate,
             "OrderItems" => InvoiceItemResource::collection($this->OrderItems),
             "ok" => 1,//
 

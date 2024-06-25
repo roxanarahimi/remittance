@@ -89,7 +89,7 @@ class CacheCommand extends Command
 
     public function handle()
     {
-
+        echo now()->format('Y-m-d h:i:s') . ' - UTC: started.';
         try {
             $inventoryVoucherIDs = Invoice::
 //        where('DeliveryDate', '>=', today()->subDays(7))->
@@ -100,7 +100,6 @@ class CacheCommand extends Command
             where('Type','Order')->orderByDesc('id')->pluck('OrderID');
             $d1 = $this->getInventoryVouchers($inventoryVoucherIDs);
             $d2 = $this->getOrders($orderIDs);
-
 
             foreach($d1 as $item){
                 $invoice = Invoice::create([
@@ -173,23 +172,11 @@ class CacheCommand extends Command
                     }
                 }
             }
-//            $d3 = Invoice::orderByDesc('id')->orderByDesc('OrderID')->orderByDesc('Type')->paginate(100);
-//            $data = InvoiceResource::collection($d3);
-//            return response()->json($d3, 200);
             echo '
 ' . now()->format('Y-m-d h:i:s') . ' - UTC: cache is ok';
         }catch (\Exception $exception){
             echo '
 ' . now()->format('Y-m-d h:i:s') . ' - UTC: '.$exception->getMessage();
         }
-//        if ($result) {
-//            echo '
-//' . now()->format('Y-m-d h:i:s') . ' - UTC: cache created successfully!
-//';
-//        } else {
-//            echo '
-//' . now()->format('Y-m-d h:i:s') . ' - UTC: cache creation failed!
-//';
-//        }
     }
 }

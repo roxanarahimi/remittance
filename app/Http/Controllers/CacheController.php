@@ -51,7 +51,6 @@ class CacheController extends Controller
             ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get();
 
-        $dat = InventoryVoucherResource::collection($dat);
         return $dat;
     }
 
@@ -75,7 +74,7 @@ class CacheController extends Controller
             ->orderBy('OrderID', 'DESC')
             ->get();
 
-        $dat2 = OrderResource::collection($dat2);
+//        $dat2 = OrderResource::collection($dat2);
         return $dat2;
     }
 
@@ -91,7 +90,7 @@ class CacheController extends Controller
 
 
         foreach($d1 as $item){
-            return array_values((array)$item);
+            return $item;
 
             Invoice::create([
                 'Type'=>'InventoryVoucher',

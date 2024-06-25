@@ -102,7 +102,7 @@ class CacheController extends Controller
             if(!$address){
                 InvoiceAddress::create([
                     'AddressID'=>$item->Store->Plant->Address->AddressID,
-                    'AddressName'=>$item->Store->Plant->Address->AddressName,
+                    'AddressName'=>$item->Store->Name,
                     'Address'=>$item->Store->Plant->Address->Details,
                     'Phone'=>$item->Store->Plant->Address->Phone
                 ]);

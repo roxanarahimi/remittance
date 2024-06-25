@@ -26,8 +26,8 @@ class CacheCommand extends Command
      */
     public function handle()
     {
-        $result = CacheController::cacheInvoice();
-        echo $result;
+        (new \App\Http\Controllers\CacheController)->cacheInvoice();
+
 //        if ($result) {
 //            echo '
 //' . now()->format('Y-m-d h:i:s') . ' - UTC: cache created successfully!

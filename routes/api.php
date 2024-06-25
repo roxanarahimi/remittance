@@ -43,6 +43,6 @@ Route::controller(App\Http\Controllers\TestController::class)->group(function ()
 });
 
 Route::controller(App\Http\Controllers\CacheController::class)->group(function () {
-        Route::post('/cashe', 'cacheInvoice');
+        Route::post('/cache', 'cacheInvoice');
 });
 

@@ -93,7 +93,7 @@ class CacheController extends Controller
             Invoice::create([
                 'Type'=>'InventoryVoucher',
                 'OrderID'=>$item->InventoryVoucherID,
-                'OrderNumber'=>$item->OrderNumber,
+                'OrderNumber'=>$item->Number,
                 'AddressID'=>$item->Store->Plant->Address->AddressID,
                 'Sum'=>$item->OrderItems->sum('Quantity'),
                 'DeliveryDate'=>$item->DeliveryDate
@@ -128,7 +128,7 @@ class CacheController extends Controller
             Invoice::create([
                 'Type'=>'Order',
                 'OrderID'=>$item->OrderID,
-                'OrderNumber'=>$item->OrderNumber,
+                'OrderNumber'=>$item->Number,
                 'AddressID'=>$item->Customer->CustomerAddress->Address->AddressID,
                 'Sum'=>$item->OrderItems->sum('Quantity'),
                 'DeliveryDate'=>$item->DeliveryDate

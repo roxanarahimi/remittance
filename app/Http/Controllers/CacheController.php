@@ -80,6 +80,7 @@ class CacheController extends Controller
 
     public function cacheInvoice(Request $request)
     {
+        return 'this is a test';
         try {
             $inventoryVoucherIDs = Invoice::
 //        where('DeliveryDate', '>=', today()->subDays(7))->

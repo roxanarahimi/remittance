@@ -15,8 +15,7 @@ class InvoiceItem extends Model
     }
     public function product()
     {
-        return $this->hasOne(InvoiceProduct::class,  'ProductID','ProductID')
-            ->where('Type',$this->Type);
+        return $this->hasOne(InvoiceProduct::class,  'ProductID','ProductID');
     }
     public function barcodes()
     {

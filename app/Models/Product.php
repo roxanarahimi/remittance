@@ -11,8 +11,8 @@ class Product extends Model
     protected $table = 'SLS3.Product';
     protected $hidden = ['Version'];
 
-    public function Item()
+    public function invoiceItem()
     {
-        return $this->belongsTo(OrderItem::class, 'ProductID', 'ProductRef');
+        return $this->belongsTo(InvoiceItem::class,  'ProductID','ProductID');
     }
 }

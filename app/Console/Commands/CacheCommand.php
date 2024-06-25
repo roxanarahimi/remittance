@@ -26,7 +26,8 @@ class CacheCommand extends Command
     public function handle()
     {
 
-        $result = (new \App\Http\Controllers\CacheController)->cacheInvoice();
+        $e = (new \App\Http\Controllers\CacheController);
+        $result = $e->cacheInvoice();
         echo $result;
 //        if ($result) {
 //            echo '

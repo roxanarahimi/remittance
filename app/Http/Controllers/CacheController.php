@@ -167,7 +167,6 @@ class CacheController extends Controller
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
-
 //where('DeliveryDate', '>=', today()->subDays(7))
 
     }

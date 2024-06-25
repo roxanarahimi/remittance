@@ -89,6 +89,96 @@ class CacheCommand extends Command
 
     public function handle()
     {
-        echo now()->format('Y-m-d h:i:s') . ' - UTC: started.';
+//        echo now()->format('Y-m-d h:i:s') . ' - UTC: started.';
+        try {
+            $inventoryVoucherIDs = Invoice::
+//        where('DeliveryDate', '>=', today()->subDays(7))->
+            where('Type','InventoryVoucher')->orderByDesc('id')->pluck('OrderID');
+
+            $orderIDs = Invoice::
+//        where('DeliveryDate', '>=', today()->subDays(7))->
+            where('Type','Order')->orderByDesc('id')->pluck('OrderID');
+            $d1 = $this->getInventoryVouchers($inventoryVoucherIDs);
+            $d2 = $this->getOrders($orderIDs);
+
+            foreach($d1 as $item){
+                $invoice = Invoice::create([
+                    'Type'=>'InventoryVoucher',
+                    'OrderID'=>$item->InventoryVoucherID,
+                    'OrderNumber'=>$item->Number,
+                    'AddressID'=>$item->Store->Plant->Address->AddressID,
+                    'Sum'=>$item->OrderItems->sum('Quantity'),
+                    'DeliveryDate'=>$item->DeliveryDate
+                ]);
+                $address = InvoiceAddress::where('AddressID',$item->Store->Plant->Address->AddressID)->first();
+                if(!$address){
+                    InvoiceAddress::create([
+                        'AddressID'=>$item->Store->Plant->Address->AddressID,
+                        'AddressName'=>$item->Store->Name,
+                        'Address'=>$item->Store->Plant->Address->Details,
+                        'Phone'=>$item->Store->Plant->Address->Phone
+                    ]);
+                }
+                foreach($item->OrderItems as $item2){
+                    InvoiceItem::create([
+                        'invoice_id'=>$invoice->id,
+                        'ProductID'=>$item2->Part->PartID,
+                        'Quantity'=>$item2->Quantity,
+                    ]);
+                    $product = InvoiceProduct::where('ProductID',$item2->ProductRef)->where('Type','Part')->first();
+                    if(!$product){
+                        InvoiceProduct::create([
+                            'Type'=> 'Part',
+                            'ProductID'=>$item2->Part->PartID,
+                            'ProductName'=>$item2->Part->Name,
+                            'ProductNumber'=>$item2->Part->Code
+                        ]);
+                    }
+                }
+
+            }
+            foreach($d2 as $item){
+                $invoice = Invoice::create([
+                    'Type'=>'Order',
+                    'OrderID'=>$item->OrderID,
+                    'OrderNumber'=>$item->Number,
+                    'AddressID'=>$item->Customer->CustomerAddress->Address->AddressID,
+                    'Sum'=>$item->OrderItems->sum('Quantity'),
+                    'DeliveryDate'=>$item->DeliveryDate
+                ]);
+                $address = InvoiceAddress::where('AddressID',$item->Customer->CustomerAddress->Address->AddressID)->first();
+                if(!$address){
+                    InvoiceAddress::create([
+                        'AddressID'=>$item->Customer->CustomerAddress->Address->AddressID,
+                        'AddressName'=>$item->Customer->CustomerAddress->Address->Name,
+                        'Address'=>$item->Customer->CustomerAddress->Address->Details,
+                        'Phone'=>$item->Customer->CustomerAddress->Address->Phone
+                    ]);
+                }
+                foreach($item->OrderItems as $item2){
+                    InvoiceItem::create([
+                        'invoice_id'=>$invoice->id,
+                        'ProductID'=>$item2->Product->ProductID,
+                        'Quantity'=>$item2->Quantity,
+                    ]);
+                    $product = InvoiceProduct::where('ProductID',$item2->ProductRef)->where('Type','Product')->first();
+                    if(!$product){
+                        InvoiceProduct::create([
+                            'Type'=> 'Product',
+                            'ProductID'=>$item2->Product->ProductID,
+                            'ProductName'=>$item2->Product->Name,
+                            'ProductNumber'=>$item2->Product->Number
+                        ]);
+                    }
+                }
+            }
+            echo '
+' . now()->format('Y-m-d h:i:s') . ' - UTC: cache is ok
+';
+        }catch (\Exception $exception){
+            echo '
+' . now()->format('Y-m-d h:i:s') . ' - UTC: '.$exception->getMessage().'
+';
+        }
     }
 }

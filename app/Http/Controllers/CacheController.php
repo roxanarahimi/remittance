@@ -118,8 +118,8 @@ class CacheController extends Controller
                     InvoiceProduct::create([
                         'Type'=> 'Part',
                         'ProductID'=>$item2->Id,
-                        'ProductName'=>$item2->Part->Name,
-                        'ProductNumber'=>$item2->Part->Code
+                        'ProductName'=>$item2->ProductName,
+                        'ProductNumber'=>$item2->ProductNumber
                     ]);
                 }
             }
@@ -154,8 +154,8 @@ class CacheController extends Controller
                     InvoiceProduct::create([
                         'Type'=> 'Product',
                         'ProductID'=>$item2->Id,
-                        'ProductName'=>$item2->Product->ProductName,
-                        'ProductNumber'=>$item2->Product->ProductNumber
+                        'ProductName'=>$item2->ProductName,
+                        'ProductNumber'=>$item2->ProductNumber
                     ]);
                 }
             }

@@ -108,17 +108,17 @@ class CacheController extends Controller
                 ]);
             }
             foreach($item->OrderItems as $item2){
-                return [$item2, $item2->Id,$item2->Product->Id];
+                return [$item2, $item2->ProductRef,$item2->Product->Id];
                 InvoiceItem::create([
                     'invoice_id'=>$invoice->id,
-                    'ProductID'=>$item2->Id,
+                    'ProductID'=>$item2->ProductRef,
                     'Quantity'=>$item2->Quantity,
                 ]);
-                $product = InvoiceProduct::where('ProductID',$item2->Id)->where('Type','Part')->first();
+                $product = InvoiceProduct::where('ProductID',$item2->ProductRef)->where('Type','Part')->first();
                 if(!$product){
                     InvoiceProduct::create([
                         'Type'=> 'Part',
-                        'ProductID'=>$item2->Id,
+                        'ProductID'=>$item2->ProductRef,
                         'ProductName'=>$item2->ProductName,
                         'ProductNumber'=>$item2->ProductNumber
                     ]);
@@ -147,14 +147,14 @@ class CacheController extends Controller
             foreach($item->OrderItems as $item2){
                 InvoiceItem::create([
                     'invoice_id'=>$invoice->id,
-                    'ProductID'=>$item2->Id,
+                    'ProductID'=>$item2->ProductRef,
                     'Quantity'=>$item2->Quantity,
                 ]);
-                $product = InvoiceProduct::where('ProductID',$item2->Id)->where('Type','Product')->first();
+                $product = InvoiceProduct::where('ProductID',$item2->ProductRef)->where('Type','Product')->first();
                 if(!$product){
                     InvoiceProduct::create([
                         'Type'=> 'Product',
-                        'ProductID'=>$item2->Id,
+                        'ProductID'=>$item2->ProductRef,
                         'ProductName'=>$item2->ProductName,
                         'ProductNumber'=>$item2->ProductNumber
                     ]);

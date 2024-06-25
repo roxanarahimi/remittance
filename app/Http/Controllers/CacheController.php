@@ -81,8 +81,8 @@ class CacheController extends Controller
 
     public function cacheInvoice(Request $request): \Illuminate\Http\JsonResponse
     {
-        $inventoryVoucherIDs = Invoice::all()->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))->orderByDesc('id')->pluck('OrderID');
-        $orderIDs = Invoice::all()->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))->orderByDesc('id')->pluck('OrderID');
+        $inventoryVoucherIDs = Invoice::where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))->orderByDesc('id')->pluck('OrderID');
+        $orderIDs = Invoice::where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))->orderByDesc('id')->pluck('OrderID');
         $d1 = $this->getInventoryVouchers($inventoryVoucherIDs);
         $d2 = $this->getOrders($orderIDs);
 

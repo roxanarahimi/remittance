@@ -74,8 +74,6 @@ class CacheController extends Controller
     public function cacheInvoice()
     {
         try {
-            echo 'started...
-';
             $inventoryVoucherIDs = Invoice::
 //        where('DeliveryDate', '>=', today()->subDays(7))->
             where('Type','InventoryVoucher')->orderByDesc('id')->pluck('OrderID');
@@ -157,10 +155,10 @@ class CacheController extends Controller
                     }
                 }
             }
-            echo '
-' . now()->format('Y-m-d h:i:s') . ' - UTC: cache is ok';
+            echo now()->format('Y-m-d h:i:s') . ' - UTC: cache is ok
+';
         }catch (\Exception $exception){
-            echo $exception->getMessage().'
+            echo  now()->format('Y-m-d h:i:s') . ' - UTC: '.$exception->getMessage().'
 ';
         }
 //where('DeliveryDate', '>=', today()->subDays(7))

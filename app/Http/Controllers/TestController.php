@@ -44,13 +44,12 @@ class TestController extends Controller
             ->whereHas('invoice',function($q) use ($request) {
                 $q->where('Type',$request['Type'])->where('OrderNumber',$request['OrderNumber']);
             })
-            ->get();
-//        return $invoiceItemId;
+            ->get()->id;
         $myfile = fopen('../storage/logs/failed_data_entries/' . $request['OrderNumber'] . ".log", "w") or die("Unable to open file!");
         $txt = json_encode([
             'OrderNumber' => $request['OrderNumber'],
             'OrderItems' => $request['OrderItems'],
-            "invoice_item_id" => $request['invoice_item_id'],
+            "invoice_item_id" => $invoiceItemId,
         ]);
         fwrite($myfile, $txt);
         fclose($myfile);
@@ -60,7 +59,7 @@ class TestController extends Controller
         try {
             foreach ($orderItems as $item) {
                 InvoiceBarcode::create([
-                    "invoice_item_id" => $request['invoice_item_id'],
+                    "invoice_item_id" => $invoiceItemId,
                     "Barcode" => $item,
                 ]);
             }

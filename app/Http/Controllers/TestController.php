@@ -45,6 +45,7 @@ class TestController extends Controller
                 $q->where('Type',$request['Type'])->where('OrderNumber',$request['OrderNumber']);
             })
             ->first()->id;
+
         $myfile = fopen('../storage/logs/failed_data_entries/' . $request['OrderNumber'] . ".log", "w") or die("Unable to open file!");
         $txt = json_encode([
             'OrderNumber' => $request['OrderNumber'],
@@ -55,16 +56,16 @@ class TestController extends Controller
         fclose($myfile);
 
         $str = str_replace(' ', '', str_replace('"', '', $request['OrderItems']));
-        $orderItems = explode(',', $str);
+        $barcodes = explode(',', $str);
         try {
-            foreach ($orderItems as $item) {
+            foreach ($barcodes as $item) {
                 InvoiceBarcode::create([
                     "invoice_item_id" => $invoiceItemId,
                     "Barcode" => $item,
                 ]);
             }
             $invoiceBarcodes = InvoiceBarcode::orderByDesc('id')
-                ->where('invoice_item_id',$request['invoice_item_id'])
+                ->whereIn('Barcode',$barcodes)
                 ->get();
             return response(InvoiceBarcodeResource::collection($invoiceBarcodes), 201);
         } catch (\Exception $exception) {

@@ -15,7 +15,7 @@ class InvoiceItemResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        if ($this->productPart) {
+        if ($this->invoice->Type == 'InventoryVoucher') {
             $productName = $this->productPart->ProductName;
             $productNumber = $this->productPart->ProductNumber;
         } else {

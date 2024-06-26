@@ -41,6 +41,7 @@ class TestController extends Controller
     {
 //        return $request;
         $invoiceItemId = InvoiceItem::where('ProductID', $request['ProductID'])->get();
+        return $invoiceItemId;
 //            ->whereHas('invoice', function ($q) use ($request) {
 //                $q->where('OrderNumber', $request['OrderNumber'])
 //                    ->where('Type', $request['Type']);

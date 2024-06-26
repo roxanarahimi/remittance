@@ -40,16 +40,16 @@ class TestController extends Controller
     public function store(Request $request)
     {
 //        return $request;
-        $invoiceItemId = InvoiceItem::where('ProductID', $request['ProductID'])
-            ->whereHas('invoice', function ($q) use ($request) {
-                $q->where('OrderNumber', $request['OrderNumber'])->where('Type', $request['Type']);
-            })
-            ->first()->id;
+//        $invoiceItemId = InvoiceItem::where('ProductID', $request['ProductID'])
+//            ->whereHas('invoice', function ($q) use ($request) {
+//                $q->where('OrderNumber', $request['OrderNumber'])->where('Type', $request['Type']);
+//            })
+//            ->first()->id;
         $myfile = fopen('../storage/logs/failed_data_entries/' . $request['OrderNumber'] . ".log", "w") or die("Unable to open file!");
         $txt = json_encode([
             'OrderNumber' => $request['OrderNumber'],
             'OrderItems' => $request['OrderItems'],
-            "invoice_item_id" => $invoiceItemId,
+            "invoice_item_id" => $request['invoice_item_id'],
         ]);
         fwrite($myfile, $txt);
         fclose($myfile);
@@ -59,17 +59,12 @@ class TestController extends Controller
         try {
             foreach ($orderItems as $item) {
                 InvoiceBarcode::create([
-                    "invoice_item_id" => $invoiceItemId,
+                    "invoice_item_id" => $request['invoice_item_id'],
                     "Barcode" => $item,
                 ]);
             }
             $invoiceBarcodes = InvoiceBarcode::orderByDesc('id')
-                ->where('OrderNumber', $request['OrderNumber'])
-                ->whereHas('invoiceItem', function ($q) use ($request) {
-                    $q->whereHas('invoice', function ($x) use ($request) {
-                        $x->where('OrderNumber', $request['OrderNumber']);
-                    });
-                })
+                ->where('invoice_item_id',$request['invoice_item_id'])
                 ->get();
             return response(InvoiceBarcode::collection($invoiceBarcodes), 201);
         } catch (\Exception $exception) {

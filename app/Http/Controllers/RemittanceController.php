@@ -139,10 +139,10 @@ class RemittanceController extends Controller
     {
         $partIds = InvoiceProduct::
 //        where('CreationDate', '>=', today()->subDays(2))->
-        where('Type', 'Part')->pluck('ProductID');
+        where('Type', 'Part')->pluck('PartID');
         $productIds = InvoiceProduct::
 //        where('CreationDate', '>=', today()->subDays(2))->
-        where('Type', 'Product')->pluck('PartID');
+        where('Type', 'Product')->pluck('ProductID');
         $parts = Part::where('Name', 'like', '%نودالیت%')->whereNotIn('PartID', $partIds)->get();
         $products = Product::where('Name', 'like', '%نودالیت%')->whereNotIn('ProductID', $productIds)->get();
         foreach ($parts as $item) {

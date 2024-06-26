@@ -17,8 +17,8 @@ class InvoiceBarcodeResource extends JsonResource
         return [
             "id" => (int)$this->id,
             "ProductID" => $this->invoiceItem->ProductID,
-            "ProductName" => $this->invoiceItem->ProductName,
-            "ProductNumber" => $this->invoiceItem->ProductNumber,
+            "ProductName" => $this->invoiceItem->productProduct?->ProductName. $this->invoiceItem->productPart?->ProductName,
+            "ProductNumber" => $this->invoiceItem->productProduct?->ProductNumber. $this->invoiceItem->productPart?->ProductNumber,
             "Quantity" => (string)$this->invoiceItem->Quantity,
             "Barcode" => $this->Barcode
         ];

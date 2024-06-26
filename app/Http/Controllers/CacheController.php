@@ -62,7 +62,7 @@ class CacheController extends Controller
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))
+//            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))
             ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $inventoryVoucherIDs)
             ->whereIn('LGS3.Store.StoreID', $storeIDs)
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
@@ -83,7 +83,7 @@ class CacheController extends Controller
             ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
             ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
-            ->where('SLS3.Order.Date', '>=', today()->subDays(2))
+//            ->where('SLS3.Order.Date', '>=', today()->subDays(2))
             ->whereNotIn('SLS3.Order.OrderID', $orderIDs)
             ->where('SLS3.Order.InventoryRef', 1)
             ->where('SLS3.Order.State', 2)
@@ -104,8 +104,12 @@ class CacheController extends Controller
     {
         try {
             $this->cacheProducts();
-            $inventoryVoucherIDs = Invoice::where('DeliveryDate', '>=', today()->subDays(2))->where('Type', 'InventoryVoucher')->orderByDesc('id')->pluck('OrderID');
-            $orderIDs = Invoice::where('DeliveryDate', '>=', today()->subDays(2))->where('Type', 'Order')->orderByDesc('id')->pluck('OrderID');
+            $inventoryVoucherIDs = Invoice::
+//            where('DeliveryDate', '>=', today()->subDays(2))->
+            where('Type', 'InventoryVoucher')->orderByDesc('id')->pluck('OrderID');
+            $orderIDs = Invoice::
+//            where('DeliveryDate', '>=', today()->subDays(2))->
+            where('Type', 'Order')->orderByDesc('id')->pluck('OrderID');
             $d1 = $this->getInventoryVouchers($inventoryVoucherIDs);
             $d2 = $this->getOrders($orderIDs);
 

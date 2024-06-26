@@ -66,7 +66,7 @@ class TestController extends Controller
             $invoiceBarcodes = InvoiceBarcode::orderByDesc('id')
                 ->where('invoice_item_id',$request['invoice_item_id'])
                 ->get();
-            return response(InvoiceBarcode::collection($invoiceBarcodes), 201);
+            return response(InvoiceBarcodeResource::collection($invoiceBarcodes), 201);
         } catch (\Exception $exception) {
             return $exception;
             for ($i = 0; $i < 3; $i++) {
@@ -81,7 +81,7 @@ class TestController extends Controller
                     $invoiceBarcodes = InvoiceBarcode::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
                     if (count($invoiceBarcodes) == count($orderItems)) {
                         $i = 3;
-                        return response(InvoiceBarcode::collection($invoiceBarcodes), 201);
+                        return response(InvoiceBarcodeResource::collection($invoiceBarcodes), 201);
                     }
                 } catch (\Exception $exception) {
                     return response(['message' =>

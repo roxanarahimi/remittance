@@ -74,6 +74,8 @@ class CacheController extends Controller
     public function cacheInvoice()
     {
         try {
+            echo 'started...
+';
             $inventoryVoucherIDs = Invoice::
 //        where('DeliveryDate', '>=', today()->subDays(7))->
             where('Type','InventoryVoucher')->orderByDesc('id')->pluck('OrderID');

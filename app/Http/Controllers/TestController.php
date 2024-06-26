@@ -41,11 +41,10 @@ class TestController extends Controller
     {
         $invoiceItemId = InvoiceItem::where('ProductID', $request['ProductID'])
             ->with('invoice')
+            ->whereHas('invoice',function($q) use ($request) {
+                $q->where('Type',$request['Type'])->where('OrderNumber',$request['OrderNumber']);
+            })
             ->get();
-//            ->whereHas('invoice', function ($q) use ($request) {
-//                $q->where('OrderNumber', $request['OrderNumber'])->where('Type', $request['Type']);
-//            })
-//            ->first();
         return $invoiceItemId;
         $myfile = fopen('../storage/logs/failed_data_entries/' . $request['OrderNumber'] . ".log", "w") or die("Unable to open file!");
         $txt = json_encode([

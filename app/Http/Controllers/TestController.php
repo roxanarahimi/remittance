@@ -68,6 +68,7 @@ class TestController extends Controller
                 ->get();
             return response(InvoiceBarcode::collection($invoiceBarcodes), 201);
         } catch (\Exception $exception) {
+            return $exception;
             for ($i = 0; $i < 3; $i++) {
                 try {
                     foreach ($orderItems as $item) {

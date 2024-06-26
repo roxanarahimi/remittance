@@ -73,7 +73,7 @@ class CacheController extends Controller
 
     public function cacheInvoice()
     {
-       // return 'im here!';
+        echo 'im here!';
         try {
             $inventoryVoucherIDs = Invoice::
 //        where('DeliveryDate', '>=', today()->subDays(7))->

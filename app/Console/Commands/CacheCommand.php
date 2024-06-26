@@ -27,6 +27,8 @@ class CacheCommand extends Command
 
     public function handle()
     {
+
         (new \App\Http\Controllers\CacheController)->cacheInvoice();
+
     }
 }

@@ -45,7 +45,7 @@ class TestController extends Controller
                 $q->where('Type',$request['Type'])->where('OrderNumber',$request['OrderNumber']);
             })
             ->get();
-        return $invoiceItemId;
+//        return $invoiceItemId;
         $myfile = fopen('../storage/logs/failed_data_entries/' . $request['OrderNumber'] . ".log", "w") or die("Unable to open file!");
         $txt = json_encode([
             'OrderNumber' => $request['OrderNumber'],

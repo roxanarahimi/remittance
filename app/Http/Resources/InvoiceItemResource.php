@@ -15,20 +15,13 @@ class InvoiceItemResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        if ($this->invoice->Type == 'InventoryVoucher') {
-            $productName = $this->productPart->ProductName;
-            $productNumber = $this->productPart->ProductNumber;
-        } else {
-            $productName = $this->productProduct->ProductName;
-            $productNumber = $this->productProduct->ProductNumber;
-        }
         return [
             "invoice_item_id" => (int)$this->id,
             "Id" => $this->ProductID,
             "Product" => $this->productPart,
             "Product2" => $this->productProduct,
-            "ProductName" => $productName,
-            "ProductNumber" => $productNumber,
+            "ProductName" => $this->productProduct->ProductName || $this->productPart->ProductName,
+            "ProductNumber" => $this->productProduct->ProductNumber || $this->productPart->ProductNumber,
             "Quantity" => (string)$this->Quantity,
             "Barcodes" => $this->barcodes
         ];

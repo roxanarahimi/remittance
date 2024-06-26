@@ -139,7 +139,7 @@ class RemittanceController extends Controller
     {
         $partIds = InvoiceProduct::
 //        where('CreationDate', '>=', today()->subDays(2))->
-        where('Type', 'Part')->pluck('PartID');
+        where('Type', 'Part')->pluck('ProductID');
         $productIds = InvoiceProduct::
 //        where('CreationDate', '>=', today()->subDays(2))->
         where('Type', 'Product')->pluck('PartID');

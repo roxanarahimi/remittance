@@ -23,7 +23,7 @@ class InvoiceItem extends Model
     }
     public function barcodes()
     {
-        return $this->hasMany(InvoiceBarcode::class,  'id','invoice_item_id');
+        return $this->hasMany(InvoiceBarcode::class,  'invoice_item_id','id');
     }
 
 }

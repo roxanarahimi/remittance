@@ -352,12 +352,11 @@ class RemittanceController extends Controller
     public function showProduct($id)
     {
         try {
-            $dat = Part::select('PartID as ProductID', 'Name', 'PropertiesComment as Description', 'Code as Number')->where('Code', $id)->first();
+            $dat = InvoiceProduct::where('ProductNumber', $id)->where('Type','Part')->first();
             if (!$dat) {
-                $dat = Product::select('ProductID', 'Name', 'Description', 'Number')->where('Number', $id)->first();
+                $dat = InvoiceProduct::where('ProductNumber', $id)->where('Type','Product')->first();
             }
             return response()->json($dat, 200);
-
         } catch (\Exception $exception) {
             return response($exception);
         }

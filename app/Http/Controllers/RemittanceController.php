@@ -10,6 +10,7 @@ use App\Http\Resources\OrderResource;
 use App\Http\Resources\RemittanceResource;
 use App\Models\InventoryVoucher;
 use App\Models\Invoice;
+use App\Models\InvoiceProduct;
 use App\Models\Order;
 use App\Models\Part;
 use App\Models\Product;
@@ -134,6 +135,33 @@ class RemittanceController extends Controller
             return response($exception);
         }
     }
+    public function cacheProducts()
+    {
+        $partIds = InvoiceProduct::
+//        where('CreationDate', '>=', today()->subDays(2))->
+        where('Type', 'Part')->pluck('PartID');
+        $productIds = InvoiceProduct::
+//        where('CreationDate', '>=', today()->subDays(2))->
+        where('Type', 'Product')->pluck('PartID');
+        $parts = Part::where('Name', 'like', '%نودالیت%')->whereNotIn('PartID', $partIds)->get();
+        $products = Product::where('Name', 'like', '%نودالیت%')->whereNotIn('ProductID', $productIds)->get();
+        foreach ($parts as $item) {
+            InvoiceProduct::create([
+                'Type' => 'Part',
+                'ProductID' => $item->PartID,
+                'ProductName' => $item->Name,
+                'ProductNumber' => $item->Code
+            ]);
+        }
+        foreach ($products as $item) {
+            InvoiceProduct::create([
+                'Type' => 'Product',
+                'ProductID' => $item->PartID,
+                'ProductName' => $item->Name,
+                'ProductNumber' => $item->Code
+            ]);
+        }
+    }
 
     public function getInventoryVouchers()
     {
@@ -193,6 +221,10 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
+        $this->cacheProducts();
+        $d3 = InvoiceProduct::orderByDesc('id')->paginate(100);
+        return response()->json($d3, 200);
+
         $d3 = Invoice::
         where('DeliveryDate', '>=', today()->subDays(7))
             ->orderByDesc('OrderID')

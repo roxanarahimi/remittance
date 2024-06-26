@@ -158,7 +158,7 @@ class RemittanceController extends Controller
                 'Type' => 'Product',
                 'ProductID' => $item->ProductID,
                 'ProductName' => $item->Name,
-                'ProductNumber' => $item->Code
+                'ProductNumber' => $item->Number
             ]);
         }
     }

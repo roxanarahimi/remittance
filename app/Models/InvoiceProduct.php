@@ -9,7 +9,8 @@ class InvoiceProduct extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
-
-
-
+    public function invoiceItem()
+    {
+        return $this->belongsTo(InvoiceItem::class,  'id','invoice_item_id');
+    }
 }

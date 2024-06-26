@@ -15,7 +15,7 @@ class InvoiceItem extends Model
     }
     public function product()
     {
-        return $this->hasOne(InvoiceProduct::class,  'ProductID','ProductID');
+        return $this->hasOne(InvoiceProduct::class,  'id','invoice_item_id');
     }
     public function barcodes()
     {

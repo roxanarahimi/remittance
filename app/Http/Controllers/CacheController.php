@@ -32,9 +32,9 @@ class CacheController extends Controller
         foreach ($products as $item) {
             InvoiceProduct::create([
                 'Type' => 'Product',
-                'ProductID' => $item->PartID,
+                'ProductID' => $item->ProductID,
                 'ProductName' => $item->Name,
-                'ProductNumber' => $item->Code
+                'ProductNumber' => $item->Number
             ]);
         }
     }

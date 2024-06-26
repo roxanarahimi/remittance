@@ -17,7 +17,7 @@ class InvoiceItemResource extends JsonResource
     {
         $barcodes = [];
         foreach($this->barcodes as $item){
-            $barcodes[]=$item;
+            $barcodes[]=$item->Barcode;
         }
         return [
             "invoice_item_id" => (int)$this->id,

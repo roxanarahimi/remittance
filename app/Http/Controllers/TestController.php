@@ -30,7 +30,7 @@ class TestController extends Controller
     public function show(InvoiceBarcode $invoiceBarcode)
     {
         try {
-            return response(new InvoiceBarcode($invoiceBarcode), 200);
+            return response(new InvoiceBarcode((array)$invoiceBarcode), 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

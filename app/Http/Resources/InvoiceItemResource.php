@@ -15,12 +15,23 @@ class InvoiceItemResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            "Id" => $this->ProductID,
-            "ProductName" => $this->product->ProductName,
-            "ProductNumber" => $this->product->ProductNumber,
-            "Quantity" => (string)$this->Quantity,
-            "Barcodes" => $this->barcodes
-        ];
+        if($this->type == 'Part'){
+            return [
+                "Id" => $this->ProductID,
+                "ProductName" => $this->productPart->ProductName,
+                "ProductNumber" => $this->productPart->ProductNumber,
+                "Quantity" => (string)$this->Quantity,
+                "Barcodes" => $this->barcodes
+            ];
+        }elseif ($this->type == 'Product'){
+            return [
+                "Id" => $this->ProductID,
+                "ProductName" => $this->productProduct->ProductName,
+                "ProductNumber" => $this->productProduct->ProductNumber,
+                "Quantity" => (string)$this->Quantity,
+                "Barcodes" => $this->barcodes
+            ];
+        }
+
     }
 }

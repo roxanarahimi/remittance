@@ -30,7 +30,6 @@ class TestController extends Controller
     public function show(InvoiceBarcode $invoiceBarcode)
     {
         try {
-            $invoiceBarcode = InvoiceBarcode::where('id', $invoiceBarcode)->first();
             return response(new InvoiceBarcode($invoiceBarcode), 200);
         } catch (\Exception $exception) {
             return response($exception);

@@ -222,16 +222,17 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-        $this->cacheProducts();
-        $d3 = InvoiceProduct::orderByDesc('id')->paginate(100);
-        return response()->json($d3, 200);
 
         $d3 = Invoice::
         where('DeliveryDate', '>=', today()->subDays(7))
             ->orderByDesc('OrderID')
             ->orderByDesc('Type')
-            ->paginate(50);
+            ->paginate(100);
         $data = InvoiceResource::collection($d3);
+        return response()->json($d3, 200);
+
+        $this->cacheProducts();
+        $d3 = InvoiceProduct::orderByDesc('id')->paginate(100);
         return response()->json($d3, 200);
 
 

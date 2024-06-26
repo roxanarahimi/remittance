@@ -16,8 +16,7 @@ class CacheController extends Controller
 {
     public function getInventoryVouchers($inventoryVoucherIDs)
     {
-        $partIDs = DB::connection('sqlsrv')->table('LGS3.Part')
-            ->where('Name', 'like', '%نودالیت%')->pluck("PartID");
+        $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')

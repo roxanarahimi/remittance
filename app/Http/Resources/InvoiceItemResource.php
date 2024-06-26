@@ -19,11 +19,12 @@ class InvoiceItemResource extends JsonResource
         foreach($this->barcodes as $item){
             $barcodes[]=$item->Barcode;
         }
+        $type = $this->invoice->Type;
         return [
             "invoice_item_id" => (int)$this->id,
             "Id" => $this->ProductID,
-            "ProductName" => $this->productProduct?->ProductName . $this->productPart?->ProductName,
-            "ProductNumber" => $this->productProduct?->ProductNumber . $this->productPart?->ProductNumber,
+            "ProductName" => $type == 'InventoryVoucher' ? $this->productPart?->ProductName : $this->productProduct?->ProductName,
+            "ProductNumber" =>  $type == 'InventoryVoucher' ? $this->productPart?->ProductNumber : $this->productProduct?->ProductNumber,
             "Quantity" => (string)$this->Quantity,
             "Barcodes" => $barcodes
         ];

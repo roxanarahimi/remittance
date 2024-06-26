@@ -15,11 +15,13 @@ class InvoiceItem extends Model
     }
     public function productPart()
     {
-        return $this->hasOne(InvoiceProduct::class,  'ProductID','ProductID')->where('Type', 'Part');
+        return $this->hasOne(InvoiceProduct::class,  'ProductID','ProductID')
+            ->where('Type', 'Part');
     }
     public function productProduct()
     {
-        return $this->hasOne(InvoiceProduct::class,  'ProductID','ProductID')->where('Type', 'Product');
+        return $this->hasOne(InvoiceProduct::class,  'ProductID','ProductID')
+            ->where('Type', 'Product');
     }
     public function barcodes()
     {

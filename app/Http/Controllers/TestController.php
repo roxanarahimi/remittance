@@ -3,33 +3,35 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\Token;
-use App\Http\Resources\TestResource;
-use App\Models\Test;
+use App\Http\Resources\InvoiceBarcodeResource;
+use App\Models\InvoiceBarcode;
+use App\Models\InvoiceItem;
 use Dotenv\Validator;
+use Faker\Core\Barcode;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 
 class TestController extends Controller
 {
     public function __construct(Request $request)
     {
-        $this->middleware(Token::class)->except('readOnly1');
+        $this->middleware(Token::class);
     }
 
     public function index(Request $request)
     {
         try {
-            $data = Test::orderByDesc('id')->get();
-            return response(TestResource::collection($data), 200);
+            $data = InvoiceBarcode::orderByDesc('id')->get();
+            return response(InvoiceBarcodeResource::collection($data), 200);
         } catch (\Exception $exception) {
             return response($exception);
         }
     }
 
-    public function show(Test $test)
+    public function show(InvoiceBarcode $invoiceBarcode)
     {
         try {
-            return response(new TestResource($test), 200);
+            $invoiceBarcode = InvoiceBarcode::where('id', $invoiceBarcode)->first();
+            return response(new InvoiceBarcode($invoiceBarcode), 200);
         } catch (\Exception $exception) {
             return response($exception);
         }
@@ -37,11 +39,18 @@ class TestController extends Controller
 
     public function store(Request $request)
     {
-        $myfile = fopen('../storage/logs/failed_data_entries/' . $request['OrderID'] . ".log", "w") or die("Unable to open file!");
+//        return $request;
+        $invoiceItemId = InvoiceItem::where('ProductID', $request['ProductID'])
+            ->whereHas('invoice', function ($q) use ($request) {
+                $q->where('OrderNumber', $request['OrderNumber'])
+                    ->where('Type', $request['Type']);
+            })
+            ->first()->id;
+        $myfile = fopen('../storage/logs/failed_data_entries/' . $request['OrderNumber'] . ".log", "w") or die("Unable to open file!");
         $txt = json_encode([
-            'OrderID' => $request['OrderID'],
+            'OrderNumber' => $request['OrderNumber'],
             'OrderItems' => $request['OrderItems'],
-            'name' => $request['name'],
+            "invoice_item_id" => $invoiceItemId,
         ]);
         fwrite($myfile, $txt);
         fclose($myfile);
@@ -50,28 +59,34 @@ class TestController extends Controller
         $orderItems = explode(',', $str);
         try {
             foreach ($orderItems as $item) {
-                Test::create([
-                    "orderID" => $request['OrderID'],
-                    "addressName" => $request['name'],
-                    "barcode" => $item,
+                InvoiceBarcode::create([
+                    "invoice_item_id" => $invoiceItemId,
+                    "Barcode" => $item,
                 ]);
             }
-            $tests = Test::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
-            return response(TestResource::collection($tests), 201);
-          } catch (\Exception $exception) {
+            $invoiceBarcodes = InvoiceBarcode::orderByDesc('id')
+                ->where('OrderNumber', $request['OrderNumber'])
+                ->whereHas('invoiceItem', function ($q) use ($request) {
+                    $q->whereHas('invoice', function ($x) use ($request) {
+                        $x->where('OrderNumber', $request['OrderNumber']);
+                    });
+                })
+                ->get();
+            return response(InvoiceBarcode::collection($invoiceBarcodes), 201);
+        } catch (\Exception $exception) {
             for ($i = 0; $i < 3; $i++) {
                 try {
                     foreach ($orderItems as $item) {
-                        Test::create([
+                        InvoiceBarcode::create([
                             "orderID" => $request['OrderID'],
                             "addressName" => $request['name'],
                             "barcode" => str_replace(' ', '', str_replace('"', '', $item)),
                         ]);
                     }
-                    $tests = Test::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
-                    if (count($tests) == count($orderItems)) {
+                    $invoiceBarcodes = InvoiceBarcode::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
+                    if (count($invoiceBarcodes) == count($orderItems)) {
                         $i = 3;
-                        return response(TestResource::collection($tests), 201);
+                        return response(InvoiceBarcode::collection($invoiceBarcodes), 201);
                     }
                 } catch (\Exception $exception) {
                     return response(['message' =>
@@ -85,11 +100,11 @@ class TestController extends Controller
 
     }
 
-    public function update(Request $request, Test $test)
+    public function update(Request $request, InvoiceBarcode $invoiceBarcode)
     {
         $validator = Validator::make($request->all('title'),
             [
-//              'title' => 'required|unique:Tests,title,' . $test['id'],
+//              'title' => 'required|unique:InvoiceBarcodes,title,' . $invoiceBarcode['id'],
 //                'title' => 'required',
             ],
             [
@@ -102,19 +117,19 @@ class TestController extends Controller
             return response()->json($validator->messages(), 422);
         }
         try {
-            $test->update($request->all());
-            return response(new TestResource($test), 200);
+            $invoiceBarcode->update($request->all());
+            return response(new InvoiceBarcode($invoiceBarcode), 200);
         } catch (\Exception $exception) {
             return response($exception);
         }
     }
 
-    public function destroy(Test $test)
+    public function destroy(InvoiceBarcode $invoiceBarcode)
     {
 
         try {
-            $test->delete();
-            return response('Test deleted', 200);
+            $invoiceBarcode->delete();
+            return response('InvoiceBarcode deleted', 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

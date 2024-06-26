@@ -27,10 +27,11 @@ class TestController extends Controller
         }
     }
 
-    public function show(InvoiceBarcode $invoiceBarcode)
+    public function show($id)
     {
         try {
-            return response(new InvoiceBarcode((array)$invoiceBarcode), 200);
+            $invoiceBarcode = InvoiceBarcode::where('id', $id)->first();
+            return response(new InvoiceBarcode($invoiceBarcode), 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

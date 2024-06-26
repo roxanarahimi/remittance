@@ -15,13 +15,17 @@ class InvoiceItemResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $barcodes = [];
+        foreach($this->barcodes as $item){
+            $barcodes[]=$item;
+        }
         return [
             "invoice_item_id" => (int)$this->id,
             "Id" => $this->ProductID,
             "ProductName" => $this->productProduct?->ProductName . $this->productPart?->ProductName,
             "ProductNumber" => $this->productProduct?->ProductNumber . $this->productPart?->ProductNumber,
             "Quantity" => (string)$this->Quantity,
-            "Barcodes" => $this->barcodes
+            "Barcodes" => $barcodes
         ];
 
     }

@@ -20,16 +20,16 @@ class InvoiceResource extends JsonResource
             "OrderID" => $this->OrderID,
             "OrderNumber" => $this->OrderNumber,
 
-            "AddressName" => $this->address->AddressName . ' ' .$this->OrderNumber,
+            "AddressName" => $this->address->AddressName . ' ' . $this->OrderNumber,
             "Address" => $this->address->Address,
             "Phone" => $this->address->Phone,
 
             "Type" => $this->Type,
             'Sum' => $this->Sum,
-//            "Done"=> $this->invoiceItems->sum('Done') == count($this->invoiceItems) ? 1 : 0,
-//            "Done"=> count($this->invoiceItems->testBarcodes),
-
-            'Done' => $this->invoiceItems->sum(function($invoiceItem) {
+            'Done' => $this->invoiceItems->sum(function ($invoiceItem) {
+                return $invoiceItem->barcodes->count();
+            }) >= $this->Sum ? 1 : 0,
+            'TestDone' => $this->invoiceItems->sum(function ($invoiceItem) {
                 return $invoiceItem->testBarcodes->count();
             }) >= $this->Sum ? 1 : 0,
 

@@ -6,7 +6,7 @@ use App\Http\Middleware\Token;
 use App\Http\Resources\InvoiceBarcodeResource;
 use App\Models\InvoiceBarcode;
 use App\Models\InvoiceItem;
-use Dotenv\Validator;
+use Illuminate\Support\Facades\Validator;
 use Faker\Core\Barcode;
 use Illuminate\Http\Request;
 
@@ -49,13 +49,13 @@ class TestController extends Controller
         $myfile = fopen('../storage/logs/failed_data_entries/' . $request['OrderNumber'] . ".log", "w") or die("Unable to open file!");
         $txt = json_encode([
             'OrderNumber' => $request['OrderNumber'],
-            'OrderItems' => $request['OrderItems'],
+            'Barcodes' => $request['Barcodes'],
             "invoice_item_id" => $invoiceItemId,
         ]);
         fwrite($myfile, $txt);
         fclose($myfile);
 
-        $str = str_replace(' ', '', str_replace('"', '', $request['OrderItems']));
+        $str = str_replace(' ', '', str_replace('"', '', $request['Barcodes']));
         $barcodes = explode(',', $str);
         try {
             foreach ($barcodes as $item) {
@@ -69,25 +69,23 @@ class TestController extends Controller
                 ->get();
             return response(InvoiceBarcodeResource::collection($invoiceBarcodes), 201);
         } catch (\Exception $exception) {
-            return $exception;
             for ($i = 0; $i < 3; $i++) {
                 try {
-                    foreach ($orderItems as $item) {
+                    foreach ($barcodes as $item) {
                         InvoiceBarcode::create([
-                            "orderID" => $request['OrderID'],
-                            "addressName" => $request['name'],
-                            "barcode" => str_replace(' ', '', str_replace('"', '', $item)),
+                            "invoice_item_id" => $invoiceItemId,
+                            "Barcode" => $item,
                         ]);
                     }
                     $invoiceBarcodes = InvoiceBarcode::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
-                    if (count($invoiceBarcodes) == count($orderItems)) {
+                    if (count($invoiceBarcodes) == count($barcodes)) {
                         $i = 3;
                         return response(InvoiceBarcodeResource::collection($invoiceBarcodes), 201);
                     }
                 } catch (\Exception $exception) {
                     return response(['message' =>
                         'خطای پایگاه داده. لطفا کد '
-                        . $request['OrderID'] .
+                        . $request['OrderNumber'] .
                         ' را یادداشت کرده و جهت ثبت بارکد ها به پشتیبانی اطلاع دهید'], 500);
                 }
             }
@@ -114,7 +112,7 @@ class TestController extends Controller
         }
         try {
             $invoiceBarcode->update($request->all());
-            return response(new InvoiceBarcode($invoiceBarcode), 200);
+            return response(new InvoiceBarcodeResource($invoiceBarcode), 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

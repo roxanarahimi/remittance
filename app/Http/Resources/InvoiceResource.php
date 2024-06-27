@@ -27,7 +27,11 @@ class InvoiceResource extends JsonResource
             "Type" => $this->Type,
             'Sum' => $this->Sum,
 //            "Done"=> $this->invoiceItems->sum('Done') == count($this->invoiceItems) ? 1 : 0,
-            "Done"=> count($this->invoiceItems->sum(count('testBarcodes'))),
+            "Done"=> count($this->invoiceItems->testBarcodes),
+
+            'total_barcodes' => $this->invoiceItems->sum(function($invoiceItem) {
+                return $invoiceItem->barcodes->count();
+            }),
 
             "CreationDate" => $this->DeliveryDate,//
             "DeliveryDate" => $this->DeliveryDate,

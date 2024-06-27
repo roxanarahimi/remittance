@@ -19,6 +19,10 @@ class InvoiceItemResource extends JsonResource
         foreach($this->barcodes as $item){
             $barcodes[]=$item->Barcode;
         }
+        $testBarcodes = [];
+        foreach($this->testBarcodes as $item){
+            $testBarcodes[]=$item->Barcode;
+        }
         $type = $this->invoice->Type;
         return [
             "invoice_item_id" => (int)$this->id,
@@ -26,7 +30,8 @@ class InvoiceItemResource extends JsonResource
             "ProductName" => $type == 'InventoryVoucher' ? $this->productPart?->ProductName : $this->productProduct?->ProductName,
             "ProductNumber" =>  $type == 'InventoryVoucher' ? $this->productPart?->ProductNumber : $this->productProduct?->ProductNumber,
             "Quantity" => (string)$this->Quantity,
-            "Barcodes" => $barcodes
+            "Barcodes" => $barcodes,
+            "Test" => $testBarcodes
         ];
 
     }

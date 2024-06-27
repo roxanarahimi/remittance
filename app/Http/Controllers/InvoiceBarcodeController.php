@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\Token;
-use App\Http\Resources\TestResource;
-use App\Models\Test;
+use App\Http\Resources\InvoiceBarcodeResource;
+use App\Models\InvoiceBarcode;
 use App\Models\InvoiceItem;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
-class TestController extends Controller
+class InvoiceBarcodeController extends Controller
 {
     public function __construct(Request $request)
     {
@@ -19,8 +19,8 @@ class TestController extends Controller
     public function index(Request $request)
     {
         try {
-            $data = Test::orderByDesc('id')->get();
-            return response(TestResource::collection($data), 200);
+            $data = InvoiceBarcode::orderByDesc('id')->get();
+            return response(InvoiceBarcodeResource::collection($data), 200);
         } catch (\Exception $exception) {
             return response($exception);
         }
@@ -29,8 +29,8 @@ class TestController extends Controller
     public function show($id)
     {
         try {
-            $test = Test::find($id);
-            return response(new TestResource($test), 200);
+            $invoiceBarcode = InvoiceBarcode::find($id);
+            return response(new InvoiceBarcodeResource($invoiceBarcode), 200);
         } catch (\Exception $exception) {
             return response($exception);
         }
@@ -58,28 +58,28 @@ class TestController extends Controller
         $barcodes = explode(',', $str);
         try {
             foreach ($barcodes as $item) {
-                Test::create([
+                InvoiceBarcode::create([
                     "invoice_item_id" => $invoiceItemId,
                     "Barcode" => $item,
                 ]);
             }
-            $tests = Test::orderByDesc('id')
+            $invoiceBarcodes = InvoiceBarcode::orderByDesc('id')
                 ->whereIn('Barcode',$barcodes)
                 ->get();
-            return response(TestResource::collection($tests), 201);
+            return response(InvoiceBarcodeResource::collection($invoiceBarcodes), 201);
         } catch (\Exception $exception) {
             for ($i = 0; $i < 3; $i++) {
                 try {
                     foreach ($barcodes as $item) {
-                        Test::create([
+                        InvoiceBarcode::create([
                             "invoice_item_id" => $invoiceItemId,
                             "Barcode" => $item,
                         ]);
                     }
-                    $tests = Test::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
-                    if (count($tests) == count($barcodes)) {
+                    $invoiceBarcodes = InvoiceBarcode::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
+                    if (count($invoiceBarcodes) == count($barcodes)) {
                         $i = 3;
-                        return response(TestResource::collection($tests), 201);
+                        return response(InvoiceBarcodeResource::collection($invoiceBarcodes), 201);
                     }
                 } catch (\Exception $exception) {
                     return response(['message' =>
@@ -93,11 +93,11 @@ class TestController extends Controller
 
     }
 
-    public function update(Request $request, Test $test)
+    public function update(Request $request, InvoiceBarcode $invoiceBarcode)
     {
         $validator = Validator::make($request->all('title'),
             [
-//              'title' => 'required|unique:Tests,title,' . $test['id'],
+//              'title' => 'required|unique:InvoiceBarcodes,title,' . $invoiceBarcode['id'],
 //                'title' => 'required',
             ],
             [
@@ -110,19 +110,19 @@ class TestController extends Controller
             return response()->json($validator->messages(), 422);
         }
         try {
-            $test->update($request->all());
-            return response(new TestResource($test), 200);
+            $invoiceBarcode->update($request->all());
+            return response(new InvoiceBarcodeResource($invoiceBarcode), 200);
         } catch (\Exception $exception) {
             return response($exception);
         }
     }
 
-    public function destroy(Test $test)
+    public function destroy(InvoiceBarcode $invoiceBarcode)
     {
 
         try {
-            $test->delete();
-            return response('Test deleted', 200);
+            $invoiceBarcode->delete();
+            return response('InvoiceBarcode deleted', 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

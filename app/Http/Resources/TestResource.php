@@ -14,13 +14,15 @@ class TestResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $type = $this->invoiceItem->invoice->Type;
+
         return [
-            "id" => (string)$this->id,
-            "orderID" => $this->orderID,
-            "addressName" => $this->addressName,
-            "barcode" => $this->barcode,
-            "created_at" => $this->created_at,
-            "updated_at" => $this->updated_at,
+            "id" => (int)$this->id,
+            "ProductID" => $this->invoiceItem->ProductID,
+            "ProductName" => $type == 'Inventoryvoucher'? $this->invoiceItem->productPart?->ProductName : $this->invoiceItem->productProduct?->ProductName,
+            "ProductNumber" => $type == 'Inventoryvoucher'? $this->invoiceItem->productPart?->ProductNumber : $this->invoiceItem->productProduct?->ProductNumber,
+            "Quantity" => (string)$this->invoiceItem->Quantity,
+            "Barcode" => $this->Barcode
         ];
     }
 }

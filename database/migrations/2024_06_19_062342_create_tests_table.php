@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('tests', function (Blueprint $table) {
             $table->id();
-            $table->string('orderID');
-            $table->string('addressName');
-            $table->string('barcode');
+            $table->string('invoice_item_id');
+            $table->string('Barcode');
             $table->timestamps();
         });
     }

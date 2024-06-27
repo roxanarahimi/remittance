@@ -31,7 +31,7 @@ class InvoiceItemResource extends JsonResource
             "ProductNumber" =>  $type == 'InventoryVoucher' ? $this->productPart?->ProductNumber : $this->productProduct?->ProductNumber,
             "Quantity" => (string)$this->Quantity,
             "Barcodes" => $barcodes,
-            "Test" => $testBarcodes
+            "TestBarcodes" => $testBarcodes
         ];
 
     }

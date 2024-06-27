@@ -9,4 +9,8 @@ class Test extends Model
 {
     use HasFactory;
     protected $guarded= ['id'];
+    public function invoiceItem()
+    {
+        return $this->belongsTo(InvoiceItem::class,  'invoice_item_id','id');
+    }
 }

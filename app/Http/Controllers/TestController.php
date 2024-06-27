@@ -68,7 +68,7 @@ class TestController extends Controller
                 ->get();
             return response(TestResource::collection($tests), 201);
         } catch (\Exception $exception) {
-            return $exception;
+//            return $exception;
             for ($i = 0; $i < 3; $i++) {
                 try {
                     foreach ($barcodes as $item) {

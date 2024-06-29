@@ -38,60 +38,48 @@ class TestController extends Controller
 
     public function store(Request $request)
     {
-        $invoiceItemId = InvoiceItem::where('ProductID', $request['ProductID'])
-            ->with('invoice')
-            ->whereHas('invoice',function($q) use ($request) {
-                $q->where('Type',$request['Type'])->where('OrderNumber',$request['OrderNumber']);
-            })
-            ->first()->id;
-
-        $myfile = fopen('../storage/logs/failed_data_entries/' . $request['OrderNumber'] . ".log", "w") or die("Unable to open file!");
-        $txt = json_encode([
-            'OrderNumber' => $request['OrderNumber'],
-            'Barcodes' => $request['Barcodes'],
-            "invoice_item_id" => $invoiceItemId,
-        ]);
-        fwrite($myfile, $txt);
-        fclose($myfile);
-
-        $str = str_replace(' ', '', str_replace('"', '', $request['Barcodes']));
-        $barcodes = explode(',', $str);
         try {
+            $str = str_replace(' ', '', str_replace('"', '', $request['Barcodes']));
+            $barcodes = explode(',', $str);
+            $myfile = fopen('../storage/logs/failed_data_entries/' . $request['invoice_item_id'] . ".log", "w") or die("Unable to open file!");
+            $txt = json_encode([
+                "invoice_item_id" => $request['invoice_item_id'],
+                'Barcodes' => $request['Barcodes'],
+            ]);
+            fwrite($myfile, $txt);
+            fclose($myfile);
             foreach ($barcodes as $item) {
                 Test::create([
-                    "invoice_item_id" => $invoiceItemId,
+                    "invoice_item_id" => $request['invoice_item_id'],
                     "Barcode" => $item,
                 ]);
             }
-            $tests = Test::orderByDesc('id')
-                ->whereIn('Barcode',$barcodes)
+            $info = Test::orderByDesc('id')
+                ->whereIn('Barcode', $barcodes)
                 ->get();
-            return response(TestResource::collection($tests), 201);
+            return response(TestResource::collection($info), 201);
         } catch (\Exception $exception) {
-//            return $exception;
             for ($i = 0; $i < 3; $i++) {
                 try {
                     foreach ($barcodes as $item) {
                         Test::create([
-                            "invoice_item_id" => $invoiceItemId,
+                            "invoice_item_id" => $request['invoice_item_id'],
                             "Barcode" => $item,
                         ]);
                     }
-                    $tests = Test::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
-                    if (count($tests) == count($barcodes)) {
+                    $info = Test::orderByDesc('id')->where('invoice_item_id', $request['invoice_item_id'])->get();
+                    if (count($info) == count($barcodes)) {
                         $i = 3;
-                        return response(TestResource::collection($tests), 201);
+                        return response(TestResource::collection($info), 201);
                     }
                 } catch (\Exception $exception) {
                     return response(['message' =>
                         'خطای پایگاه داده. لطفا کد '
-                        . $request['OrderNumber'] .
+                        . $request['invoice_item_id'] .
                         ' را یادداشت کرده و جهت ثبت بارکد ها به پشتیبانی اطلاع دهید'], 500);
                 }
             }
         }
-
-
     }
 
     public function update(Request $request, Test $test)

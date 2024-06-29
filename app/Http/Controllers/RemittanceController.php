@@ -54,15 +54,6 @@ class RemittanceController extends Controller
 
     public function store(Request $request)
     {
-        $myfile = fopen('../storage/logs/failed_data_entries/' .  $request['OrderID'] . ".log", "w") or die("Unable to open file!");
-        $txt = json_encode([
-            'OrderID' =>  $request['OrderID'],
-            'name' =>  $request['name'],
-            'OrderItems' => $request['OrderItems']
-        ]);
-        fwrite($myfile, $txt);
-        fclose($myfile);
-
         $data = json_encode([
             'OrderID' => $request['OrderID'],
             'OrderItems' => $request['OrderItems'],

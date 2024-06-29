@@ -261,10 +261,11 @@ class RemittanceController extends Controller
     public function showProductTest(Request $request)
     {
         try {
-            $dat = InvoiceProduct::select('ProductID', 'ProductName as Name', 'ProductNumber as Number')
-                ->where('ProductID', $request['ProductID'])
-                ->where('Type', $request['Type'])
-                ->first();
+            $dat = InvoiceProduct::all();
+//            $dat = InvoiceProduct::select('ProductID', 'ProductName as Name', 'ProductNumber as Number')
+//                ->where('ProductID', $request['ProductID'])
+//                ->where('Type', $request['Type'])
+//                ->first();
             return response()->json($dat, 200);
 
         } catch (\Exception $exception) {

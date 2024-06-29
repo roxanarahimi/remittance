@@ -19,6 +19,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::controller(App\Http\Controllers\RemittanceController::class)->group(function () {
     Route::prefix('remittance')->group(function () {
+        Route::post('/', 'index');
+        Route::post('/show/{remittance}', 'show');
+        Route::post('/store', 'store');
+        Route::post('/update/{remittance}', 'update');
+        Route::post('/destroy/{remittance}', 'destroy');
         Route::post('/fix', 'fix');
     });
     Route::post('/stores', 'getStores');
@@ -26,6 +31,7 @@ Route::controller(App\Http\Controllers\RemittanceController::class)->group(funct
     Route::get('/info', 'readOnly1');
     Route::post('/product/{id}', 'showProduct');
     Route::post('/productTest', 'showProductTest');
+
 
 });
 

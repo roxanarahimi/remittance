@@ -335,8 +335,9 @@ class RemittanceController extends Controller
     {
         try {
             $dat = Part::select('PartID as ProductID', 'Name', 'PropertiesComment as Description', 'Code as Number')
-                ->where('Code', $id)->get()->count();
-            $dat2 = Product::select('ProductID', 'Name', 'Description', 'Number')->where('Number', $id)->get()->count();
+                ->where('Code', $id)->get();
+            $dat2 = Product::select('ProductID', 'Name', 'Description', 'Number')
+                ->where('Number', $id)->get();
 
             return response()->json([$dat, $dat2], 200);
 

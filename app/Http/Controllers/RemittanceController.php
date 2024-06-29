@@ -263,7 +263,7 @@ class RemittanceController extends Controller
         try {
             $type =  $request['Type'] == 'Order'? 'Product' : 'Part';
             $dat = InvoiceProduct::select('ProductID', 'ProductName as Name', 'ProductNumber as Number', 'Type')
-                ->where('ProductID', (integer)$request['ProductID'])
+                ->where('ProductID', $request['ProductID'])
                 ->where('Type', $type)
                 ->first();
             return response()->json($dat, 200);

@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\StrictSessionHandler;
 
 // error_reporting(E_ALL);
 // ini_set('display_errors', '1');
@@ -261,11 +262,11 @@ class RemittanceController extends Controller
     public function showProductTest(Request $request)
     {
         try {
-            $dat = InvoiceProduct::all();
-//            $dat = InvoiceProduct::select('ProductID', 'ProductName as Name', 'ProductNumber as Number')
-//                ->where('ProductID', $request['ProductID'])
-//                ->where('Type', $request['Type'])
-//                ->first();
+            $id = (string)$request['ProductID'];
+            $dat = InvoiceProduct::select('ProductID', 'ProductName as Name', 'ProductNumber as Number')
+                ->where('ProductID', $id)
+                ->where('Type', $request['Type'])
+                ->first();
             return response()->json($dat, 200);
 
         } catch (\Exception $exception) {

@@ -13,6 +13,7 @@ use App\Models\InventoryVoucherItem;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Part;
+use App\Models\Product;
 use App\Models\Remittance;
 use App\Models\Store;
 use Illuminate\Http\Request;
@@ -320,9 +321,9 @@ class RemittanceController extends Controller
     {
         try {
             $dat = Part::select('PartID as ProductID', 'Name', 'PropertiesComment as Description', 'Code as Number')->where('Code', $id)->first();
-//            if (!$dat) {
-//                $dat = Product::select('ProductID', 'Name', 'Description', 'Number')->where('Number', $id)->first();
-//            }
+            if (!$dat) {
+                $dat = Product::select('ProductID', 'Name', 'Description', 'Number')->where('Number', $id)->first();
+            }
             return response()->json($dat, 200);
 
         } catch (\Exception $exception) {

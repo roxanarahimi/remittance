@@ -54,7 +54,6 @@ class RemittanceController extends Controller
 
     public function store(Request $request)
     {
-        return 'test';
         $data = json_encode([
             'OrderID' => $request['OrderID'],
             'OrderItems' => $request['OrderItems'],

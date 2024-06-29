@@ -211,14 +211,6 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-        //            $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))
-//                ->orderByDesc('OrderID')
-//                ->orderByDesc('Type')
-//                ->paginate(50);
-//            $data = InvoiceResource::collection($d3);
-//            return response()->json($d3, 200);
-
-
         $dat = $this->getInventoryVouchers();
         $dat2 = $this->getOrders();
         $filtered = json_decode(json_encode($dat));
@@ -243,12 +235,16 @@ class RemittanceController extends Controller
     public function readOnly(Request $request)
     {
         try {
-//            $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))
-//                ->orderByDesc('OrderID')
-//                ->orderByDesc('Type')
-//                ->paginate(50);
-//            $data = InvoiceResource::collection($d3);
-//            return response()->json($d3, 200);
+            $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))->orderByDesc('OrderID')->orderByDesc('Type')->get();
+            $input = InvoiceResource::collection($d3);
+            $offset = 0;
+            $perPage = 100;
+            if ($request['page'] && $request['page'] > 1) {
+                $offset = ($request['page'] - 1) * $perPage;
+            }
+            $info = array_slice($input, $offset, $perPage);
+            $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+            return response()->json($paginator, 200);
 
 
             //Mainnnnnnnnn

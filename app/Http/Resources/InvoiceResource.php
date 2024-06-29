@@ -36,8 +36,6 @@ class InvoiceResource extends JsonResource
             "CreationDate" => $this->DeliveryDate,//
             "DeliveryDate" => $this->DeliveryDate,
             "OrderItems" => InvoiceItemResource::collection($this->invoiceItems),
-            "ok" => 1,//
-
         ];
     }
 }

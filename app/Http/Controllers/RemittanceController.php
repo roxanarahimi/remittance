@@ -30,112 +30,6 @@ class RemittanceController extends Controller
     {
         $this->middleware(Token::class)->except('readOnly1');
     }
-
-    public function index(Request $request)
-    {
-        try {
-            $data = Remittance::orderByDesc('id')->get();
-            return response(RemittanceResource::collection($data), 200);
-        } catch (\Exception $exception) {
-            return response($exception);
-        }
-    }
-
-    public function show(Remittance $remittance)
-    {
-        try {
-            return response(new RemittanceResource($remittance), 200);
-        } catch (\Exception $exception) {
-            return response($exception);
-        }
-    }
-
-    public function store(Request $request)
-    {
-
-        $myfile = fopen('../storage/logs/failed_data_entries/' . $request['OrderID'] . ".log", "w") or die("Unable to open file!");
-        $txt = json_encode([
-            'OrderID' => $request['OrderID'],
-            'OrderItems' => $request['OrderItems'],
-            'name' => $request['name'],
-        ]);
-        fwrite($myfile, $txt);
-        fclose($myfile);
-
-        $str = str_replace(' ', '', str_replace('"', '', $request['OrderItems']));
-        $orderItems = explode(',', $str);
-        try {
-            foreach ($orderItems as $item) {
-                Remittance::create([
-                    "orderID" => $request['OrderID'],
-                    "addressName" => $request['name'],
-                    "barcode" => $item,
-                ]);
-            }
-            $remittances = Remittance::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
-            return response(RemittanceResource::collection($remittances), 201);
-        } catch (\Exception $exception) {
-            for ($i = 0; $i < 3; $i++) {
-                try {
-                    foreach ($orderItems as $item) {
-                        Remittance::create([
-                            "orderID" => $request['OrderID'],
-                            "addressName" => $request['name'],
-                            "barcode" => str_replace(' ', '', str_replace('"', '', $item)),
-                        ]);
-                    }
-                    $remittances = Remittance::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
-                    if (count($remittances) == count($orderItems)) {
-                        $i = 3;
-                        return response(RemittanceResource::collection($remittances), 201);
-                    }
-                } catch (\Exception $exception) {
-                    return response(['message' =>
-                        'خطای پایگاه داده. لطفا کد '
-                        . $request['OrderID'] .
-                        ' را یادداشت کرده و جهت ثبت بارکد ها به پشتیبانی اطلاع دهید'], 500);
-                }
-            }
-        }
-
-
-    }
-
-    public function update(Request $request, Remittance $remittance)
-    {
-        $validator = Validator::make($request->all('title'),
-            [
-//              'title' => 'required|unique:Remittances,title,' . $remittance['id'],
-//                'title' => 'required',
-            ],
-            [
-//                'title.required' => 'لطفا عنوان را وارد کنید',
-//                'title.unique' => 'این عنوان قبلا ثبت شده است',
-            ]
-        );
-
-        if ($validator->fails()) {
-            return response()->json($validator->messages(), 422);
-        }
-        try {
-            $remittance->update($request->all());
-            return response(new RemittanceResource($remittance), 200);
-        } catch (\Exception $exception) {
-            return response($exception);
-        }
-    }
-
-    public function destroy(Remittance $remittance)
-    {
-
-        try {
-            $remittance->delete();
-            return response('Remittance deleted', 200);
-        } catch (\Exception $exception) {
-            return response($exception);
-        }
-    }
-
     public function cacheProducts()
     {
         $partIds = InvoiceProduct::
@@ -358,12 +252,19 @@ class RemittanceController extends Controller
             if (!$dat) {
                 $dat = Product::select('ProductID', 'Name', 'Description', 'Number')->where('Number', $id)->first();
             }
-// $dat = InvoiceProduct::select("Type","ProductID","ProductName as Name","ProductNumber as Number")->where('ProductNumber', $id)->where('Type','Part')->first();
-//            if (!$dat) {
-//                $dat = InvoiceProduct::select("Type","ProductID","ProductName as Name","ProductNumber as Number")->where('ProductNumber', $id)->where('Type','Product')->first();
-//            }
+            return response()->json($dat, 200);
 
-
+        } catch (\Exception $exception) {
+            return response($exception);
+        }
+    }
+    public function showProductTest(Request $request)
+    {
+        try {
+            $dat = InvoiceProduct::select('ProductID', 'ProductName as Name', 'ProductNumber as Number')
+                ->where('ProductID', $request['id'])
+                ->where('Type', $request['type'])
+                ->first();
             return response()->json($dat, 200);
 
         } catch (\Exception $exception) {

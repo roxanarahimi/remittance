@@ -338,7 +338,6 @@ class RemittanceController extends Controller
                 ->where('Code', $id)->get();
             $dat2 = Product::select('ProductID', 'Name', 'Description', 'Number')
                 ->where('Number', $id)->get();
-
             return response()->json([$dat, $dat2], 200);
 
         } catch (\Exception $exception) {

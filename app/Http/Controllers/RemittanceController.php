@@ -56,9 +56,9 @@ class RemittanceController extends Controller
         $orderItems = explode(',', $str);
         $myfile = fopen('../storage/logs/failed_data_entries/' . $request['OrderID'] . ".log", "w") or die("Unable to open file!");
         $txt = json_encode([
-            'OrderID' =>  $request['OrderID'],
-            'name' =>  $request['name'],
-            'OrderItems' =>  $orderItems
+            'OrderID' => $request['OrderID'],
+            'name' => $request['name'],
+            'OrderItems' => $orderItems
         ]);
         fwrite($myfile, $txt);
         fclose($myfile);
@@ -92,7 +92,7 @@ class RemittanceController extends Controller
                 } catch (\Exception $exception) {
                     return response(['message' =>
                         'خطای پایگاه داده. لطفا کد '
-                        .  $request['OrderID'] .
+                        . $request['OrderID'] .
                         ' را یادداشت کرده و جهت ثبت بارکد ها به پشتیبانی اطلاع دهید'], 500);
                 }
             }
@@ -325,6 +325,20 @@ class RemittanceController extends Controller
                 $dat = Product::select('ProductID', 'Name', 'Description', 'Number')->where('Number', $id)->first();
             }
             return response()->json($dat, 200);
+
+        } catch (\Exception $exception) {
+            return response($exception);
+        }
+    }
+
+    public function showProductTest($id)
+    {
+        try {
+            $dat = Part::select('PartID as ProductID', 'Name', 'PropertiesComment as Description', 'Code as Number')
+                ->where('Code', $id)->get()->count();
+            $dat2 = Product::select('ProductID', 'Name', 'Description', 'Number')->where('Number', $id)->get()->count();
+
+            return response()->json([$dat, $dat2], 200);
 
         } catch (\Exception $exception) {
             return response($exception);

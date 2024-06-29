@@ -52,6 +52,13 @@ class InvoiceBarcodeController extends Controller
                 ->get();
             return response(InvoiceBarcodeResource::collection($info), 201);
         } catch (\Exception $exception) {
+            $myfile = fopen('../storage/logs/failed_data_entries/' . $request['invoice_item_id'] . ".log", "w") or die("Unable to open file!");
+            $txt = json_encode([
+                "invoice_item_id" => $request['invoice_item_id'],
+                'Barcodes' => $request['Barcodes'],
+            ]);
+            fwrite($myfile, $txt);
+            fclose($myfile);
             for ($i = 0; $i < 3; $i++) {
                 try {
                     foreach ($barcodes as $item) {
@@ -66,13 +73,6 @@ class InvoiceBarcodeController extends Controller
                         return response(InvoiceBarcodeResource::collection($info), 201);
                     }
                 } catch (\Exception $exception) {
-                    $myfile = fopen('../storage/logs/failed_data_entries/' . $request['invoice_item_id'] . ".log", "w") or die("Unable to open file!");
-                    $txt = json_encode([
-                        "invoice_item_id" => $request['invoice_item_id'],
-                        'Barcodes' => $request['Barcodes'],
-                    ]);
-                    fwrite($myfile, $txt);
-                    fclose($myfile);
                     return response(['message' =>
                         'خطای پایگاه داده. لطفا کد '
                         . $request['invoice_item_id'] .

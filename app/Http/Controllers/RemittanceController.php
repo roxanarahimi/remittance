@@ -338,9 +338,9 @@ class RemittanceController extends Controller
     {
         try {
             $dat = Part::select('PartID as ProductID', 'Name', 'PropertiesComment as Description', 'Code as Number')->where('Code', $id)->first();
-            if (!$dat) {
-                $dat = Product::select('ProductID', 'Name', 'Description', 'Number')->where('Number', $id)->first();
-            }
+//            if (!$dat) {
+//                $dat = Product::select('ProductID', 'Name', 'Description', 'Number')->where('Number', $id)->first();
+//            }
             return response()->json($dat, 200);
 
         } catch (\Exception $exception) {

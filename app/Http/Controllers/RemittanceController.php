@@ -11,6 +11,7 @@ use App\Http\Resources\RemittanceResource;
 use App\Models\InventoryVoucher;
 use App\Models\InventoryVoucherItem;
 use App\Models\Invoice;
+use App\Models\InvoiceProduct;
 use App\Models\Order;
 use App\Models\Part;
 use App\Models\Product;
@@ -334,6 +335,7 @@ class RemittanceController extends Controller
     public function showProductTest($id)
     {
         try {
+            return InvoiceProduct::all();
             $dat = Part::select('PartID as ProductID', 'Name', 'PropertiesComment as Description', 'Code as Number')
                 ->where('Code', $id)->get();
             $dat2 = Product::select('ProductID', 'Name', 'Description', 'Number')

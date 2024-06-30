@@ -19,24 +19,14 @@ class InvoiceResource extends JsonResource
             "id" => $this->id,
             "OrderID" => $this->OrderID,
             "OrderNumber" => $this->OrderNumber,
-
             "AddressName" => $this->address->AddressName . ' ' . $this->OrderNumber,
             "Address" => $this->address->Address,
             "Phone" => $this->address->Phone,
-
             "Type" => $this->Type,
             'Sum' => $this->Sum,
-            'Done' => $this->invoiceItems->sum(function ($invoiceItem) {
-                return $invoiceItem->barcodes->count();
-            }) >= $this->Sum,
-            'TestDone' => $this->invoiceItems->sum(function ($invoiceItem) {
-                return $invoiceItem->testBarcodes->count();
-            }) >= $this->Sum,
-
-            "CreationDate" => $this->DeliveryDate,//
+            'Barcodes' => InvoiceBarcodeResource::collection($this->barcodes),
             "DeliveryDate" => $this->DeliveryDate,
             "OrderItems" => InvoiceItemResource::collection($this->invoiceItems),
-            "ok" => 1,//
 
         ];
     }

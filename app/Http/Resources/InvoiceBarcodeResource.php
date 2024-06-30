@@ -14,15 +14,16 @@ class InvoiceBarcodeResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $type = $this->invoiceItem->invoice->Type;
-
         return [
-            "id" => (int)$this->id,
-            "ProductID" => $this->invoiceItem->ProductID,
-            "ProductName" => $type == 'Inventoryvoucher'? $this->invoiceItem->productPart?->ProductName : $this->invoiceItem->productProduct?->ProductName,
-            "ProductNumber" => $type == 'Inventoryvoucher'? $this->invoiceItem->productPart?->ProductNumber : $this->invoiceItem->productProduct?->ProductNumber,
-            "Quantity" => (string)$this->invoiceItem->Quantity,
-            "Barcode" => $this->Barcode
+//            "id" => (int)$this->id,
+            "Barcode" => $this->Barcode,
+//            "Order"=>[
+//                "Type" => $this->invoice->Type,
+//                "OrderID" => $this->invoice->OrderID,
+//                "OrderNumber" => $this->invoice->OrderNumber,
+//                "AddressName" => $this->invoice->address->AddressName,
+//                "Address" => $this->invoice->address->Address,
+//            ]
         ];
     }
 }

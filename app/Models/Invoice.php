@@ -17,5 +17,9 @@ class Invoice extends Model
     {
         return $this->hasOne(InvoiceAddress::class, 'AddressID', 'AddressID');
     }
+    public function barcodes()
+    {
+        return $this->hasMany(InvoiceBarcode::class,  'invoice_id','id');
+    }
 
 }

@@ -13,24 +13,9 @@ class InvoiceItem extends Model
     {
         return $this->belongsTo(Invoice::class, 'invoice_id', 'id');
     }
-    public function productPart()
+    public function product()
     {
-        return $this->hasOne(InvoiceProduct::class,  'ProductID','ProductID')
-            ->where('Type', 'Part');
-    }
-    public function productProduct()
-    {
-        return $this->hasOne(InvoiceProduct::class,  'ProductID','ProductID')
-            ->where('Type', 'Product');
-    }
-    public function barcodes()
-    {
-        return $this->hasMany(InvoiceBarcode::class,  'invoice_item_id','id');
-    }
-
-    public function testBarcodes()
-    {
-        return $this->hasMany(Test::class,  'invoice_item_id','id');
+        return $this->hasOne(InvoiceProduct::class,  'ProductNumber','ProductNumber');
     }
 
 }

@@ -11,6 +11,6 @@ class InvoiceProduct extends Model
     protected $guarded = ['id'];
     public function invoiceItem()
     {
-        return $this->hasOne(InvoiceProduct::class,  'ProductID','ProductID')->where('Type', $this->Type);
+        return $this->hasOne(InvoiceProduct::class,  'ProductNumber','ProductNumber');
     }
 }

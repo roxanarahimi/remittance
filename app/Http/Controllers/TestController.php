@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Middleware\Token;
 use App\Http\Resources\TestResource;
+use App\Models\Invoice;
 use App\Models\Test;
 use App\Models\InvoiceItem;
 use Illuminate\Support\Facades\Validator;
@@ -19,6 +20,7 @@ class TestController extends Controller
     public function index(Request $request)
     {
         try {
+            return Invoice::all();
             $data = Test::orderByDesc('id')->get();
             return response(TestResource::collection($data), 200);
         } catch (\Exception $exception) {

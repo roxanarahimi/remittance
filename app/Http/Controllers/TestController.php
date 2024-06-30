@@ -32,7 +32,7 @@ class TestController extends Controller
 //
 //             return Invoice::all();
             $data = Test::orderByDesc('id')->get();
-            return response(TestResource::collection($data), 200);
+            return response($data, 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

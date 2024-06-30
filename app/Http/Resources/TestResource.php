@@ -15,7 +15,9 @@ class TestResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            "invoice_id" => $this->invoice_id,
             "Barcode" => $this->Barcode,
+            "OrderID" => $this->invoice->OrderID,
         ];
     }
 }

@@ -15,6 +15,13 @@ class InvoiceResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $barcodes = [];
+        foreach ($this->barcodes as $item){
+            $barcodes[] = $item->Barcode;
+        }$testBarcodes = [];
+        foreach ($this->testBarcodes as $item){
+            $testBarcodes[] = $item->Barcode;
+        }
         return [
             "id" => $this->id,
             "OrderID" => $this->OrderID,
@@ -24,8 +31,8 @@ class InvoiceResource extends JsonResource
             "Phone" => $this->address->Phone,
             "Type" => $this->Type,
             'Sum' => $this->Sum,
-            'Barcodes' => InvoiceBarcodeResource::collection($this->barcodes),
-            'TestBarcodes' => InvoiceBarcodeResource::collection($this->testBarcodes),
+            'Barcodes' => $barcodes,
+            'TestBarcodes' => $testBarcodes,
             "DeliveryDate" => $this->DeliveryDate,
             "OrderItems" => InvoiceItemResource::collection($this->invoiceItems),
 

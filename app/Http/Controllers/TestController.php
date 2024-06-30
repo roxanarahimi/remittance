@@ -24,13 +24,13 @@ class TestController extends Controller
     public function index(Request $request)
     {
         try {
-             Invoice::all()->each->delete();
-             InvoiceItem::all()->each->delete();
-             InvoiceProduct::all()->each->delete();
-             InvoiceAddress::all()->each->delete();
-             InvoiceBarcode::all()->each->delete();
+//             Invoice::all()->each->delete();
+//             InvoiceItem::all()->each->delete();
+//             InvoiceProduct::all()->each->delete();
+//             InvoiceAddress::all()->each->delete();
+//             InvoiceBarcode::all()->each->delete();
 
-             return Invoice::all();
+//             return Invoice::all();
             $data = Test::orderByDesc('id')->get();
             return response(TestResource::collection($data), 200);
         } catch (\Exception $exception) {

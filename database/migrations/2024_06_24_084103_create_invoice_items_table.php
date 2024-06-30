@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('invoice_items', function (Blueprint $table) {
             $table->id();
             $table->integer('invoice_id');
-            $table->string('ProductNumber');
+            $table->string('ProductID');
             $table->integer('Quantity');
             $table->timestamps();
         });
     }
+
     /**
      * Reverse the migrations.
      */

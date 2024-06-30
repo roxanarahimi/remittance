@@ -21,5 +21,9 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoiceBarcode::class,  'invoice_id','id');
     }
+    public function testBarcodes()
+    {
+        return $this->hasMany(Test::class,  'invoice_id','id');
+    }
 
 }

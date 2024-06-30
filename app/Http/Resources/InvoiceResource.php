@@ -25,6 +25,7 @@ class InvoiceResource extends JsonResource
             "Type" => $this->Type,
             'Sum' => $this->Sum,
             'Barcodes' => InvoiceBarcodeResource::collection($this->barcodes),
+            'TestBarcodes' => InvoiceBarcodeResource::collection($this->testBarcodes),
             "DeliveryDate" => $this->DeliveryDate,
             "OrderItems" => InvoiceItemResource::collection($this->invoiceItems),
 

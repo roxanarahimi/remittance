@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\Token;
+use App\Http\Resources\InvoiceBarcodeResource;
 use App\Http\Resources\TestResource;
 use App\Models\Invoice;
+use App\Models\InvoiceAddress;
+use App\Models\InvoiceBarcode;
+use App\Models\InvoiceProduct;
 use App\Models\Test;
 use App\Models\InvoiceItem;
 use Illuminate\Support\Facades\Validator;
@@ -20,7 +24,13 @@ class TestController extends Controller
     public function index(Request $request)
     {
         try {
-            return Invoice::all();
+             Invoice::all()->each->delete();
+             InvoiceItem::all()->each->delete();
+             InvoiceProduct::all()->each->delete();
+             InvoiceAddress::all()->each->delete();
+             InvoiceBarcode::all()->each->delete();
+
+             return Invoice::all();
             $data = Test::orderByDesc('id')->get();
             return response(TestResource::collection($data), 200);
         } catch (\Exception $exception) {

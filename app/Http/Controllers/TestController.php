@@ -53,7 +53,7 @@ class TestController extends Controller
         try {
             $myfile = fopen('../storage/logs/failed_data_entries/' . $request['id'] . ".log", "w") or die("Unable to open file!");
             $txt = json_encode([
-                "invoice_id" => $request['id'],
+                "invoice_id" => (string)$request['id'],
                 'Barcodes' => $request['Barcodes'],
             ]);
             fwrite($myfile, $txt);
@@ -62,7 +62,7 @@ class TestController extends Controller
             $barcodes = explode(',', $str);
             foreach ($barcodes as $item) {
                 Test::create([
-                    "invoice_id" => $request['id'],
+                    "invoice_id" => (string)$request['id'],
                     "Barcode" => $item,
                 ]);
             }
@@ -82,7 +82,7 @@ class TestController extends Controller
                 try {
                     foreach ($barcodes as $item) {
                         Test::create([
-                            "invoice_item_id" => $request['id'],
+                            "invoice_id" => (string)$request['id'],
                             "Barcode" => $item,
                         ]);
                     }

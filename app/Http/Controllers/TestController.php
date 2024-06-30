@@ -29,7 +29,7 @@ class TestController extends Controller
 //             InvoiceProduct::all()->each->delete();
 //             InvoiceAddress::all()->each->delete();
 //             InvoiceBarcode::all()->each->delete();
-             Test::all()->each->delete();
+//             Test::all()->each->delete();
 //
 //             return Invoice::all();
             $data = Test::orderByDesc('id')->get();

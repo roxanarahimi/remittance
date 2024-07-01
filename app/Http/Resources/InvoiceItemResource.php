@@ -17,7 +17,7 @@ class InvoiceItemResource extends JsonResource
     {
         return [
             "id" => (int)$this->id,
-            "ProductID" => $this->ProductID,
+            "product_id" => $this->product->id,
             "ProductName" => $this->product->ProductName,
             "ProductNumber" =>  $this->product?->ProductNumber,
             "Quantity" => (string)$this->Quantity,

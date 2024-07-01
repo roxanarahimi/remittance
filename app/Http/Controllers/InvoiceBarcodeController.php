@@ -39,35 +39,44 @@ class InvoiceBarcodeController extends Controller
     public function store(Request $request)
     {
         try {
-            $str = str_replace(' ', '', str_replace('"', '', $request['Barcodes']));
-            $barcodes = explode(',', $str);
-            foreach ($barcodes as $item) {
-                InvoiceBarcode::create([
-                    "invoice_item_id" => $request['invoice_item_id'],
-                    "Barcode" => $item,
-                ]);
-            }
-            $info = InvoiceBarcode::orderByDesc('id')
-                ->whereIn('Barcode', $barcodes)
-                ->get();
-            return response(InvoiceBarcodeResource::collection($info), 201);
-        } catch (\Exception $exception) {
-            $myfile = fopen('../storage/logs/failed_data_entries/' . $request['invoice_item_id'] . ".log", "w") or die("Unable to open file!");
+            $myfile = fopen('../storage/logs/failed_data_entries/' . $request['id'] . ".log", "w") or die("Unable to open file!");
             $txt = json_encode([
-                "invoice_item_id" => $request['invoice_item_id'],
+                "invoice_id" => $request['id'],
                 'Barcodes' => $request['Barcodes'],
             ]);
             fwrite($myfile, $txt);
             fclose($myfile);
+            $str = str_replace(' ', '', str_replace('"', '', $request['Barcodes']));
+            $barcodes = explode(',', $str);
+            $barIds = [];
+            foreach ($barcodes as $item) {
+                $bar =  InvoiceBarcode::create([
+                    "invoice_id" => $request['id'],
+                    "Barcode" => $item,
+                ]);
+                $barIds[] = $bar->id;
+            }
+            $info = InvoiceBarcode::orderByDesc('id')
+                ->whereIn('id', $barIds)
+                ->get();
+            return response(InvoiceBarcodeResource::collection($info), 201);
+        } catch (\Exception $exception) {
+//            $myfile = fopen('../storage/logs/failed_data_entries/' . $request['id'] . ".log", "w") or die("Unable to open file!");
+//            $txt = json_encode([
+//                "invoice_id" => $request['id'],
+//                'Barcodes' => $request['Barcodes'],
+//            ]);
+//            fwrite($myfile, $txt);
+//            fclose($myfile);
             for ($i = 0; $i < 3; $i++) {
                 try {
                     foreach ($barcodes as $item) {
                         InvoiceBarcode::create([
-                            "invoice_item_id" => $request['invoice_item_id'],
+                            "invoice_id" => $request['id'],
                             "Barcode" => $item,
                         ]);
                     }
-                    $info = InvoiceBarcode::orderByDesc('id')->where('invoice_item_id', $request['invoice_item_id'])->get();
+                    $info = InvoiceBarcode::orderByDesc('id')->where('invoice_id', $request['id'])->get();
                     if (count($info) == count($barcodes)) {
                         $i = 3;
                         return response(InvoiceBarcodeResource::collection($info), 201);
@@ -75,7 +84,7 @@ class InvoiceBarcodeController extends Controller
                 } catch (\Exception $exception) {
                     return response(['message' =>
                         'خطای پایگاه داده. لطفا کد '
-                        . $request['invoice_item_id'] .
+                        . $request['id'] .
                         ' را یادداشت کرده و جهت ثبت بارکد ها به پشتیبانی اطلاع دهید'], 500);
                 }
             }

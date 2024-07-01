@@ -19,7 +19,7 @@ class CacheController extends Controller
     {
         $productnumbers = InvoiceProduct:://        where('CreationDate', '>=', today()->subDays(2))->
         pluck('ProductNumber');
-        $products = Product::where('Name', 'like', '%نودالیت%')->whereNotIn('ProductNumber', $productnumbers)->get();
+        $products = Product::where('Name', 'like', '%نودالیت%')->whereNotIn('Number', $productnumbers)->get();
         foreach ($products as $item) {
             InvoiceProduct::create([
                 'ProductName' => $item->Name,

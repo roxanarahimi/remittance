@@ -17,7 +17,7 @@ class TestResource extends JsonResource
         return [
             "invoice_id" => $this->invoice_id,
             "Barcode" => $this->Barcode,
-            "OrderID" => $this->invoice->OrderID,
+            "OrderID" => $this->invoice?->OrderID,
         ];
     }
 }

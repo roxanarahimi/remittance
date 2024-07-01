@@ -32,6 +32,7 @@ class TestController extends Controller
 //             Test::all()->each->delete();
 //
 //             return Invoice::all();
+            CacheController::cacheProducts();
             return InvoiceProduct::all();
 
                 $data = Test::orderByDesc('id')->get();

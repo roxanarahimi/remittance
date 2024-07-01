@@ -28,6 +28,16 @@ class CacheController extends Controller
                 'Description' => $item->Description
             ]);
         }
+        $partnumbers = InvoiceProduct:://        where('CreationDate', '>=', today()->subDays(2))->
+        pluck('ProductNumber');
+        $products = Part::where('Name', 'like', '%نودالیت%')->whereNotIn('Number', $partnumbers)->get();
+        foreach ($products as $item) {
+            InvoiceProduct::create([
+                'ProductName' => $item->Name,
+                'ProductNumber' => $item->Code,
+                'Description' => $item->Description
+            ]);
+        }
     }
 
     public function getInventoryVouchers($inventoryVoucherIDs)

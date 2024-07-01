@@ -17,7 +17,7 @@ class CacheController extends Controller
 {
     public function cacheProducts()
     {
-        InvoiceProduct::query()->truncate();
+//        InvoiceProduct::query()->truncate();
         $productnumbers = InvoiceProduct:://        where('CreationDate', '>=', today()->subDays(2))->
         pluck('ProductNumber');
         $products = Product::where('Name', 'like', '%نودالیت%')->whereNotIn('Number', $productnumbers)->get();
@@ -90,7 +90,7 @@ class CacheController extends Controller
     public function cacheInvoice()
     {
         try {
-            Invoice::query()->truncate();
+//            Invoice::query()->truncate();
 
             $this->cacheProducts();
             $inventoryVoucherIDs = Invoice::

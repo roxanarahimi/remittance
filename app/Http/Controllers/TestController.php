@@ -64,14 +64,16 @@ class TestController extends Controller
             fclose($myfile);
             $str = str_replace(' ', '', str_replace('"', '', $request['Barcodes']));
             $barcodes = explode(',', $str);
+            $barIds = [];
             foreach ($barcodes as $item) {
-                Test::create([
+               $bar =  Test::create([
                     "invoice_id" => $request['id'],
                     "Barcode" => $item,
                 ]);
+               $barIds[] = $bar->id;
             }
             $info = Test::orderByDesc('id')
-                ->whereIn('Barcode', $barcodes)
+                ->whereIn('id', $barIds)
                 ->get();
             return response(TestResource::collection($info), 201);
         } catch (\Exception $exception) {
@@ -90,7 +92,7 @@ class TestController extends Controller
                             "Barcode" => $item,
                         ]);
                     }
-                    $info = Test::orderByDesc('id')->where('invoice_item_id', $request['id'])->get();
+                    $info = Test::orderByDesc('id')->where('invoice_id', $request['id'])->get();
                     if (count($info) == count($barcodes)) {
                         $i = 3;
                         return response(TestResource::collection($info), 201);

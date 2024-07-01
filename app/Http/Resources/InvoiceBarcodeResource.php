@@ -15,15 +15,12 @@ class InvoiceBarcodeResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-//            "id" => (int)$this->id,
+            "id"=>$this->id,
+            "invoice_id" => $this->invoice_id,
             "Barcode" => $this->Barcode,
-//            "Order"=>[
-//                "Type" => $this->invoice->Type,
-//                "OrderID" => $this->invoice->OrderID,
-//                "OrderNumber" => $this->invoice->OrderNumber,
-//                "AddressName" => $this->invoice->address->AddressName,
-//                "Address" => $this->invoice->address->Address,
-//            ]
+            "OrderNumber" => $this->invoice?->OrderNumber,
+            "OrderID" => $this->invoice?->OrderID,
+            "created_at" => $this->created_at,
         ];
     }
 }

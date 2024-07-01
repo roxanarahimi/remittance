@@ -23,7 +23,8 @@ class CacheController extends Controller
         foreach ($products as $item) {
             InvoiceProduct::create([
                 'ProductName' => $item->Name,
-                'ProductNumber' => $item->Number
+                'ProductNumber' => $item->Number,
+                'Description' => $item->Description
             ]);
         }
     }
@@ -126,7 +127,8 @@ class CacheController extends Controller
                     if (!$product) {
                         InvoiceProduct::create([
                             'ProductName' => $item2->Part->Name,
-                            'ProductNumber' => $item2->Part->Code
+                            'ProductNumber' => $item2->Part->Code,
+                            'Description' => $item2->Part->Description,
                         ]);
                     }
                 }
@@ -160,7 +162,8 @@ class CacheController extends Controller
                     if (!$product) {
                         InvoiceProduct::create([
                             'ProductName' => $item2->Product->Name,
-                            'ProductNumber' => $item2->Product->Number
+                            'ProductNumber' => $item2->Product->Number,
+                            'Description' => $item2->Product->Description
                         ]);
                     }
                 }

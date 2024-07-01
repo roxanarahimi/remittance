@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('ProductName');
             $table->string('ProductNumber');
+            $table->string('Description');
             $table->timestamps();
         });
     }

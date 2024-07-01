@@ -19,6 +19,7 @@ class TestResource extends JsonResource
             "invoice_id" => $this->invoice_id,
             "Barcode" => $this->Barcode,
             "OrderID" => $this->invoice?->OrderID,
+            "created_at" => $this->created_at,
         ];
     }
 }

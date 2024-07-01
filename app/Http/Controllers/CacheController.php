@@ -90,6 +90,8 @@ class CacheController extends Controller
     public function cacheInvoice()
     {
         try {
+            Invoice::query()->truncate();
+
             $this->cacheProducts();
             $inventoryVoucherIDs = Invoice::
 //            where('DeliveryDate', '>=', today()->subDays(2))->

@@ -195,6 +195,15 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
+        $dat = InventoryVoucher::select("*")
+//            ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
+//            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Party.AddressRef')
+            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+//            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
+            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
+            ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
+            ->get();
+        return $dat;
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
@@ -207,36 +216,28 @@ class RemittanceController extends Controller
                     ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
             })
             ->pluck('StoreID');
-        $dat = InventoryVoucher::select("*")
-//            ->join('DNR3.Party', 'DNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
-//            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-//            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-            ->join('GNR3.Address', 'GNR3.Address.PartyRef', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
+        $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
+            ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-//            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
-//            ->whereIn('LGS3.Store.StoreID', $storeIDs)
-            ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [69])
-//            ->where(function ($q) use ($storeIDs) {
-//                $q->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [69])
-//                    ->orwhere(function ($z) use ($storeIDs) {
-//                        $z->whereIn('LGS3.Store.StoreID', $storeIDs)
-//                            ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68]);
-//                    });
-//            })
+            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
+            ->whereIn('LGS3.Store.StoreID', $storeIDs)
+            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
                 $q->whereIn('PartRef', $partIDs);
             })
             ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-            ->paginate(100);
-//$data = InventoryVoucherResource::collection($dat);
-        return $dat;
+            ->get();
+
 
         $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))
-            ->orderByDesc('OrderID')
-            ->orderByDesc('Type')
-            ->paginate(100);
-        $data = InvoiceResource::collection($d3);
-        return response()->json($d3, 200);
+                ->orderByDesc('OrderID')
+                ->orderByDesc('Type')
+                ->paginate(100);
+            $data = InvoiceResource::collection($d3);
+            return response()->json($d3, 200);
 
 
         $dat = $this->getInventoryVouchers();
@@ -371,7 +372,7 @@ class RemittanceController extends Controller
     public function showProductTest($id)
     {
         try {
-            $dat = InvoiceProduct::select('id', 'ProductName as Name', 'ProductNumber', 'Description')->where('ProductNumber', $id)->first();
+              $dat = InvoiceProduct::select('id','ProductName as Name','ProductNumber','Description')->where('ProductNumber', $id)->first();
             return response()->json($dat, 200);
         } catch (\Exception $exception) {
             return response($exception);

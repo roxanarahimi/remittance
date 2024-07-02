@@ -320,6 +320,33 @@ class RemittanceController extends Controller
                     ->get();
                 $item->{'OrderItems'} = $details;
             }
+            $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')->
+            select([
+                    "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
+                    "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
+                    "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate"])
+//                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+//                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+//                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+                ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
+//                ->whereIn('LGS3.Store.StoreID', $storeIDs)
+                ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
+                ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
+                ->get()->toArray();
+            foreach ($dat as $item) {
+                $item->{'type'} = 'InventoryVoucher';
+                $item->{'ok'} = 1;
+                $item->{'AddressName'} = $item->{'AddressName'} . ' ' . $item->{'OrderNumber'};
+                $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
+                    ->select(["LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
+                        "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
+                    ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
+                    ->where('InventoryVoucherRef', $item->{'OrderID'})
+                    ->whereIn('PartRef', $partIDs)
+                    ->get();
+                $item->{'OrderItems'} = $details;
+            }
 
             $filtered = array_filter($dat, function ($el) {
                 return count($el->{'OrderItems'}) > 0;

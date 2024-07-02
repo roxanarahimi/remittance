@@ -330,7 +330,6 @@ class RemittanceController extends Controller
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
-//                ->whereIn('LGS3.Store.StoreID', $storeIDs)
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get()->toArray();

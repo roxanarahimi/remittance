@@ -196,7 +196,7 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-        return  DB::connection('sqlsrv')->select("PartyID",'AddressRef')->table('GNR3.Party')->get(100);
+        return  DB::connection('sqlsrv')->table('GNR3.Party')->select("PartyID",'AddressRef')->get(100);
         $dat = InventoryVoucher::select("*")
             ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Party.AddressRef')

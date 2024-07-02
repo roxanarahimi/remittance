@@ -326,7 +326,48 @@ class RemittanceController extends Controller
             $filtered = array_filter($dat, function ($el) {
                 return count($el->{'OrderItems'}) > 0;
             });
-            $input = array_values($filtered);
+            $dat2 = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+                "CounterpartEntityText", "CounterpartEntityRef")
+//            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate")
+//            ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
+//            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Party.AddressRef')
+                ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+                ->where('LGS3.InventoryVoucher.Date', '>=', today())
+                ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
+                ->whereHas('OrderItems', function ($q) use ($partIDs) {
+                    $q->whereIn('PartRef', $partIDs);
+                })
+                ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
+                ->get()->toArray();
+            foreach ($dat2 as $item) {
+                $item->{'type'} = 'InventoryVoucher';
+                $item->{'ok'} = 1;
+                $item->{'AddressName'} = $item->{'CounterpartEntityText'} . ' ' . $item->{'OrderNumber'};
+                $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
+                    ->select(["LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
+                        "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
+                    ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
+                    ->where('InventoryVoucherRef', $item->{'OrderID'})
+                    ->whereIn('PartRef', $partIDs)
+                    ->get();
+                $item->{'OrderItems'} = $details;
+            }
+            $filtered = array_filter($dat, function ($el) {
+                return count($el->{'OrderItems'}) > 0;
+            });
+            $input1 = array_values($filtered);
+            $input2 = array_values($filtered);
+
+            $input = [];
+            $input1 = InventoryVoucherResource::collection($dat2);
+            $input2 = InventoryVoucherResource::collection($dat);
+            foreach ($input1 as $item) {
+                $input[] = $item;
+            }
+            foreach ($input2 as $item) {
+                $input[] = $item;
+            }
+
             $offset = 0;
             $perPage = 100;
             if ($request['page'] && $request['page'] > 1) {
@@ -334,6 +375,7 @@ class RemittanceController extends Controller
             }
             $info = array_slice($input, $offset, $perPage);
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+
             return response()->json($paginator, 200);
 
         } catch (\Exception $exception) {

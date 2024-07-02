@@ -354,8 +354,8 @@ class RemittanceController extends Controller
              $filtered2 = array_filter($dat2, function ($el) {
                 return count($el->{'OrderItems'}) > 0;
             });
-            $input1 = InventoryVoucherResource::collection(array_values($filtered));
-            $input2 = InventoryVoucherResource::collection(array_values($filtered2));
+            $input1 = array_values($filtered);
+            $input2 = array_values($filtered2);
             $input = [];
             foreach ($input1 as $item) {
                 $input[] = $item;

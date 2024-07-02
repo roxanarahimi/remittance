@@ -218,10 +218,10 @@ class RemittanceController extends Controller
 //            ->whereIn('LGS3.Store.StoreID', $storeIDs)
 //            ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
             ->where(function ($q) use ($storeIDs) {
-                $q->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68])
+                $q->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [69])
                     ->orwhere(function ($z) use ($storeIDs) {
                         $z->whereIn('LGS3.Store.StoreID', $storeIDs)
-                            ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [69]);
+                            ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68]);
                     });
             })
             ->whereHas('OrderItems', function ($q) use ($partIDs) {

@@ -278,7 +278,26 @@ class RemittanceController extends Controller
 //            $data = InvoiceResource::collection($d3);
 //            return response()->json($d3, 200);
 
+            $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
+            $dat2 = InventoryVoucher::
+            select([
+                "InventoryVoucherID as OrderID", "Number as OrderNumber",
+                "InventoryVoucherSpecificationRef",
+//                    "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
+                "CreationDate", "Date as DeliveryDate"])
+//                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+//                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+//                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                ->where('FiscalYearRef', 1403)
+                ->where('Date', '>=', today()->subDays(7))
+                ->where('InventoryVoucherSpecificationRef', 69)
+                ->whereHas('OrderItems', function ($q) use ($partIDs) {
+                    $q->whereIn('PartRef', $partIDs);
+                })
+                ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
+                ->get();
 
+            return response()->json($dat2, 200);
             //Mainnnnnnnnn
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')

@@ -293,7 +293,7 @@ class RemittanceController extends Controller
                 })
                 ->pluck('StoreID');
 
-            $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')->
+            $dat = InventoryVoucher::
             select([
                     "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
                     "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
@@ -305,21 +305,11 @@ class RemittanceController extends Controller
                 ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
                 ->whereIn('LGS3.Store.StoreID', $storeIDs)
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
+                ->whereHas('OrderItems', function ($q) use ($partIDs) {
+                    $q->whereIn('PartRef', $partIDs);
+                })
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-                ->get()->toArray();
-            foreach ($dat as $item) {
-                $item->{'type'} = 'InventoryVoucher';
-                $item->{'ok'} = 1;
-                $item->{'AddressName'} = $item->{'AddressName'} . ' ' . $item->{'OrderNumber'};
-                $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
-                    ->select(["LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
-                        "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
-                    ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
-                    ->where('InventoryVoucherRef', $item->{'OrderID'})
-                    ->whereIn('PartRef', $partIDs)
-                    ->get();
-                $item->{'OrderItems'} = $details;
-            }
+                ->get();
             $dat2 = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')->
             select([
                     "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
@@ -331,30 +321,14 @@ class RemittanceController extends Controller
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
+                ->whereHas('OrderItems', function ($q) use ($partIDs) {
+                    $q->whereIn('PartRef', $partIDs);
+                })
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-                ->get()->toArray();
-            foreach ($dat2 as $item) {
-                $item->{'type'} = 'InventoryVoucher';
-                $item->{'ok'} = 1;
-                $item->{'AddressName'} = $item->{'AddressName'} . ' ' . $item->{'OrderNumber'};
-                $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
-                    ->select(["LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
-                        "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
-                    ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
-                    ->where('InventoryVoucherRef', $item->{'OrderID'})
-                    ->whereIn('PartRef', $partIDs)
-                    ->get();
-                $item->{'OrderItems'} = $details;
-            }
+                ->get();
 
-            $filtered = array_filter($dat, function ($el) {
-                return count($el->{'OrderItems'}) > 0;
-            });
-            $filtered2 = array_filter($dat2, function ($el) {
-                return count($el->{'OrderItems'}) > 0;
-            });
-            $input1 = InventoryVoucherResource::collection(array_values($filtered));
-            $input2 = InventoryVoucherResource::collection(array_values($filtered2));
+            $input1 = InventoryVoucherResource::collection($dat);
+            $input2 = InventoryVoucherResource::collection($dat2);
             $input = [];
             foreach ($input1 as $item) {
                 $input[] = $item;

@@ -297,7 +297,7 @@ class RemittanceController extends Controller
             select([
                     "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
                     "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
-                    "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate"])
+                    "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate","CounterpartEntityText"])
                 ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -324,7 +324,7 @@ class RemittanceController extends Controller
             select([
                     "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
 //                    "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
-                    "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate"])
+                    "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate","CounterpartEntityText"])
 //                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
 //                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
 //                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -337,7 +337,7 @@ class RemittanceController extends Controller
             foreach ($dat as $item) {
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 1;
-                $item->{'AddressName'} = $item->{'AddressName'} . ' ' . $item->{'OrderNumber'};
+                $item->{'AddressName'} = $item->{'CounterpartEntityText'} . ' ' . $item->{'OrderNumber'};
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                     ->select(["LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
                         "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])

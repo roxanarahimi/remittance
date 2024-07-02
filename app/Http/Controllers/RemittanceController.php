@@ -323,7 +323,7 @@ class RemittanceController extends Controller
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')->
             select([
                     "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
-                    "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
+//                    "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
                     "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate"])
 //                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
 //                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')

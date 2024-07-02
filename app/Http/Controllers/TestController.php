@@ -35,6 +35,7 @@ class TestController extends Controller
 //            (new CacheController)->cacheProducts();
 //            return InvoiceProduct::select('id','ProductName as Name','ProductNumber','Description')->get();
 
+
                 $data = Test::orderByDesc('id')->get();
             return response(TestResource::collection($data), 200);
         } catch (\Exception $exception) {

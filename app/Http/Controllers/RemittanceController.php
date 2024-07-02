@@ -310,7 +310,7 @@ class RemittanceController extends Controller
                 })
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get();
-            $dat2 = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')->
+            $dat2 = InventoryVoucher::
             select([
                     "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
 //                    "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone",

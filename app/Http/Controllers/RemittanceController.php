@@ -227,8 +227,8 @@ class RemittanceController extends Controller
                 $q->whereIn('PartRef', $partIDs);
             })
             ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-            ->get();
-
+            ->paginate(100);
+$data = InventoryVoucherResource::collection($dat);
         return $dat;
 
         $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))

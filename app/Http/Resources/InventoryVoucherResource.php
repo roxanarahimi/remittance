@@ -20,11 +20,11 @@ class InventoryVoucherResource extends JsonResource
             "InventoryVoucherSpecificationRef" => $this->InventoryVoucherSpecificationRef,
 
 //            "AddressID" => $this->Store->Plant->Address->AddressID,
-//            "AddressName" => $this->Store->Name . ' ' .$this->Number,
+//            "AddressName" =>  . ' ' .$this->Number,
 //            "Address" => $this->Store->Plant->Address->Details,
 //            "Phone" => $this->Store->Plant->Address->Phone,
             "AddressID" => '',
-            "AddressName" => $this->CounterpartEntityText . ' ' .$this->Number,
+            "AddressName" => $this->Store?->Name . $this->CounterpartEntityText . ' ' .$this->Number,
             "Address" => '',
             "Phone" => '',
 

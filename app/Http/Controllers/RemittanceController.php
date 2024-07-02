@@ -297,7 +297,7 @@ class RemittanceController extends Controller
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get();
 
-            return response()->json($dat2, 200);
+            return response()->json(InventoryVoucherResource::collection($dat2), 200);
             //Mainnnnnnnnn
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')

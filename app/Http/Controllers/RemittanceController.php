@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use function Laravel\Prompts\select;
 
 // error_reporting(E_ALL);
 // ini_set('display_errors', '1');
@@ -195,7 +196,7 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-        return  DB::connection('sqlsrv')->table('GNR3.Party')->get(100);
+        return  DB::connection('sqlsrv')->select("PartyID",'AddressRef')->table('GNR3.Party')->get(100);
         $dat = InventoryVoucher::select("*")
             ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Party.AddressRef')

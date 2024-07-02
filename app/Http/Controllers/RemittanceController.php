@@ -278,26 +278,7 @@ class RemittanceController extends Controller
 //            $data = InvoiceResource::collection($d3);
 //            return response()->json($d3, 200);
 
-            $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
-            $dat2 = InventoryVoucher::
-//            select([
-//                "InventoryVoucherID", "Number",
-//                "InventoryVoucherSpecificationRef",
-////                    "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
-//                "CreationDate", "Date"])
-//                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
-//                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-//                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-                where('FiscalYearRef', 1403)
-                ->where('Date', '>=', today()->subDays(7))
-                ->where('InventoryVoucherSpecificationRef', 69)
-                ->whereHas('OrderItems', function ($q) use ($partIDs) {
-                    $q->whereIn('PartRef', $partIDs);
-                })
-                ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-                ->get();
 
-            return response()->json(InventoryVoucherResource::collection($dat2), 200);
             //Mainnnnnnnnn
             $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
@@ -312,8 +293,11 @@ class RemittanceController extends Controller
                 })
                 ->pluck('StoreID');
 
-            $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
-                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef","InventoryVoucherSpecificationRef")
+            $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')->
+            select([
+                    "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
+                    "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
+                    "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate"])
                 ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -321,39 +305,26 @@ class RemittanceController extends Controller
                 ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
                 ->whereIn('LGS3.Store.StoreID', $storeIDs)
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
-                ->whereHas('OrderItems', function ($q) use ($partIDs) {
-                    $q->whereIn('PartRef', $partIDs);
-                })
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-                ->get();
-            $dat2 = InventoryVoucher::
-            select([
-                    "InventoryVoucherID as OrderID", "Number as OrderNumber",
-                "InventoryVoucherSpecificationRef",
-//                    "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
-                    "CreationDate", "Date as DeliveryDate"])
-//                ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
-//                ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-//                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-                ->where('FiscalYearRef', 1403)
-                ->where('Date', '>=', today()->subDays(7))
-                ->where('InventoryVoucherSpecificationRef', 69)
-                ->whereHas('OrderItems', function ($q) use ($partIDs) {
-                    $q->whereIn('PartRef', $partIDs);
-                })
-                ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-                ->get();
+                ->get()->toArray();
+            foreach ($dat as $item) {
+                $item->{'type'} = 'InventoryVoucher';
+                $item->{'ok'} = 1;
+                $item->{'AddressName'} = $item->{'AddressName'} . ' ' . $item->{'OrderNumber'};
+                $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
+                    ->select(["LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
+                        "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
+                    ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
+                    ->where('InventoryVoucherRef', $item->{'OrderID'})
+                    ->whereIn('PartRef', $partIDs)
+                    ->get();
+                $item->{'OrderItems'} = $details;
+            }
 
-            $input1 = InventoryVoucherResource::collection($dat);
-            $input2 = InventoryVoucherResource::collection($dat2);
-            $input = [];
-            foreach ($input1 as $item) {
-                $input[] = $item;
-            }
-            foreach ($input2 as $item) {
-                $input[] = $item;
-            }
-//            $input = (array)InventoryVoucherResource::collection($input);
+            $filtered = array_filter($dat, function ($el) {
+                return count($el->{'OrderItems'}) > 0;
+            });
+            $input = array_values($filtered);
             $offset = 0;
             $perPage = 100;
             if ($request['page'] && $request['page'] > 1) {

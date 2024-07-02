@@ -354,8 +354,8 @@ class RemittanceController extends Controller
             $filtered2 = array_filter($dat2, function ($el) {
                 return count($el->{'OrderItems'}) > 0;
             });
-            $input1 = array_values($filtered);
-            $input2 = array_values($filtered2);
+            $input1 = InventoryVoucherResource::collection(array_values($filtered));
+            $input2 = InventoryVoucherResource::collection(array_values($filtered2));
             $input = [];
             foreach ($input1 as $item) {
                 $input[] = $item;
@@ -363,7 +363,7 @@ class RemittanceController extends Controller
             foreach ($input2 as $item) {
                 $input[] = $item;
             }
-            $input = (array)InventoryVoucherResource::collection($input);
+//            $input = (array)InventoryVoucherResource::collection($input);
             $offset = 0;
             $perPage = 100;
             if ($request['page'] && $request['page'] > 1) {

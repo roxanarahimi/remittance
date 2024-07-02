@@ -17,6 +17,7 @@ class InventoryVoucherResource extends JsonResource
         return [
             "OrderID" => $this->InventoryVoucherID,
             "OrderNumber" => $this->Number,
+            "InventoryVoucherSpecificationRef" => $this->InventoryVoucherSpecificationRef,
 
             "AddressID" => $this->Store->Plant->Address->AddressID,
             "AddressName" => $this->Store->Name . ' ' .$this->Number,
@@ -25,6 +26,7 @@ class InventoryVoucherResource extends JsonResource
 
             "Type" => "InventoryVoucher",
             'Sum' => $this->OrderItems->sum('Quantity'),
+
 
             "CreationDate" => $this->CreationDate,
             "DeliveryDate" => $this->CreationDate,

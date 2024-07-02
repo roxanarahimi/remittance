@@ -320,7 +320,7 @@ class RemittanceController extends Controller
                     ->get();
                 $item->{'OrderItems'} = $details;
             }
-            $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')->
+            $dat2 = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')->
             select([
                     "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
 //                    "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
@@ -351,7 +351,18 @@ class RemittanceController extends Controller
             $filtered = array_filter($dat, function ($el) {
                 return count($el->{'OrderItems'}) > 0;
             });
-            $input = array_values($filtered);
+             $filtered2 = array_filter($dat2, function ($el) {
+                return count($el->{'OrderItems'}) > 0;
+            });
+            $input1 = InventoryVoucherResource::collection(array_values($filtered));
+            $input2 = InventoryVoucherResource::collection(array_values($filtered2));
+            $input = [];
+            foreach ($input1 as $item) {
+                $input[] = $item;
+            }
+            foreach ($input2 as $item) {
+                $input[] = $item;
+            }
             $offset = 0;
             $perPage = 100;
             if ($request['page'] && $request['page'] > 1) {

@@ -207,7 +207,7 @@ class RemittanceController extends Controller
             ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
             ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get();
-//        $data = InventoryVoucherResource::collection($dat);
+        $data = InventoryVoucherResource::collection($dat);
         return $dat;
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')

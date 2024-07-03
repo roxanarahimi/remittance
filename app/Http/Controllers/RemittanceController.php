@@ -208,10 +208,9 @@ class RemittanceController extends Controller
             ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
             ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
             ->whereHas('OrderItems')
-            ->with('OrderItems')
             ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get();
-        return $dat2;
+        return InventoryVoucherResource::collection($dat2);
        $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')

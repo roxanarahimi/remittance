@@ -18,6 +18,6 @@ class Party extends Model
 
     public function PartyAddress()
     {
-        return $this->hasOne(PartyAddress::class, 'PartyRef', 'PartyID');
+        return $this->hasOne(Address::class, 'AddressID', 'AddressRef');
     }
 }

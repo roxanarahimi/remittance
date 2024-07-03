@@ -312,7 +312,7 @@ class RemittanceController extends Controller
             select([
                 "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
                 "GNR3.Address.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
-                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate","CounterpartEntityText"])
+                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate","CounterpartEntityText","CounterpartEntityRef"])
                 ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
                 ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')

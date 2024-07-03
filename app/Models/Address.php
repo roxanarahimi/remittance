@@ -21,4 +21,9 @@ class Address extends Model
         return $this->belongsTo(CustomerAddress::class, 'AddressRef', 'AddressID');
     }
 
+    public function PartyAddress()
+    {
+        return $this->belongsTo(PartyAddress::class, 'AddressRef', 'AddressID');
+    }
+
 }

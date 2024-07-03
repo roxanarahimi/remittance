@@ -197,7 +197,7 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         return DB::connection('sqlsrv')->table('GNR3.Party')
-            ->select("*")->selectNot(['Version'])->get(100);
+            ->select("*")->get(100)->except(['Version']);
 
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')

@@ -11,6 +11,7 @@ use App\Http\Resources\RemittanceResource;
 use App\Models\InventoryVoucher;
 use App\Models\InventoryVoucherItem;
 use App\Models\Invoice;
+use App\Models\InvoiceItem;
 use App\Models\InvoiceProduct;
 use App\Models\Order;
 use App\Models\Part;
@@ -197,6 +198,12 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
+        $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))
+            ->orderByDesc('OrderID')
+            ->orderByDesc('Type')
+            ->paginate(100);
+        $data = InvoiceResource::collection($d3);
+        return response()->json($d3, 200);
 
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')

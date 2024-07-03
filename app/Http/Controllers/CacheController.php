@@ -183,10 +183,10 @@ class CacheController extends Controller
                     'Sum' => $item->OrderItems->sum('Quantity'),
                     'DeliveryDate' => $item->DeliveryDate
                 ]);
-                $address = InvoiceAddress::where('AddressID', $item->Party?->PartyAddress->Address->AddressID)->first();
+                $address = InvoiceAddress::where('AddressID', $item->Party->PartyAddress->Address->AddressID)->first();
                 if (!$address) {
                     InvoiceAddress::create([
-                        'AddressID' => $item->AddressID,
+                        'AddressID' => $item->Party->PartyAddress->Address->AddressID,
                         'AddressName' => $item->Party->PartyAddress->Address->Name,
                         'Address' => $item->Party->PartyAddress->Address->Details,
                         'Phone' => $item->Party->PartyAddress->Address->Phone

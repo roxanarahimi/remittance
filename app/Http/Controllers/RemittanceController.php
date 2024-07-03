@@ -421,6 +421,7 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
 
+
     }
 
 }

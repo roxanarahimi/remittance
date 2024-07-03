@@ -300,8 +300,8 @@ class RemittanceController extends Controller
                     "GNR3.Address.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
                     "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate","CounterpartEntityText"])
                 ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.DelivererOrReceiverPartyRef')
-                ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'GNR3.PartyAddress.PartyRef')
-                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
+                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.PartyAddress.AddressRef')
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
                 ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
 //                ->whereIn('LGS3.Store.StoreID', $storeIDs)

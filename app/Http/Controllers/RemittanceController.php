@@ -207,6 +207,7 @@ class RemittanceController extends Controller
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
             ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
             ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
+            ->whereHas('OrderItems')
             ->with('OrderItems')
             ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get();

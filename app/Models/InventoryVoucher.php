@@ -26,6 +26,6 @@ class InventoryVoucher extends Model
     }
     public function Party()
     {
-        return $this->belongsTo(Party::class, 'CounterpartEntityRef', 'PartyID');
+        return $this->belongsTo(Party::class, 'SenderOrReceiverPartyRef', 'PartyID');
     }
 }

@@ -196,16 +196,19 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-        $dat2 = InventoryVoucher::
-            join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
+        $dat2 = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')->
+        select([
+            "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
+            "GNR3.Address.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
+            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate","CounterpartEntityText","GNR3.PartyAddress.Type as AddressType"])
+            ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
             ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
             ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
             ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
-            ->whereHas('OrderItems')
             ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-            ->get();
+            ->get()->toArray();
         return InventoryVoucherResource::collection($dat2);
        $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
@@ -306,7 +309,7 @@ class RemittanceController extends Controller
             select([
                 "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
                 "GNR3.Address.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
-                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate","CounterpartEntityText","GNR3.PartyAddress.Type as AddressType"])
+                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate","CounterpartEntityText"])
                 ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
                 ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')

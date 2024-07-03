@@ -99,8 +99,8 @@ class CacheController extends Controller
     public function getOrders($orderIDs)
     {
         $dat2 = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
-            "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef')
-            ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef','AddressID')
+            "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef','AddressID')
+            ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
             ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
 //            ->where('SLS3.Order.Date', '>=', today()->subDays(2))

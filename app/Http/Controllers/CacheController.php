@@ -187,8 +187,8 @@ class CacheController extends Controller
                 $address = InvoiceAddress::where('AddressID', $item->AddressID)->first();
                 if (!$address) {
                     InvoiceAddress::create([
-                        'AddressID' => $item->AssressID,
-                        'AddressName' => $item->AssressName,
+                        'AddressID' => $item->AddressID,
+                        'AddressName' => $item->AddressName,
                         'Address' => $item->Details,
                         'Phone' => $item->Phone
                     ]);

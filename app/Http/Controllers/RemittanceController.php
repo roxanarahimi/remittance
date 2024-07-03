@@ -199,7 +199,7 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))
-            ->orderBy('Type')
+            ->orderByDesc('Type')
             ->orderByDesc('OrderID')
             ->paginate(100);
         $data = InvoiceResource::collection($d3);

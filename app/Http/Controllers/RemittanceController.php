@@ -357,10 +357,11 @@ class RemittanceController extends Controller
             $input1 = array_values($filtered);
             $input2 = array_values($filtered2);
             $input = [];
-            foreach ($input1 as $item) {
+
+            foreach ($input2 as $item) {
                 $input[] = $item;
             }
-            foreach ($input2 as $item) {
+            foreach ($input1 as $item) {
                 $input[] = $item;
             }
             $offset = 0;

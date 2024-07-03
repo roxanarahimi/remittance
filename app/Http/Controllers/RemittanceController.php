@@ -196,7 +196,20 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-
+        $dat2 = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')->
+        select([
+            "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
+            "GNR3.Address.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
+            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate","CounterpartEntityText"])
+            ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
+            ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
+            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
+            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
+            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
+            ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
+            ->get()->toArray();
+        return $dat2;
        $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')

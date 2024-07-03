@@ -126,6 +126,7 @@ class CacheController extends Controller
     {
         try {
             Invoice::query()->truncate();
+            InvoiceItem::query()->truncate();
 
             $this->cacheProducts();
             $inventoryVoucherIDs = Invoice::

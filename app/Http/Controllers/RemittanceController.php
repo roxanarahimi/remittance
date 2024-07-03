@@ -196,7 +196,7 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-        $x = DB::connection('sqlsrv')->table('GNR3.PartyAddress')->get(100)->except('Version');
+        $x = DB::connection('sqlsrv')->table('GNR3.PartyAddress')->get(100);
        return  $x;
         $dat2 = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')
 //        select([

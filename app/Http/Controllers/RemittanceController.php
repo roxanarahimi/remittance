@@ -199,11 +199,7 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))
-//            ->where(function ($q){
-//                $q->where('Type', 'InventoryVoucher')
-//                    ->orWhere('Type', 'Deputation');
-//            })
-                ->whereNot('Type','Order')
+            ->whereNot('Type', 'Order')
             ->orderByDesc('Type')
             ->orderByDesc('OrderID')
             ->paginate(100);
@@ -239,15 +235,15 @@ class RemittanceController extends Controller
 
 
         $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))
-            ->where(function ($q){
-                $q->where('Type','InventoryVoucher')
-                    ->orWhere('Type','Deputation');
+            ->where(function ($q) {
+                $q->where('Type', 'InventoryVoucher')
+                    ->orWhere('Type', 'Deputation');
             })
-                ->orderByDesc('OrderID')
-                ->orderByDesc('Type')
-                ->paginate(100);
-            $data = InvoiceResource::collection($d3);
-            return response()->json($d3, 200);
+            ->orderByDesc('OrderID')
+            ->orderByDesc('Type')
+            ->paginate(100);
+        $data = InvoiceResource::collection($d3);
+        return response()->json($d3, 200);
 
 
         $dat = $this->getInventoryVouchers();
@@ -298,9 +294,9 @@ class RemittanceController extends Controller
 
             $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')->
             select([
-                    "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
-                    "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
-                    "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate","CounterpartEntityText"])
+                "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
+                "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
+                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartEntityText"])
                 ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -314,7 +310,7 @@ class RemittanceController extends Controller
             select([
                 "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
                 "GNR3.Address.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
-                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate","CounterpartEntityText","CounterpartEntityRef"])
+                "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartEntityText", "CounterpartEntityRef"])
                 ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
                 ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
@@ -354,7 +350,7 @@ class RemittanceController extends Controller
             $filtered = array_filter($dat, function ($el) {
                 return count($el->{'OrderItems'}) > 0;
             });
-             $filtered2 = array_filter($dat2, function ($el) {
+            $filtered2 = array_filter($dat2, function ($el) {
                 return count($el->{'OrderItems'}) > 0;
             });
             $input1 = array_values($filtered);
@@ -420,7 +416,7 @@ class RemittanceController extends Controller
     public function showProductTest($id)
     {
         try {
-              $dat = InvoiceProduct::select('id','ProductName as Name','ProductNumber','Description')->where('ProductNumber', $id)->first();
+            $dat = InvoiceProduct::select('id', 'ProductName as Name', 'ProductNumber', 'Description')->where('ProductNumber', $id)->first();
             return response()->json($dat, 200);
         } catch (\Exception $exception) {
             return response($exception);

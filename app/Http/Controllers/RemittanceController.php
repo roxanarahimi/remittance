@@ -197,13 +197,9 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         $dat2 = InventoryVoucher::
-        select([
-            "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
-//            "GNR3.Address.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
-            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate","CounterpartEntityText"])
-//            ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
-//            ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
-//            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
+            join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
+            ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
+            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
             ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
             ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)

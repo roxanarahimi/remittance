@@ -19,14 +19,11 @@ class InventoryVoucherResource extends JsonResource
             "OrderNumber" => $this->Number,
             "InventoryVoucherSpecificationRef" => $this->InventoryVoucherSpecificationRef,
 
-//            "AddressID" => $this->Store->Plant->Address->AddressID,
-//            "AddressName" =>  . ' ' .$this->Number,
-//            "Address" => $this->Store->Plant->Address->Details,
-//            "Phone" => $this->Store->Plant->Address->Phone,
-            "AddressID" => '',
+            "AddressID" => $this->Store->Plant->Address->AddressID,
             "AddressName" => $this->Store?->Name . $this->CounterpartEntityText . ' ' .$this->Number,
-            "Address" => '',
-            "Phone" => '',
+            "Address" => $this->Store->Plant->Address->Details,
+            "Phone" => $this->Store->Plant->Address->Phone,
+
 
             "Type" => "InventoryVoucher",
             'Sum' => $this->OrderItems->sum('Quantity'),

@@ -123,7 +123,7 @@ class CacheController extends Controller
     public function cacheInvoice()
     {
         try {
-//            Invoice::query()->truncate();
+            Invoice::query()->truncate();
 
             $this->cacheProducts();
             $inventoryVoucherIDs = Invoice::
@@ -183,7 +183,7 @@ class CacheController extends Controller
                     'Sum' => $item->OrderItems->sum('Quantity'),
                     'DeliveryDate' => $item->DeliveryDate
                 ]);
-                $address = InvoiceAddress::where('AddressID', $item->Store->Plant->Address->AddressID)->first();
+                $address = InvoiceAddress::where('AddressID', $item->Party->PartyAddress->Address->AddressID)->first();
                 if (!$address) {
                     InvoiceAddress::create([
                         'AddressID' => $item->Party->PartyAddress->Address->AddressID,

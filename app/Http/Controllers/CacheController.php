@@ -73,7 +73,7 @@ class CacheController extends Controller
         return $dat;
     }
 
-    public function getInventoryVouchersDeputation($inventoryVoucherIDs)
+    public function getInventoryVouchersDeputation($deputationIds)
     {
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
         $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
@@ -84,7 +84,7 @@ class CacheController extends Controller
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
 
             //            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))
-            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $inventoryVoucherIDs)
+            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $deputationIds)
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
             ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
@@ -125,21 +125,18 @@ class CacheController extends Controller
     public function cacheInvoice()
     {
         try {
-//            Invoice::query()->truncate();
-//            InvoiceItem::query()->truncate();
+            Invoice::query()->truncate();
+            InvoiceItem::query()->truncate();
 
             $this->cacheProducts();
-            $inventoryVoucherIDs = Invoice::
-//            where('DeliveryDate', '>=', today()->subDays(2))->
+            $inventoryVoucherIDs = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
             where('Type', 'InventoryVoucher')->orderByDesc('id')->pluck('OrderID');
-            $deputationIds = Invoice::
-//            where('DeliveryDate', '>=', today()->subDays(2))->
+            $deputationIds = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
             where('Type', 'Deputation')->orderByDesc('id')->pluck('OrderID');
-            $orderIDs = Invoice::
-//            where('DeliveryDate', '>=', today()->subDays(2))->
+            $orderIDs = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
             where('Type', 'Order')->orderByDesc('id')->pluck('OrderID');
             $d1 = $this->getInventoryVouchers($inventoryVoucherIDs);
-            $d2 = $this->getInventoryVouchersDeputation($inventoryVoucherIDs);
+            $d2 = $this->getInventoryVouchersDeputation($deputationIds);
             $d3 = $this->getOrders($orderIDs);
 
             foreach ($d1 as $item) {

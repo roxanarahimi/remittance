@@ -240,7 +240,7 @@ class RemittanceController extends Controller
         $filtered2 = json_decode(json_encode($dat2));
         $input1 = array_values($filtered);
         $input2 = array_values($filtered2);
-        $input = array_merge($input2, $input1);
+        $input = array_merge($input1, $input2);
 
 
         $offset = 0;

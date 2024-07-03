@@ -55,7 +55,7 @@ class CacheController extends Controller
             })
             ->pluck('StoreID');
         $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
-            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
+            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef","AddressID")
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -77,7 +77,7 @@ class CacheController extends Controller
     {
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
         $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
-            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
+            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef","AddressID")
             ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
             ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
@@ -100,7 +100,7 @@ class CacheController extends Controller
     {
         $dat2 = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
             "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef')
-            ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
+            ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef','AddressID')
             ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
 //            ->where('SLS3.Order.Date', '>=', today()->subDays(2))
@@ -179,14 +179,14 @@ class CacheController extends Controller
                     'Type' => 'Deputation',
                     'OrderID' => $item->InventoryVoucherID,
                     'OrderNumber' => $item->Number,
-                    'AddressID' => $item->Party->PartyAddress->Address->AddressID,
+                    'AddressID' => $item->AddressID,
                     'Sum' => $item->OrderItems->sum('Quantity'),
                     'DeliveryDate' => $item->DeliveryDate
                 ]);
                 $address = InvoiceAddress::where('AddressID', $item->Party->PartyAddress->Address->AddressID)->first();
                 if (!$address) {
                     InvoiceAddress::create([
-                        'AddressID' => $item->Party->PartyAddress->Address->AddressID,
+                        'AddressID' => $item->AddressID,
                         'AddressName' => $item->Party->PartyAddress->Address->Name,
                         'Address' => $item->Party->PartyAddress->Address->Details,
                         'Phone' => $item->Party->PartyAddress->Address->Phone
@@ -214,7 +214,7 @@ class CacheController extends Controller
                     'Type' => 'Order',
                     'OrderID' => $item->OrderID,
                     'OrderNumber' => $item->Number,
-                    'AddressID' => $item->Customer->CustomerAddress->Address->AddressID,
+                    'AddressID' => $item->AddressID,
                     'Sum' => $item->OrderItems->sum('Quantity'),
                     'DeliveryDate' => $item->DeliveryDate
                 ]);

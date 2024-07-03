@@ -99,7 +99,8 @@ class CacheController extends Controller
     public function getOrders($orderIDs)
     {
         $dat2 = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
-            "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef','AddressID')
+            "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef',
+            'GNR3.Address.AddressID','GNR3.Address.Name as AddressName', 'GNR3.Address.Phone','Details')
             ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
             ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
@@ -183,13 +184,13 @@ class CacheController extends Controller
                     'Sum' => $item->OrderItems->sum('Quantity'),
                     'DeliveryDate' => $item->DeliveryDate
                 ]);
-                $address = InvoiceAddress::where('AddressID', $item->Party->PartyAddress->Address->AddressID)->first();
+                $address = InvoiceAddress::where('AddressID', $item->AddressID)->first();
                 if (!$address) {
                     InvoiceAddress::create([
-                        'AddressID' => $item->Party->PartyAddress->Address->AddressID,
-                        'AddressName' => $item->Party->PartyAddress->Address->Name,
-                        'Address' => $item->Party->PartyAddress->Address->Details,
-                        'Phone' => $item->Party->PartyAddress->Address->Phone
+                        'AddressID' => $item->AssressID,
+                        'AddressName' => $item->AssressName,
+                        'Address' => $item->Details,
+                        'Phone' => $item->Phone
                     ]);
                 }
                 foreach ($item->OrderItems as $item2) {

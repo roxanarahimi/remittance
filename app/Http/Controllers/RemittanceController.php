@@ -200,7 +200,7 @@ class RemittanceController extends Controller
     {
         $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))
             ->orderByDesc('OrderID')
-            ->orderByDesc('Type')
+            ->orderBy('Type')
             ->paginate(100);
         $data = InvoiceResource::collection($d3);
         return response()->json($d3, 200);

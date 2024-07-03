@@ -67,7 +67,7 @@ class CacheController extends Controller
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
                 $q->whereIn('PartRef', $partIDs);
             })
-            ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
+            ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get();
 
         return $dat;
@@ -91,7 +91,7 @@ class CacheController extends Controller
                 $q->whereIn('PartRef', $partIDs);
             })
             ->where('GNR3.PartyAddress.IsMainAddress', "1")
-            ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
+            ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get();
 
         return $dat;
@@ -115,7 +115,7 @@ class CacheController extends Controller
             ->whereHas('OrderItems', function ($q) {
                 $q->havingRaw('SUM(Quantity) >= ?', [50]);
             })
-            ->orderBy('OrderID', 'DESC')
+            ->orderBy('OrderID')
             ->get();
 
 //        $dat2 = OrderResource::collection($dat2);
@@ -130,11 +130,11 @@ class CacheController extends Controller
 
             $this->cacheProducts();
             $inventoryVoucherIDs = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
-            where('Type', 'InventoryVoucher')->orderByDesc('id')->pluck('OrderID');
+            where('Type', 'InventoryVoucher')->orderBy('id')->pluck('OrderID');
             $deputationIds = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
-            where('Type', 'Deputation')->orderByDesc('id')->pluck('OrderID');
+            where('Type', 'Deputation')->orderBy('id')->pluck('OrderID');
             $orderIDs = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
-            where('Type', 'Order')->orderByDesc('id')->pluck('OrderID');
+            where('Type', 'Order')->orderBy('id')->pluck('OrderID');
             $d1 = $this->getInventoryVouchers($inventoryVoucherIDs);
             $d2 = $this->getInventoryVouchersDeputation($deputationIds);
             $d3 = $this->getOrders($orderIDs);

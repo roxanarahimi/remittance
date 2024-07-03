@@ -13,7 +13,7 @@ class Party extends Model
     protected $hidden = ['Version'];
     public function Order()
     {
-        return $this->hasMany(InventoryVoucher::class, 'CounterpartEntityRef', 'PartyID');
+        return $this->hasMany(InventoryVoucher::class, 'PartyID','CounterpartEntityRef');
     }
 
     public function PartyAddress()

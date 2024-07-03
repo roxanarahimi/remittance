@@ -14,6 +14,7 @@ use App\Models\Invoice;
 use App\Models\InvoiceProduct;
 use App\Models\Order;
 use App\Models\Part;
+use App\Models\PartyAddress;
 use App\Models\Product;
 use App\Models\Remittance;
 use App\Models\Store;
@@ -196,7 +197,7 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-        $x = DB::connection('sqlsrv')->table('GNR3.PartyAddress')->take(100)->get()->makeHidden('Version');
+        $x = PartyAddress::take(100)->get();
        return  $x;
         $dat2 = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')
 //        select([

@@ -234,6 +234,10 @@ class RemittanceController extends Controller
 
 
         $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))
+            ->where(function ($q){
+                $q->where('Type','InventoryVoucher')
+                    ->orWhere('Type','Deputation');
+            })
                 ->orderByDesc('OrderID')
                 ->orderByDesc('Type')
                 ->paginate(100);

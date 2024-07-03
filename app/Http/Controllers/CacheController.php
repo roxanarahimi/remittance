@@ -72,17 +72,17 @@ class CacheController extends Controller
 
         return $dat;
     }
+
     public function getInventoryVouchersDeputation($inventoryVoucherIDs)
     {
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
-        $dat = InventoryVoucher::select( [ "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
-            "GNR3.Address.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
-            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate","CounterpartEntityText","CounterpartEntityRef"])
-                ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
-        ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
-        ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
+        $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
+            ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
+            ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
+            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
 
-        //            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))
+            //            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))
             ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $inventoryVoucherIDs)
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
             ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
@@ -176,7 +176,7 @@ class CacheController extends Controller
             }
             foreach ($d2 as $item) {
                 $invoice = Invoice::create([
-                    'Type' => 'InventoryVoucher',
+                    'Type' => 'Deputation',
                     'OrderID' => $item->InventoryVoucherID,
                     'OrderNumber' => $item->Number,
                     'AddressID' => $item->Party->PartyAddress->Address->AddressID,

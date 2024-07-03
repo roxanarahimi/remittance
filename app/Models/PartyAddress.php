@@ -11,5 +11,8 @@ class PartyAddress extends Model
     protected $connection = 'sqlsrv';
     protected $table = 'GNR3.PartyAddress';
     protected $hidden = ['Version'];
-
+    public function Address()
+    {
+        return $this->hasOne(Address::class, 'AddressID', 'AddressRef');
+    }
 }

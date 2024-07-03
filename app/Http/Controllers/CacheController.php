@@ -63,10 +63,33 @@ class CacheController extends Controller
             ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $inventoryVoucherIDs)
             ->whereIn('LGS3.Store.StoreID', $storeIDs)
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-            ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
+            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
                 $q->whereIn('PartRef', $partIDs);
             })
+            ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
+            ->get();
+
+        return $dat;
+    }
+    public function getInventoryVouchersDeputation($inventoryVoucherIDs)
+    {
+        $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
+        $dat = InventoryVoucher::select( [ "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
+            "GNR3.Address.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
+            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate","CounterpartEntityText","CounterpartEntityRef"])
+                ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
+        ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
+        ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
+
+        //            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))
+            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $inventoryVoucherIDs)
+            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
+            ->whereHas('OrderItems', function ($q) use ($partIDs) {
+                $q->whereIn('PartRef', $partIDs);
+            })
+            ->where('GNR3.PartyAddress.IsMainAddress', "1")
             ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get();
 
@@ -106,11 +129,15 @@ class CacheController extends Controller
             $inventoryVoucherIDs = Invoice::
 //            where('DeliveryDate', '>=', today()->subDays(2))->
             where('Type', 'InventoryVoucher')->orderByDesc('id')->pluck('OrderID');
+            $deputationIds = Invoice::
+//            where('DeliveryDate', '>=', today()->subDays(2))->
+            where('Type', 'Deputation')->orderByDesc('id')->pluck('OrderID');
             $orderIDs = Invoice::
 //            where('DeliveryDate', '>=', today()->subDays(2))->
             where('Type', 'Order')->orderByDesc('id')->pluck('OrderID');
             $d1 = $this->getInventoryVouchers($inventoryVoucherIDs);
-            $d2 = $this->getOrders($orderIDs);
+            $d2 = $this->getInventoryVouchersDeputation($inventoryVoucherIDs);
+            $d3 = $this->getOrders($orderIDs);
 
             foreach ($d1 as $item) {
                 $invoice = Invoice::create([
@@ -148,6 +175,41 @@ class CacheController extends Controller
 
             }
             foreach ($d2 as $item) {
+                $invoice = Invoice::create([
+                    'Type' => 'InventoryVoucher',
+                    'OrderID' => $item->InventoryVoucherID,
+                    'OrderNumber' => $item->Number,
+                    'AddressID' => $item->Party->PartyAddress->Address->AddressID,
+                    'Sum' => $item->OrderItems->sum('Quantity'),
+                    'DeliveryDate' => $item->DeliveryDate
+                ]);
+                $address = InvoiceAddress::where('AddressID', $item->Store->Plant->Address->AddressID)->first();
+                if (!$address) {
+                    InvoiceAddress::create([
+                        'AddressID' => $item->Party->PartyAddress->Address->AddressID,
+                        'AddressName' => $item->Party->PartyAddress->Address->Name,
+                        'Address' => $item->Party->PartyAddress->Address->Details,
+                        'Phone' => $item->Party->PartyAddress->Address->Phone
+                    ]);
+                }
+                foreach ($item->OrderItems as $item2) {
+                    $invoiceItem = InvoiceItem::create([
+                        'invoice_id' => $invoice->id,
+                        'ProductNumber' => $item2->Part->Code,
+                        'Quantity' => $item2->Quantity,
+                    ]);
+                    $product = InvoiceProduct::where('ProductNumber', $item2->Part->Code)->first();
+                    if (!$product) {
+                        InvoiceProduct::create([
+                            'ProductName' => $item2->Part->Name,
+                            'ProductNumber' => $item2->Part->Code,
+                            'Description' => $item2->Part->Description,
+                        ]);
+                    }
+                }
+
+            }
+            foreach ($d3 as $item) {
                 $invoice = Invoice::create([
                     'Type' => 'Order',
                     'OrderID' => $item->OrderID,

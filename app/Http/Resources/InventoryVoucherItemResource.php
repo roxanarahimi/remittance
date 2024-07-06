@@ -15,7 +15,6 @@ class InventoryVoucherItemResource extends JsonResource
     public function toArray(Request $request): array
     {
 
-
         return [
             "Id" => $this->Part->PartID,
             "ProductName" => $this->Part->Name,

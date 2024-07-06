@@ -302,7 +302,7 @@ class RemittanceController extends Controller
                 })
                 ->pluck('StoreID');
 
-            $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')->
+            $dat = InventoryVoucher::
             select([
                 "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
                 "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
@@ -316,7 +316,7 @@ class RemittanceController extends Controller
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
                 ->get()->toArray();
-            $dat2 = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')->
+            $dat2 = InventoryVoucher::
             select([
                 "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
                 "GNR3.Address.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
@@ -334,26 +334,28 @@ class RemittanceController extends Controller
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 1;
                 $item->{'AddressName'} = $item->{'AddressName'} . ' ' . $item->{'OrderNumber'};
-                $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
-                    ->select(["LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
+                $details = InventoryVoucherItem::
+                    select(["LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
                         "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
                     ->whereIn('PartRef', $partIDs)
                     ->get()->toArray();
                 $item->{'OrderItems'} = $details;
+
             }
             foreach ($dat2 as $item) {
                 $item->{'type'} = 'InventoryVoucher';
                 $item->{'ok'} = 1;
                 $item->{'AddressName'} = $item->{'CounterpartEntityText'} . ' ' . $item->{'OrderNumber'};
-                $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
-                    ->select(["LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
+                $details = InventoryVoucherItem::
+                select(["LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
                         "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
                     ->whereIn('PartRef', $partIDs)
                     ->get()->toArray();
+
                 $item->{'OrderItems'} = $details;
             }
 

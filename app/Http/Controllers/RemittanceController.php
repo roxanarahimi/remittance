@@ -202,8 +202,8 @@ class RemittanceController extends Controller
 
         $t = InventoryVoucherItem::where('InventoryVoucherRef',"203084")
             ->where('PartRef','500')
-            ->with('Part')
             ->with('Unit')
+            ->with('PartUnit')
             ->get();
         return $t;
         $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))

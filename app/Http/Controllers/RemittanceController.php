@@ -198,7 +198,9 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-        $t = InventoryVoucherItem::where('InventoryVoucherRef',"203084")->first();
+        $t = InventoryVoucherItem::where('InventoryVoucherRef',"203084")
+            ->where('Quantity','1280.000000')
+            ->first();
         return $t;
         $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))
             ->whereNot('Type', 'Order')

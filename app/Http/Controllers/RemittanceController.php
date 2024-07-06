@@ -198,6 +198,9 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
+        $dat = DB::connection('sqlsrv')->table('GNR3.Unit')->get()->except('Version');
+        return $dat;
+
         $t = InventoryVoucherItem::where('InventoryVoucherRef',"203084")
             ->where('PartRef','500')
             ->with('Part')

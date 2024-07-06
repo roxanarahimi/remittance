@@ -15,4 +15,5 @@ class Part extends Model
     {
         return $this->belongsTo(InventoryVoucherItem::class, 'PartID', 'PartRef');
     }
+
 }

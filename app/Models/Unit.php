@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Unit extends Model
 {
     protected $connection = 'sqlsrv';
-    protected $table = 'GNR3.PartUnit';
+    protected $table = 'LGS3.PartUnit';
     protected $hidden = ['Version'];
     use HasFactory;
 }

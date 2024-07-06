@@ -356,6 +356,15 @@ class RemittanceController extends Controller
                     ->whereIn('PartRef', $partIDs)
                     ->get()->toArray();
 
+                foreach($details as $itemN){
+                    $itemX = InventoryVoucherItem::where('InventoryVoucherItemID',$itemN->{'InventoryVoucherItemID'})->first();
+                    $q = $itemX->Quantity;
+                    $int = (int)$itemX->Quantity;
+                    if(str_contains($itemX->PartUnit->Name,'پک')){
+                        $q = (float)($int/8);
+                        $itemN->{'Quantity'} = $q;
+                    }
+                }
                 $item->{'OrderItems'} = $details;
             }
 

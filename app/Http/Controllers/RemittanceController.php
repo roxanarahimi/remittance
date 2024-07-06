@@ -198,7 +198,7 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-        $dat = Unit::all()->get();
+        $dat = Unit::take(100)->get();
         return $dat;
 
         $t = InventoryVoucherItem::where('InventoryVoucherRef',"203084")

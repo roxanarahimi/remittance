@@ -349,7 +349,7 @@ class RemittanceController extends Controller
                 $item->{'ok'} = 1;
                 $item->{'AddressName'} = $item->{'CounterpartEntityText'} . ' ' . $item->{'OrderNumber'};
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
-                    ->select(["LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
+                    ->select(["InventoryVoucherItemID","LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
                         "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
@@ -357,7 +357,7 @@ class RemittanceController extends Controller
                     ->get()->toArray();
 
                 foreach($details as $itemN){
-                    $itemX = InventoryVoucherItem::where('InventoryVoucherItemID',$itemN->InventoryVoucherItemID)->first();
+                    $itemX = InventoryVoucherItem::where('InventoryVoucherItemID',$itemN->{'InventoryVoucherItemID'})->first();
                     $q = $itemX->Quantity;
                     $int = (int)$itemX->Quantity;
                     if(str_contains($itemX->PartUnit->Name,'پک')){

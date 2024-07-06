@@ -361,7 +361,7 @@ class RemittanceController extends Controller
                     $q = $itemX->Quantity;
                     $int = (int)$itemX->Quantity;
                     if(str_contains($itemX->PartUnit->Name,'پک')){
-                        $q = (float)($int/8);
+                        $q = (string)($int/8);
                         $itemN->{'Quantity'} = $q;
                     }
                 }

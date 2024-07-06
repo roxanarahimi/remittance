@@ -15,6 +15,7 @@ use App\Models\InvoiceItem;
 use App\Models\InvoiceProduct;
 use App\Models\Order;
 use App\Models\Part;
+use App\Models\PartUnit;
 use App\Models\PartyAddress;
 use App\Models\Product;
 use App\Models\Remittance;
@@ -198,13 +199,12 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-
-
-        $t = InventoryVoucherItem::where('InventoryVoucherRef',"203084")
-            ->where('PartRef','500')
-            ->with('Unit')
-            ->with('PartUnit')
-            ->get();
+        $t = PartUnit::where('PartID',"500")->get();
+//        $t = InventoryVoucherItem::where('InventoryVoucherRef',"203084")
+//            ->where('PartRef','500')
+//            ->with('Unit')
+//            ->with('PartUnit')
+//            ->get();
         return $t;
         $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))
             ->whereNot('Type', 'Order')

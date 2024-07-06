@@ -357,7 +357,7 @@ class RemittanceController extends Controller
                     ->get()->toArray();
 
                 foreach($details as $itemN){
-                    $itemX = InventoryVoucherItem::where('InventoryVoucherItemID',$itemN->{'InventoryVoucherItemID'})->first();
+                    $itemX = InventoryVoucherItem::where('InventoryVoucherItemID',$itemN->InventoryVoucherItemID)->first();
                     $q = $itemX->Quantity;
                     $int = (int)$itemX->Quantity;
                     if(str_contains($itemX->PartUnit->Name,'پک')){

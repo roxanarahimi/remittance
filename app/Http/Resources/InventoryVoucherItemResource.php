@@ -17,7 +17,7 @@ class InventoryVoucherItemResource extends JsonResource
 
         $q = $this->Quantity;
         if(str_contains($this->PartUnit->Name,'پک')){
-            $q = ((integer)$this->Quantity/8).'.000000';
+            $q = (((integer)$this->Quantity)/8).'.000000';
         }
         return [
             "Id" => $this->Part->PartID,

@@ -22,6 +22,6 @@ class InventoryVoucherItem extends Model
     }
     public function Unit()
     {
-        return $this->hasOne(Unit::class, 'UnitRef', 'UnitID');
+        return $this->hasOne(Unit::class, 'UnitID','UnitRef' );
     }
 }

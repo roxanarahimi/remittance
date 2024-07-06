@@ -24,7 +24,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use function Laravel\Prompts\select;
-
+use App\Models\Unit;
 // error_reporting(E_ALL);
 // ini_set('display_errors', '1');
 
@@ -198,7 +198,7 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-        $dat = DB::connection('sqlsrv')->table('GNR3.Unit')->get()->makeHidden('Version');
+        $dat = Unit::all()->get();
         return $dat;
 
         $t = InventoryVoucherItem::where('InventoryVoucherRef',"203084")

@@ -125,8 +125,8 @@ class CacheController extends Controller
     public function cacheInvoice()
     {
         try {
-//            Invoice::query()->truncate();
-//            InvoiceItem::query()->truncate();
+            Invoice::query()->truncate();
+            InvoiceItem::query()->truncate();
 
             $this->cacheProducts();
             $inventoryVoucherIDs = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
@@ -193,10 +193,15 @@ class CacheController extends Controller
                     ]);
                 }
                 foreach ($item->OrderItems as $item2) {
+                    $q = $this->Quantity;
+                    $ig = (int)$this->Quantity;
+                    if(str_contains($this->PartUnit->Name,'پک')){
+                        $q = ($ig/8).'.000000';
+                    }
                     $invoiceItem = InvoiceItem::create([
                         'invoice_id' => $invoice->id,
                         'ProductNumber' => $item2->Part->Code,
-                        'Quantity' => $item2->Quantity,
+                        'Quantity' => $q,
                     ]);
                     $product = InvoiceProduct::where('ProductNumber', $item2->Part->Code)->first();
                     if (!$product) {

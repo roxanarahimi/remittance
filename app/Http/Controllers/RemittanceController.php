@@ -201,13 +201,13 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-//        $t = PartUnit::where('PartID',"500")->get();
-        $t = InventoryVoucherItem::where('InventoryVoucherRef',"203084")
-            ->where('PartRef','500')
-            ->with('Unit')
-            ->with('PartUnit')
-            ->get();
-        return InventoryVoucherItemResource::collection($t);
+////        $t = PartUnit::where('PartID',"500")->get();
+//        $t = InventoryVoucherItem::where('InventoryVoucherRef',"203084")
+//            ->where('PartRef','500')
+//            ->with('Unit')
+//            ->with('PartUnit')
+//            ->get();
+//        return InventoryVoucherItemResource::collection($t);
         $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))
             ->whereNot('Type', 'Order')
             ->orderByDesc('Type')

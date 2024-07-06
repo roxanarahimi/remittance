@@ -15,16 +15,12 @@ class InventoryVoucherItemResource extends JsonResource
     public function toArray(Request $request): array
     {
 
-        $q = $this->Quantity;
-        $ig = (int)$this->Quantity;
-        if(str_contains($this->PartUnit->Name,'پک')){
-            $q = ($ig/8).'.000000';
-        }
+
         return [
             "Id" => $this->Part->PartID,
             "ProductName" => $this->Part->Name,
             "ProductNumber" => $this->Part->Code,
-            "Quantity" => $q,
+            "Quantity" => $this->Quantity,
         ];
     }
 }

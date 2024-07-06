@@ -199,7 +199,7 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         $t = InventoryVoucherItem::where('InventoryVoucherRef',"203084")
-            ->where('Quantity','1280.000000')
+            ->where('PartRef','500')
             ->with('Part')
             ->get();
         return $t;

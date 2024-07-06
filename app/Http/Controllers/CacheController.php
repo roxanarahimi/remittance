@@ -193,10 +193,10 @@ class CacheController extends Controller
                     ]);
                 }
                 foreach ($item->OrderItems as $item2) {
-                    $q = $this->Quantity;
-                    $ig = (int)$this->Quantity;
-                    if(str_contains($this->PartUnit->Name,'پک')){
-                        $q = ($ig/8).'.000000';
+                    $q = $item2->Quantity;
+                    $int = (int)$item2->Quantity;
+                    if(str_contains($item2->PartUnit->Name,'پک')){
+                        $q = ($int/8).'.000000';
                     }
                     $invoiceItem = InvoiceItem::create([
                         'invoice_id' => $invoice->id,

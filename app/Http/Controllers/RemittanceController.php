@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\Token;
+use App\Http\Resources\InventoryVoucherItemResource;
 use App\Http\Resources\InventoryVoucherResource;
 use App\Http\Resources\InvoiceItemResource;
 use App\Http\Resources\InvoiceResource;
@@ -206,7 +207,7 @@ class RemittanceController extends Controller
             ->with('Unit')
             ->with('PartUnit')
             ->get();
-        return InvoiceItemResource::collection($t);
+        return InventoryVoucherItemResource::collection($t);
         $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))
             ->whereNot('Type', 'Order')
             ->orderByDesc('Type')

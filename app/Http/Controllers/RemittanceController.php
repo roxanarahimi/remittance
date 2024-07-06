@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Middleware\Token;
 use App\Http\Resources\InventoryVoucherResource;
+use App\Http\Resources\InvoiceItemResource;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\RemittanceResource;
@@ -199,13 +200,13 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-        $t = PartUnit::where('PartID',"500")->get();
-//        $t = InventoryVoucherItem::where('InventoryVoucherRef',"203084")
-//            ->where('PartRef','500')
-//            ->with('Unit')
-//            ->with('PartUnit')
-//            ->get();
-        return $t;
+//        $t = PartUnit::where('PartID',"500")->get();
+        $t = InventoryVoucherItem::where('InventoryVoucherRef',"203084")
+            ->where('PartRef','500')
+            ->with('Unit')
+            ->with('PartUnit')
+            ->get();
+        return InvoiceItemResource::collection($t);
         $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))
             ->whereNot('Type', 'Order')
             ->orderByDesc('Type')

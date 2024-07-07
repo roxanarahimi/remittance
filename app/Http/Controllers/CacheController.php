@@ -196,7 +196,7 @@ class CacheController extends Controller
                     $q = $item2->Quantity;
                     $int = (int)$item2->Quantity;
                     if(str_contains($item2->PartUnit->Name,'پک')){
-                        $q = (string)($int/8);
+                        $q = (string)floor($int/8);
                     }
                     $invoiceItem = InvoiceItem::create([
                         'invoice_id' => $invoice->id,

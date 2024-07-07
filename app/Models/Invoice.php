@@ -11,7 +11,7 @@ class Invoice extends Model
     protected $guarded = ['id'];
     public function invoiceItems()
     {
-        return $this->hasMany(InvoiceItem::class, 'invoice_id', 'id');
+        return $this->hasMany(InvoiceItem::class, 'invoice_id', 'id')->orderBy('PartRef');
     }
     public function address()
     {

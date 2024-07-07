@@ -201,8 +201,8 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-        $t = PartUnit::where('PartID',"500")->where('Name','like','%کارتن%')->pluck('DSRatio');
-        return (int)$t[0];
+//        $t = PartUnit::where('PartID',"500")->where('Name','like','%کارتن%')->pluck('DSRatio');
+//        return (int)$t[0];
 //        $t = InventoryVoucherItem::where('InventoryVoucherRef',"203084")
 //            ->where('PartRef','500')
 //            ->with('Unit')
@@ -362,7 +362,8 @@ class RemittanceController extends Controller
                     $q = $itemX->Quantity;
                     $int = (int)$itemX->Quantity;
                     if(str_contains($itemX->PartUnit->Name,'پک')){
-                        $q = (string)floor($int/8);
+                        $t = (int)PartUnit::where('PartID',$itemX->PartRef)->where('Name','like','%کارتن%')->pluck('DSRatio')[0];
+                        $q = (string)floor($int/$t);
                         $itemN->{'Quantity'} = $q;
                     }
                 }

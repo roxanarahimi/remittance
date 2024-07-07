@@ -201,8 +201,8 @@ class RemittanceController extends Controller
 
     public function readOnly1(Request $request)
     {
-        $t = PartUnit::where('PartID',"500")->where('Name','like','%کارتن%')->get('DSRatio');
-        return $t;
+        $t = PartUnit::where('PartID',"500")->where('Name','like','%کارتن%')->pluck('DSRatio');
+        return $t[0];
 //        $t = InventoryVoucherItem::where('InventoryVoucherRef',"203084")
 //            ->where('PartRef','500')
 //            ->with('Unit')

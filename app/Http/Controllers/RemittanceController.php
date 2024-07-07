@@ -355,6 +355,7 @@ class RemittanceController extends Controller
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
                     ->whereIn('PartRef', $partIDs)
+                    ->OrderBy('PartRef')
                     ->get()->toArray();
 
                 foreach($details as $itemN){

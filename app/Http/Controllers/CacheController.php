@@ -10,6 +10,7 @@ use App\Models\InvoiceItem;
 use App\Models\InvoiceProduct;
 use App\Models\Order;
 use App\Models\Part;
+use App\Models\PartUnit;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 
@@ -125,8 +126,8 @@ class CacheController extends Controller
     public function cacheInvoice()
     {
         try {
-//            Invoice::query()->truncate();
-//            InvoiceItem::query()->truncate();
+            Invoice::query()->truncate();
+            InvoiceItem::query()->truncate();
 
             $this->cacheProducts();
             $inventoryVoucherIDs = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
@@ -196,7 +197,8 @@ class CacheController extends Controller
                     $q = $item2->Quantity;
                     $int = (int)$item2->Quantity;
                     if(str_contains($item2->PartUnit->Name,'پک')){
-                        $q = (string)floor($int/8);
+                        $t = (int)PartUnit::where('PartID',$item2->PartRef)->where('Name','like','%کارتن%')->pluck('DSRatio')[0];
+                        $q = (string)floor($int/$t);
                     }
                     $invoiceItem = InvoiceItem::create([
                         'invoice_id' => $invoice->id,

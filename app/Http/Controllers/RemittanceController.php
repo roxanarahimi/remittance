@@ -41,7 +41,19 @@ class RemittanceController extends Controller
     public function index(Request $request)
     {
         try {
-            $data = Remittance::orderByDesc('id')->get();
+            $data = Remittance::orderByDesc('id');
+                if (isset($request['orderID'])){
+                    $data = $data->where('orderID',$request['orderID']);
+                }
+                if (isset($request['search'])){
+                    $data = $data->where('barcode',$request['search']);
+                }
+                if (isset($request['count'])){
+                $count = $request['count'];
+                    $data->take($count)->get();
+                }else{
+                    $data->paginate(100);
+                }
             return response(RemittanceResource::collection($data), 200);
         } catch (\Exception $exception) {
             return response($exception);

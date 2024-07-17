@@ -50,10 +50,10 @@ class RemittanceController extends Controller
                 }
                 if (isset($request['count'])){
                 $count = $request['count'];
-                    $info->take($count)->get();
+                    $info = $info->take($count)->get();
                     $info = RemittanceResource::collection($info);
                 }else{
-                    $info->paginate(100);
+                    $info = $info->paginate(100);
                     $data = RemittanceResource::collection($info);
                 }
 

@@ -492,13 +492,12 @@ class RemittanceController extends Controller
                    ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
                    ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
                    ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
-                   ->with('OrderItems')
                    ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
                    ->where('LGS3.InventoryVoucher.Number', $request['orderNumber'])
                    ->first();
 
-//               return new InventoryVoucherResource($dat);
-               return $dat;
+               return new InventoryVoucherResource($dat);
+//               return $dat;
 
 
            }

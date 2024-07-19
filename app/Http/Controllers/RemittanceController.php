@@ -496,7 +496,10 @@ class RemittanceController extends Controller
                    ->where('LGS3.InventoryVoucher.Number', $request['orderNumber'])
                    ->first();
 
-               return new InventoryVoucherResource($dat->orderBy('ProductName'),$dat);
+               $x = new InventoryVoucherResource($dat);
+               $t = sort($x->{'OrderItems'});
+               $x->{'OrderItems'} = $t;
+               return $x;
 
 
            }

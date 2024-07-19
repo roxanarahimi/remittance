@@ -480,7 +480,7 @@ class RemittanceController extends Controller
                    ->where('LGS3.InventoryVoucher.Number', $request['orderNumber'])
                    ->first();
 
-               return new InventoryVoucherItemResource($dat);
+               return new InventoryVoucherResource($dat);
 
            }
            case('نمایندگی'):{
@@ -493,7 +493,7 @@ class RemittanceController extends Controller
                    ->where('LGS3.InventoryVoucher.Number', $request['orderNumber'])
                    ->first();
 
-               return new InventoryVoucherItemResource($dat);
+               return new InventoryVoucherResource($dat);
 
 
            }

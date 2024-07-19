@@ -18,14 +18,14 @@ class InventoryVoucherItem extends Model
 
     public function Part()
     {
-        return $this->hasOne(Part::class, 'PartID', 'PartRef')->ordeBy('Name');
+        return $this->hasOne(Part::class, 'PartID', 'PartRef');
     }
     public function Unit()
     {
-        return $this->hasOne(Unit::class, 'UnitID','UnitRef' )->ordeBy('Name');
+        return $this->hasOne(Unit::class, 'UnitID','UnitRef' );
     }
     public function PartUnit()
     {
-        return $this->hasOne(PartUnit::class, 'PartUnitID','PartUnitRef' )->ordeBy('Name');
+        return $this->hasOne(PartUnit::class, 'PartUnitID','PartUnitRef' );
     }
 }

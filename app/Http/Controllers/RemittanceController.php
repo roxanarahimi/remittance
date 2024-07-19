@@ -477,6 +477,7 @@ class RemittanceController extends Controller
                    ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                    ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                    ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                   ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
                    ->where('LGS3.InventoryVoucher.Number', $request['orderNumber'])
                    ->first();
 
@@ -484,12 +485,14 @@ class RemittanceController extends Controller
 
            }
            case('نمایندگی'):{
-               $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+               $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID",
+                   "LGS3.InventoryVoucher.Number",
                    "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartEntityRef",
                    "AddressID",'GNR3.Address.Name as AddressName', 'GNR3.Address.Phone','Details')
                    ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
                    ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
                    ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
+                   ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
                    ->where('LGS3.InventoryVoucher.Number', $request['orderNumber'])
                    ->first();
 

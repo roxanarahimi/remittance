@@ -497,8 +497,9 @@ class RemittanceController extends Controller
                    ->first();
 
                $x = new InventoryVoucherResource($dat);
-               $t = sort($x->{'OrderItems'});
-               $x->{'OrderItems'} = $t;
+               $arr = (array)$x->{'OrderItems'};
+               $t = sort($arr);
+               $x->{'OrderItems'} = json_encode($t);
                return $x;
 
 

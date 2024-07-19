@@ -17,7 +17,9 @@ class InventoryVoucher extends Model
         return $this->hasMany(InventoryVoucherItem::class, 'InventoryVoucherRef', 'InventoryVoucherID')
             ->whereHas('Part', function ($q) {
                 $q->where('Name', 'like', '%نودالیت%');
-            })->orderBy('Part.Name');
+            })->orderBy(function($z){
+               return $z->Part->Name;
+            });
     }
 
     public function Store()

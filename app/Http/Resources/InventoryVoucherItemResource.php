@@ -15,10 +15,11 @@ class InventoryVoucherItemResource extends JsonResource
     public function toArray(Request $request): array
     {
 
+
         return [
-            "Id" => $this->Part->PartID,
-            "ProductName" => $this->Part->Name,
-            "ProductNumber" => $this->Part->Code,
+            "Id" => $this->Part? $this->Part->PartID : $this->Party->PartyID,
+            "ProductName" => $this->Part? $this->Part->Name : $this->Party->Name,
+            "ProductNumber" => $this->Part? $this->Part->Code : $this->Party->Code,
             "Quantity" => $this->Quantity,
         ];
     }

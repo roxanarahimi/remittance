@@ -496,12 +496,7 @@ class RemittanceController extends Controller
                    ->where('LGS3.InventoryVoucher.Number', $request['orderNumber'])
                    ->first();
 
-               $x = new InventoryVoucherResource($dat);
-               return $x->{'OrderItems'};
-               $arr = (array)$x->{'OrderItems'};
-               $t = sort($arr);
-               $x->{'OrderItems'} = json_encode($t);
-               return $x;
+               return new InventoryVoucherResource($dat);
 
 
            }

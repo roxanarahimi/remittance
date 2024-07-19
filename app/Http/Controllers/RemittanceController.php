@@ -510,7 +510,8 @@ class RemittanceController extends Controller
                return new OrderResource($dat);
            }
            default:{
-              $m = ' لطفا نوع حواله (type) را ارسال کنید:
+              $m = ' لطفا نوع حواله را ارسال کنید.
+              type:
               نمایندگی
               انبار
               فروش';

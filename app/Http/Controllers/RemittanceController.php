@@ -35,7 +35,7 @@ class RemittanceController extends Controller
 {
     public function __construct(Request $request)
     {
-        $this->middleware(Token::class)->except('readOnly1');
+        $this->middleware(Token::class)->except('readOnly1','query');
     }
 
     public function index(Request $request)
@@ -464,6 +464,64 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+
+
+    }
+
+    public function query(Request $request)
+    {
+       switch($request['type']){
+           case('انبار'):{
+               $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+                   "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef","AddressID")
+                   ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+                   ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+                   ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                   ->where('Number', $request['orderNumber'])
+                   ->first();
+
+               return new InventoryVoucherItemResource($dat);
+
+           }
+           case('نمایندگی'):{
+               $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+                   "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef",
+                   "AddressID",'GNR3.Address.Name as AddressName', 'GNR3.Address.Phone','Details')
+                   ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
+                   ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
+                   ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
+                   ->where('Number', $request['orderNumber'])
+                   ->first();
+
+               return new InventoryVoucherItemResource($dat);
+
+
+           }
+           case('فروش'):{
+               $dat = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
+                   "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef',
+                   'GNR3.Address.AddressID')
+                   ->where('Number', $request['orderNumber'])
+                   ->first();
+
+               return new OrderResource($dat);
+           }
+           default:{
+              $m = ' لطفا نوع حواله (type) را ارسال کنید:
+              نمایندگی
+              انبار
+              فروش';
+              return $m;
+
+           }
+       }
+
+
+
+
+
+
+
 
 
     }

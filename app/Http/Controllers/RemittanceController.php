@@ -477,7 +477,7 @@ class RemittanceController extends Controller
                    ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
                    ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                    ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-                   ->where('Number', $request['orderNumber'])
+                   ->where('LGS3.InventoryVoucher.Number', $request['orderNumber'])
                    ->first();
 
                return new InventoryVoucherItemResource($dat);
@@ -490,7 +490,7 @@ class RemittanceController extends Controller
                    ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
                    ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
                    ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
-                   ->where('Number', $request['orderNumber'])
+                   ->where('LGS3.InventoryVoucher.Number', $request['orderNumber'])
                    ->first();
 
                return new InventoryVoucherItemResource($dat);
@@ -501,7 +501,7 @@ class RemittanceController extends Controller
                $dat = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
                    "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef',
                    'GNR3.Address.AddressID')
-                   ->where('Number', $request['orderNumber'])
+                   ->where('SLS3.Order.Number', $request['orderNumber'])
                    ->first();
 
                return new OrderResource($dat);

@@ -487,7 +487,7 @@ class RemittanceController extends Controller
            case('نمایندگی'):{
                $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID",
                    "LGS3.InventoryVoucher.Number",
-                   "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartEntityRef",
+                   "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartEntityRef","CounterpartStoreRef",
                    "AddressID",'GNR3.Address.Name as AddressName', 'GNR3.Address.Phone','Details')
                    ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
                    ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')

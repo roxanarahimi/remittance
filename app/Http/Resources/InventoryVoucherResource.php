@@ -24,10 +24,10 @@ class InventoryVoucherResource extends JsonResource
 //            "AddressName" => $this->Store?->Name . $this->CounterpartEntityText . ' ' .$this->Number,
 //            "Address" => $this->Store->Plant->Address->Details,
 //            "Phone" => $this->Store->Plant->Address->Phone,
-            "AddressID" => '',
+            "AddressID" => $this->Store->Plant?->Address->AddressID. $this->Store->Party?->Address->AddressID,
             "AddressName" => $this->Store?->Name . $this->CounterpartEntityText . ' ' .$this->Number,
-            "Address" => '',
-            "Phone" => '',
+            "Address" => $this->Store->Plant?->Address->Details. $this->Store->Party?->Address->Details,
+            "Phone" => $this->Store->Plant?->Address->Phone. $this->Store->Party?->Address->Phone,
 
             "Type" => "InventoryVoucher",
             'Sum' => $this->OrderItems->sum('Quantity'),

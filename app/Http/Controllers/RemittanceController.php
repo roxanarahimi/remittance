@@ -284,7 +284,7 @@ class RemittanceController extends Controller
                 ->get()->toArray();
 
             foreach($details as $itemN){
-                $itemX = InventoryVoucherItem::where('InventoryVoucherItemID',$itemN->{'InventoryVoucherItemID'})->first();
+                $itemX = InventoryVoucherItem::where('InventoryVoucherItemID', $itemN->{'InventoryVoucherItemID'})->first();
                 $q = $itemX->Quantity;
                 $int = (int)$itemX->Quantity;
                 if(str_contains($itemX->PartUnit->Name,'پک')){
@@ -294,17 +294,19 @@ class RemittanceController extends Controller
                 }
             }
 
-            $detailsU = array_unique($details);
-            foreach($detailsU as $u){
-                $d = array_filter($details, function ($x) use ($u) {
-                    return $x->PartRef == $u->PartRef;
-                });
+            $detailsU =[];
+            foreach($details as $d){
+               $q =  array_sum(array_column($d, 'Quantity'));
 
-                $value = 0;
-                foreach ($d as $item){
-                    $value += array_sum(array_column($d, 'Quantity'));
-                }
-                $u->Quantity = $value;
+               $f = array_filter($detailsU,function ($e) use ($d) {
+                   return $e->PartRef == $d->PartRef;
+               });
+               if (!$f){
+                   $d->Quantity = $q;
+                   $detailsU[] = $d;
+               }
+
+
             }
             $item->{'OrderItems'} = $detailsU;
         }

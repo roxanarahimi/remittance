@@ -297,15 +297,14 @@ class RemittanceController extends Controller
             $detailsU = array_unique($details);
             foreach($detailsU as $u){
                 $d = array_filter($details, function ($x) use ($u) {
-                    return $x['PartRef'] == $u['PartRef'];
+                    return $x->PartRef == $u->PartRef;
                 });
 
                 $value = 0;
                 foreach ($d as $item){
                     $value += array_sum(array_column($d, 'Quantity'));
                 }
-                $u['Quantity'] = $value;
-
+                $u->Quantity = $value;
             }
             $item->{'OrderItems'} = $detailsU;
         }

@@ -276,7 +276,7 @@ class RemittanceController extends Controller
             $item->{'AddressName'} = $item->{'CounterpartEntityText'} . ' ' . $item->{'OrderNumber'};
             $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                 ->select(["InventoryVoucherItemID","LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
-                    "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
+                   "LGS3.InventoryVoucherItem.PartRef", "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
                 ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
                 ->where('InventoryVoucherRef', $item->{'OrderID'})
                 ->whereIn('PartRef', $partIDs)

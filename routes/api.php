@@ -29,6 +29,7 @@ Route::controller(App\Http\Controllers\RemittanceController::class)->group(funct
     Route::post('/stores', 'getStores');
     Route::post('/read/info', 'readOnly');
     Route::get('/info', 'readOnly1');
+    Route::get('/info2', 'readOnly2');
     Route::post('/product/{id}', 'showProduct');
     Route::post('/productTest/{id}', 'showProductTest');
     Route::post('/query', 'query');

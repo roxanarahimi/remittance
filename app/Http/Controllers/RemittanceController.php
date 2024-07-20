@@ -35,7 +35,7 @@ class RemittanceController extends Controller
 {
     public function __construct(Request $request)
     {
-        $this->middleware(Token::class)->except('readOnly1');
+        $this->middleware(Token::class)->except('readOnly1','readOnly2');
     }
 
     public function index(Request $request)
@@ -214,6 +214,127 @@ class RemittanceController extends Controller
         return $dat2;
     }
 
+    public function readOnly2(Request $request){
+        $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
+        $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
+            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+            ->whereNot(function ($query) {
+                $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
+                    ->orWhere('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+                    ->orWhere('GNR3.Address.Details', 'LIKE', "%گرمدره%")
+                    ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
+                    ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
+            })
+            ->pluck('StoreID');
+
+        $dat = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')->
+        select([
+            "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
+            "LGS3.Store.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
+            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartEntityText"])
+            ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
+            ->whereIn('LGS3.Store.StoreID', $storeIDs)
+            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
+            ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
+            ->get()->toArray();
+        $dat2 = DB::connection('sqlsrv')->table('LGS3.InventoryVoucher')->
+        select([
+            "LGS3.InventoryVoucher.InventoryVoucherID as OrderID", "LGS3.InventoryVoucher.Number as OrderNumber",
+            "GNR3.Address.Name as AddressName", "GNR3.Address.Details as Address", "Phone",
+            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartEntityText", "CounterpartEntityRef"])
+            ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
+            ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
+            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
+            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
+            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
+            ->where('GNR3.PartyAddress.IsMainAddress', "1")
+            ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
+            ->get()->toArray();
+        foreach ($dat as $item) {
+            $item->{'type'} = 'InventoryVoucher';
+            $item->{'ok'} = 1;
+            $item->{'AddressName'} = $item->{'AddressName'} . ' ' . $item->{'OrderNumber'};
+            $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
+                ->select(["LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
+                    "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
+                ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
+                ->where('InventoryVoucherRef', $item->{'OrderID'})
+                ->whereIn('PartRef', $partIDs)
+                ->get()->toArray();
+            $item->{'OrderItems'} = $details;
+
+        }
+        foreach ($dat2 as $item) {
+            $item->{'type'} = 'InventoryVoucher';
+            $item->{'ok'} = 1;
+            $item->{'AddressName'} = $item->{'CounterpartEntityText'} . ' ' . $item->{'OrderNumber'};
+            $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
+                ->select(["InventoryVoucherItemID","LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
+                    "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
+                ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
+                ->where('InventoryVoucherRef', $item->{'OrderID'})
+                ->whereIn('PartRef', $partIDs)
+                ->OrderBy('PartRef')
+                ->get()->toArray();
+
+            foreach($details as $itemN){
+                $itemX = InventoryVoucherItem::where('InventoryVoucherItemID',$itemN->{'InventoryVoucherItemID'})->first();
+                $q = $itemX->Quantity;
+                $int = (int)$itemX->Quantity;
+                if(str_contains($itemX->PartUnit->Name,'پک')){
+                    $t = (int)PartUnit::where('PartID',$itemX->PartRef)->where('Name','like','%کارتن%')->pluck('DSRatio')[0];
+                    $q = (string)floor($int/$t);
+                    $itemN->{'Quantity'} = $q;
+                }
+            }
+
+            $detailsU = array_unique($details);
+            foreach($detailsU as $u){
+                $d = array_filter($details, function ($x) use ($u) {
+                    return $x['PartRef'] == $u['PartRef'];
+                });
+
+                $value = 0;
+                foreach ($d as $item){
+                    $value += array_sum(array_column($d, 'Quantity'));
+                }
+                $u['Quantity'] = $value;
+
+            }
+            $item->{'OrderItems'} = $detailsU;
+        }
+
+        $filtered = array_filter($dat, function ($el) {
+            return count($el->{'OrderItems'}) > 0;
+        });
+        $filtered2 = array_filter($dat2, function ($el) {
+            return count($el->{'OrderItems'}) > 0;
+        });
+        $input1 = array_values($filtered);
+        $input2 = array_values($filtered2);
+        $input = [];
+        foreach ($input1 as $item) {
+            $input[] = $item;
+        }
+        foreach ($input2 as $item) {
+            $input[] = $item;
+        }
+        $offset = 0;
+        $perPage = 100;
+        if ($request['page'] && $request['page'] > 1) {
+            $offset = ($request['page'] - 1) * $perPage;
+        }
+        $info = array_slice($input, $offset, $perPage);
+        $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+        return response()->json($paginator, 200);
+
+    }
     public function readOnly1(Request $request)
     {
 //        $t = PartUnit::where('PartID',"1746")->where('Name','like','%کارتن%')->get();

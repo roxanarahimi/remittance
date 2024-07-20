@@ -491,7 +491,7 @@ class RemittanceController extends Controller
                 $item->{'AddressName'} = $item->{'CounterpartEntityText'} . ' ' . $item->{'OrderNumber'};
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                     ->select(["InventoryVoucherItemID","LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
-                        "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
+                        "LGS3.InventoryVoucherItem.PartRef", "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
                     ->whereIn('PartRef', $partIDs)
@@ -499,7 +499,7 @@ class RemittanceController extends Controller
                     ->get()->toArray();
 
                 foreach($details as $itemN){
-                    $itemX = InventoryVoucherItem::where('InventoryVoucherItemID',$itemN->{'InventoryVoucherItemID'})->first();
+                    $itemX = InventoryVoucherItem::where('InventoryVoucherItemID', $itemN->{'InventoryVoucherItemID'})->first();
                     $q = $itemX->Quantity;
                     $int = (int)$itemX->Quantity;
                     if(str_contains($itemX->PartUnit->Name,'پک')){
@@ -508,7 +508,25 @@ class RemittanceController extends Controller
                         $itemN->{'Quantity'} = $q;
                     }
                 }
-                $item->{'OrderItems'} = $details;
+
+                $detailsU =[];
+                foreach($details as $d){
+                    $ref = array_filter($details,function ($b) use ($d) {
+                        return $b->PartRef == $d->PartRef;
+                    });
+                    $q =  array_sum(array_column($ref, 'Quantity'));
+
+                    $f = array_filter($detailsU,function ($e) use ($d) {
+                        return $e->PartRef == $d->PartRef;
+                    });
+                    if (!$f){
+                        $d->Quantity = (string)$q;
+                        $detailsU[] = $d;
+                    }
+
+
+                }
+                $item->{'OrderItems'} = $detailsU;
             }
 
             $filtered = array_filter($dat, function ($el) {

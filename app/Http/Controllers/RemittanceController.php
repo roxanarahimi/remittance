@@ -491,7 +491,7 @@ class RemittanceController extends Controller
                 $item->{'AddressName'} = $item->{'CounterpartEntityText'} . ' ' . $item->{'OrderNumber'};
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
                     ->select(["InventoryVoucherItemID","LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
-                        "LGS3.InventoryVoucherItem.PartRef", "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
+                        "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
                     ->whereIn('PartRef', $partIDs)
@@ -499,7 +499,7 @@ class RemittanceController extends Controller
                     ->get()->toArray();
 
                 foreach($details as $itemN){
-                    $itemX = InventoryVoucherItem::where('InventoryVoucherItemID', $itemN->{'InventoryVoucherItemID'})->first();
+                    $itemX = InventoryVoucherItem::where('InventoryVoucherItemID',$itemN->{'InventoryVoucherItemID'})->first();
                     $q = $itemX->Quantity;
                     $int = (int)$itemX->Quantity;
                     if(str_contains($itemX->PartUnit->Name,'پک')){
@@ -508,52 +508,8 @@ class RemittanceController extends Controller
                         $itemN->{'Quantity'} = $q;
                     }
                 }
-
-                $detailsU =[];
-                foreach($details as $d){
-                    $ref = array_filter($details,function ($b) use ($d) {
-                        return $b->PartRef == $d->PartRef;
-                    });
-                    $q =  array_sum(array_column($ref, 'Quantity'));
-
-                    $f = array_filter($detailsU,function ($e) use ($d) {
-                        return $e->PartRef == $d->PartRef;
-                    });
-                    if (!$f){
-                        $d->Quantity = $q;
-                        $detailsU[] = $d;
-                    }
-
-
-                }
-                $item->{'OrderItems'} = $detailsU;
+                $item->{'OrderItems'} = $details;
             }
-
-//            foreach ($dat2 as $item) {
-//                $item->{'type'} = 'InventoryVoucher';
-//                $item->{'ok'} = 1;
-//                $item->{'AddressName'} = $item->{'CounterpartEntityText'} . ' ' . $item->{'OrderNumber'};
-//                $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
-//                    ->select(["InventoryVoucherItemID","LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
-//                        "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
-//                    ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
-//                    ->where('InventoryVoucherRef', $item->{'OrderID'})
-//                    ->whereIn('PartRef', $partIDs)
-//                    ->OrderBy('PartRef')
-//                    ->get()->toArray();
-//
-//                foreach($details as $itemN){
-//                    $itemX = InventoryVoucherItem::where('InventoryVoucherItemID',$itemN->{'InventoryVoucherItemID'})->first();
-//                    $q = $itemX->Quantity;
-//                    $int = (int)$itemX->Quantity;
-//                    if(str_contains($itemX->PartUnit->Name,'پک')){
-//                        $t = (int)PartUnit::where('PartID',$itemX->PartRef)->where('Name','like','%کارتن%')->pluck('DSRatio')[0];
-//                        $q = (string)floor($int/$t);
-//                        $itemN->{'Quantity'} = $q;
-//                    }
-//                }
-//                $item->{'OrderItems'} = $details;
-//            }
 
             $filtered = array_filter($dat, function ($el) {
                 return count($el->{'OrderItems'}) > 0;

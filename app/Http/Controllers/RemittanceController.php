@@ -296,7 +296,10 @@ class RemittanceController extends Controller
 
             $detailsU =[];
             foreach($details as $d){
-               $q =  array_sum(array_column($d, 'Quantity'));
+                $ref = array_filter($details,function ($b) use ($d) {
+                    return $b->PartRef == $d->PartRef;
+                });
+               $q =  array_sum(array_column($ref, 'Quantity'));
 
                $f = array_filter($detailsU,function ($e) use ($d) {
                    return $e->PartRef == $d->PartRef;

@@ -12,10 +12,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-
         $schedule->command('app:cache')
             ->everyFiveMinutes()
-            ->appendOutputTo(' storage/logs/')
+            ->appendOutputTo('scheduler.log')
             ->timezone('Asia/Tehran');
     }
 

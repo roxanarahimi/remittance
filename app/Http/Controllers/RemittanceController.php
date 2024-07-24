@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use function Laravel\Prompts\select;
 use App\Models\Unit;
+use function PHPUnit\Framework\returnSelf;
+
 // error_reporting(E_ALL);
 // ini_set('display_errors', '1');
 
@@ -610,9 +612,11 @@ class RemittanceController extends Controller
         $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
 
         $nowHour  = $datetime->format( 'G');
-        $c1 = ((int)$nowHour > 8);
-        $c2 = (bool)((int)$nowHour <19);
-        return $c2;
+        if (((int)$nowHour > 8) && ((int)$nowHour <19)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public function query(Request $request)

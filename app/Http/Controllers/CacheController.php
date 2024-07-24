@@ -125,148 +125,151 @@ class CacheController extends Controller
 
     public function cacheInvoice()
     {
-        try {
-            $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
-            $nowTime  = $datetime->format( 'Y-m-d G:i');
-            $nowHour = $datetime->format( 'G');
-            if (((int)$nowHour < 9) || ((int)$nowHour > 18)){
-                return $nowTime . ' - Tehran Time: not work hour.
+        $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
+        $nowTime  = $datetime->format( 'Y-m-d G:i');
+        $nowHour = $datetime->format( 'G');
+        if (((int)$nowHour < 9) || ((int)$nowHour > 18)){
+            return $nowTime . ' - Tehran Time: not work hour.
 ';
-            }
+        }else{
+            try {
+
 
 //            Invoice::query()->truncate();
 //            InvoiceItem::query()->truncate();
 
-            $this->cacheProducts();
-            $inventoryVoucherIDs = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
-            where('Type', 'InventoryVoucher')->orderBy('id')->pluck('OrderID');
-            $deputationIds = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
-            where('Type', 'Deputation')->orderBy('id')->pluck('OrderID');
-            $orderIDs = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
-            where('Type', 'Order')->orderBy('id')->pluck('OrderID');
-            $d1 = $this->getInventoryVouchers($inventoryVoucherIDs);
-            $d2 = $this->getInventoryVouchersDeputation($deputationIds);
-            $d3 = $this->getOrders($orderIDs);
+                $this->cacheProducts();
+                $inventoryVoucherIDs = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
+                where('Type', 'InventoryVoucher')->orderBy('id')->pluck('OrderID');
+                $deputationIds = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
+                where('Type', 'Deputation')->orderBy('id')->pluck('OrderID');
+                $orderIDs = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
+                where('Type', 'Order')->orderBy('id')->pluck('OrderID');
+                $d1 = $this->getInventoryVouchers($inventoryVoucherIDs);
+                $d2 = $this->getInventoryVouchersDeputation($deputationIds);
+                $d3 = $this->getOrders($orderIDs);
 
-            foreach ($d1 as $item) {
-                $invoice = Invoice::create([
-                    'Type' => 'InventoryVoucher',
-                    'OrderID' => $item->InventoryVoucherID,
-                    'OrderNumber' => $item->Number,
-                    'AddressID' => $item->Store->Plant->Address->AddressID,
-                    'Sum' => $item->OrderItems->sum('Quantity'),
-                    'DeliveryDate' => $item->DeliveryDate
-                ]);
-                $address = InvoiceAddress::where('AddressID', $item->Store->Plant->Address->AddressID)->first();
-                if (!$address) {
-                    InvoiceAddress::create([
+                foreach ($d1 as $item) {
+                    $invoice = Invoice::create([
+                        'Type' => 'InventoryVoucher',
+                        'OrderID' => $item->InventoryVoucherID,
+                        'OrderNumber' => $item->Number,
                         'AddressID' => $item->Store->Plant->Address->AddressID,
-                        'AddressName' => $item->Store->Name,
-                        'Address' => $item->Store->Plant->Address->Details,
-                        'Phone' => $item->Store->Plant->Address->Phone
+                        'Sum' => $item->OrderItems->sum('Quantity'),
+                        'DeliveryDate' => $item->DeliveryDate
                     ]);
-                }
-                foreach ($item->OrderItems as $item2) {
-                    $invoiceItem = InvoiceItem::create([
-                        'invoice_id' => $invoice->id,
-                        'ProductNumber' => $item2->Part->Code,
-                        'Quantity' => $item2->Quantity,
-                    ]);
-                    $product = InvoiceProduct::where('ProductNumber', $item2->Part->Code)->first();
-                    if (!$product) {
-                        InvoiceProduct::create([
-                            'ProductName' => $item2->Part->Name,
-                            'ProductNumber' => $item2->Part->Code,
-                            'Description' => $item2->Part->Description,
+                    $address = InvoiceAddress::where('AddressID', $item->Store->Plant->Address->AddressID)->first();
+                    if (!$address) {
+                        InvoiceAddress::create([
+                            'AddressID' => $item->Store->Plant->Address->AddressID,
+                            'AddressName' => $item->Store->Name,
+                            'Address' => $item->Store->Plant->Address->Details,
+                            'Phone' => $item->Store->Plant->Address->Phone
                         ]);
                     }
-                }
+                    foreach ($item->OrderItems as $item2) {
+                        $invoiceItem = InvoiceItem::create([
+                            'invoice_id' => $invoice->id,
+                            'ProductNumber' => $item2->Part->Code,
+                            'Quantity' => $item2->Quantity,
+                        ]);
+                        $product = InvoiceProduct::where('ProductNumber', $item2->Part->Code)->first();
+                        if (!$product) {
+                            InvoiceProduct::create([
+                                'ProductName' => $item2->Part->Name,
+                                'ProductNumber' => $item2->Part->Code,
+                                'Description' => $item2->Part->Description,
+                            ]);
+                        }
+                    }
 
-            }
-            foreach ($d2 as $item) {
-                $invoice = Invoice::create([
-                    'Type' => 'Deputation',
-                    'OrderID' => $item->InventoryVoucherID,
-                    'OrderNumber' => $item->Number,
-                    'AddressID' => $item->AddressID,
-                    'Sum' => $item->OrderItems->sum('Quantity'),
-                    'DeliveryDate' => $item->DeliveryDate
-                ]);
-                $address = InvoiceAddress::where('AddressID', $item->AddressID)->first();
-                if (!$address) {
-                    InvoiceAddress::create([
+                }
+                foreach ($d2 as $item) {
+                    $invoice = Invoice::create([
+                        'Type' => 'Deputation',
+                        'OrderID' => $item->InventoryVoucherID,
+                        'OrderNumber' => $item->Number,
                         'AddressID' => $item->AddressID,
-                        'AddressName' => $item->AddressName,
-                        'Address' => $item->Details,
-                        'Phone' => $item->Phone
+                        'Sum' => $item->OrderItems->sum('Quantity'),
+                        'DeliveryDate' => $item->DeliveryDate
                     ]);
-                }
-                foreach ($item->OrderItems as $item2) {
-                    $q = $item2->Quantity;
-                    $int = (int)$item2->Quantity;
-                    if(str_contains($item2->PartUnit->Name,'پک')){
-                        $t = (int)PartUnit::where('PartID',$item2->PartRef)->where('Name','like','%کارتن%')->pluck('DSRatio')[0];
-                        $q = (string)floor($int/$t);
+                    $address = InvoiceAddress::where('AddressID', $item->AddressID)->first();
+                    if (!$address) {
+                        InvoiceAddress::create([
+                            'AddressID' => $item->AddressID,
+                            'AddressName' => $item->AddressName,
+                            'Address' => $item->Details,
+                            'Phone' => $item->Phone
+                        ]);
                     }
-                    $invoiceItem = InvoiceItem::create([
-                        'invoice_id' => $invoice->id,
-                        'ProductNumber' => $item2->Part->Code,
-                        'Quantity' => $q,
-                    ]);
-                    $product = InvoiceProduct::where('ProductNumber', $item2->Part->Code)->first();
-                    if (!$product) {
-                        InvoiceProduct::create([
-                            'ProductName' => $item2->Part->Name,
+                    foreach ($item->OrderItems as $item2) {
+                        $q = $item2->Quantity;
+                        $int = (int)$item2->Quantity;
+                        if(str_contains($item2->PartUnit->Name,'پک')){
+                            $t = (int)PartUnit::where('PartID',$item2->PartRef)->where('Name','like','%کارتن%')->pluck('DSRatio')[0];
+                            $q = (string)floor($int/$t);
+                        }
+                        $invoiceItem = InvoiceItem::create([
+                            'invoice_id' => $invoice->id,
                             'ProductNumber' => $item2->Part->Code,
-                            'Description' => $item2->Part->Description,
+                            'Quantity' => $q,
                         ]);
+                        $product = InvoiceProduct::where('ProductNumber', $item2->Part->Code)->first();
+                        if (!$product) {
+                            InvoiceProduct::create([
+                                'ProductName' => $item2->Part->Name,
+                                'ProductNumber' => $item2->Part->Code,
+                                'Description' => $item2->Part->Description,
+                            ]);
+                        }
                     }
-                }
 
-            }
-            foreach ($d3 as $item) {
-                $invoice = Invoice::create([
-                    'Type' => 'Order',
-                    'OrderID' => $item->OrderID,
-                    'OrderNumber' => $item->Number,
-                    'AddressID' => $item->AddressID,
-                    'Sum' => $item->OrderItems->sum('Quantity'),
-                    'DeliveryDate' => $item->DeliveryDate
-                ]);
-                $address = InvoiceAddress::where('AddressID', $item->Customer->CustomerAddress->Address->AddressID)->first();
-                if (!$address) {
-                    InvoiceAddress::create([
-                        'AddressID' => $item->Customer->CustomerAddress->Address->AddressID,
-                        'AddressName' => $item->Customer->CustomerAddress->Address->Name,
-                        'Address' => $item->Customer->CustomerAddress->Address->Details,
-                        'Phone' => $item->Customer->CustomerAddress->Address->Phone
-                    ]);
                 }
-                foreach ($item->OrderItems as $item2) {
-                    $invoiceItem = InvoiceItem::create([
-                        'invoice_id' => $invoice->id,
-                        'ProductNumber' => $item2->Product->Number,
-                        'Quantity' => $item2->Quantity,
+                foreach ($d3 as $item) {
+                    $invoice = Invoice::create([
+                        'Type' => 'Order',
+                        'OrderID' => $item->OrderID,
+                        'OrderNumber' => $item->Number,
+                        'AddressID' => $item->AddressID,
+                        'Sum' => $item->OrderItems->sum('Quantity'),
+                        'DeliveryDate' => $item->DeliveryDate
                     ]);
-                    $product = InvoiceProduct::where('ProductNumber', $item2->Product->Number)->first();
-                    if (!$product) {
-                        InvoiceProduct::create([
-                            'ProductName' => $item2->Product->Name,
-                            'ProductNumber' => $item2->Product->Number,
-                            'Description' => $item2->Product->Description
+                    $address = InvoiceAddress::where('AddressID', $item->Customer->CustomerAddress->Address->AddressID)->first();
+                    if (!$address) {
+                        InvoiceAddress::create([
+                            'AddressID' => $item->Customer->CustomerAddress->Address->AddressID,
+                            'AddressName' => $item->Customer->CustomerAddress->Address->Name,
+                            'Address' => $item->Customer->CustomerAddress->Address->Details,
+                            'Phone' => $item->Customer->CustomerAddress->Address->Phone
                         ]);
                     }
+                    foreach ($item->OrderItems as $item2) {
+                        $invoiceItem = InvoiceItem::create([
+                            'invoice_id' => $invoice->id,
+                            'ProductNumber' => $item2->Product->Number,
+                            'Quantity' => $item2->Quantity,
+                        ]);
+                        $product = InvoiceProduct::where('ProductNumber', $item2->Product->Number)->first();
+                        if (!$product) {
+                            InvoiceProduct::create([
+                                'ProductName' => $item2->Product->Name,
+                                'ProductNumber' => $item2->Product->Number,
+                                'Description' => $item2->Product->Description
+                            ]);
+                        }
+                    }
                 }
+                $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
+                $nowTime  = $datetime->format( 'Y-m-d G:i');
+                echo $nowTime . ' - Tehran Time: cache is ok
+';
+            } catch (\Exception $exception) {
+                $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
+                $nowTime  = $datetime->format( 'Y-m-d G:i');
+                echo $nowTime . ' - Tehran Time: ' . $exception->getMessage() . '
+';
             }
-            $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
-            $nowTime  = $datetime->format( 'Y-m-d G:i');
-            echo $nowTime . ' - Tehran Time: cache is ok
-';
-        } catch (\Exception $exception) {
-            $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
-            $nowTime  = $datetime->format( 'Y-m-d G:i');
-            echo $nowTime . ' - Tehran Time: ' . $exception->getMessage() . '
-';
+
         }
 //where('DeliveryDate', '>=', today()->subDays(2))
 

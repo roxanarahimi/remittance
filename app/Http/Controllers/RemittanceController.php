@@ -607,9 +607,9 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $datetime = new \DateTime( "now", new \DateTimeZone( "Europe/Bucharest" ) );
+        $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
 
-        return response($datetime->format( 'Y-m-d G:i:s' ),200);
+        return response($datetime->format( 'Y-m-d G:i' ),200);
     }
 
     public function query(Request $request)

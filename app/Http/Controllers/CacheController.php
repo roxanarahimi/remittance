@@ -126,6 +126,14 @@ class CacheController extends Controller
     public function cacheInvoice()
     {
         try {
+            $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
+            $nowTime  = $datetime->format( 'Y-m-d G:i');
+            $nowHour = $datetime->format( 'G');
+            if (((int)$nowHour < 9) || ((int)$nowHour > 18)){
+                return $nowTime . ' - Tehran Time: not work hour.
+';
+            }
+
 //            Invoice::query()->truncate();
 //            InvoiceItem::query()->truncate();
 
@@ -250,10 +258,14 @@ class CacheController extends Controller
                     }
                 }
             }
-            echo now()->format('Y-m-d h:i:s') . ' - UTC: cache is ok
+            $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
+            $nowTime  = $datetime->format( 'Y-m-d G:i');
+            echo $nowTime . ' - Tehran Time: cache is ok
 ';
         } catch (\Exception $exception) {
-            echo now()->format('Y-m-d h:i:s') . ' - UTC: ' . $exception->getMessage() . '
+            $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
+            $nowTime  = $datetime->format( 'Y-m-d G:i');
+            echo $nowTime . ' - Tehran Time: ' . $exception->getMessage() . '
 ';
         }
 //where('DeliveryDate', '>=', today()->subDays(2))

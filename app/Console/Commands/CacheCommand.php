@@ -28,6 +28,11 @@ class CacheCommand extends Command
 
     public function handle()
     {
-        (new \App\Http\Controllers\CacheController)->cacheInvoice();
+        $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
+
+        $nowHour  = $datetime->format( 'G');
+        if (((int)$nowHour > 8) && ((int)$nowHour < 19)){
+            (new \App\Http\Controllers\CacheController)->cacheInvoice();
+        }
     }
 }

@@ -610,7 +610,9 @@ class RemittanceController extends Controller
         $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
 
         $nowHour  = $datetime->format( 'G');
-        return ((int)$nowHour > 8);
+        $c1 = ((int)$nowHour > 8);
+        $c2 = ((int)$nowHour <19);
+        return $c2;
     }
 
     public function query(Request $request)

@@ -610,7 +610,11 @@ class RemittanceController extends Controller
         $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
 
         $nowHour  = $datetime->format( 'G');
-        $isWorkHour =  (int)$nowHour > 8 ;
+         if((int)$nowHour > 8 && (int)$nowHour < 19){
+             $isWorkHour = true;
+         }else{
+             $isWorkHour = false;
+         }
 
         return response($isWorkHour,200);
     }

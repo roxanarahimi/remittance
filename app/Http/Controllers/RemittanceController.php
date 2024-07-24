@@ -607,7 +607,7 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        return response(now()->format('h'),200);
+        return response(now()->format('G'),200);
     }
 
     public function query(Request $request)

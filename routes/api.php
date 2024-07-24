@@ -24,7 +24,6 @@ Route::controller(App\Http\Controllers\RemittanceController::class)->group(funct
         Route::post('/store', 'store');
         Route::post('/update/{remittance}', 'update');
         Route::post('/destroy/{remittance}', 'destroy');
-        Route::post('/fix', 'fix');
     });
     Route::post('/stores', 'getStores');
     Route::post('/read/info', 'readOnly');
@@ -33,7 +32,7 @@ Route::controller(App\Http\Controllers\RemittanceController::class)->group(funct
     Route::post('/product/{id}', 'showProduct');
     Route::post('/productTest/{id}', 'showProductTest');
     Route::post('/query', 'query');
-
+    Route::post('/fix', 'fix');
 
 });
 

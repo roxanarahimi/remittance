@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\CacheController;
 use Illuminate\Console\Command;
+use function Composer\Autoload\includeFile;
 
 class CacheCommand extends Command
 {

@@ -611,7 +611,7 @@ class RemittanceController extends Controller
 
         $nowHour  = $datetime->format( 'G');
         $c1 = ((int)$nowHour > 8);
-        $c2 = ((int)$nowHour <19);
+        $c2 = (bool)((int)$nowHour <19);
         return $c2;
     }
 

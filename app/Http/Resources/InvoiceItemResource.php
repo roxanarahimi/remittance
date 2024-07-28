@@ -15,12 +15,19 @@ class InvoiceItemResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+//        $state = 0;
+//        if ($this->sum($this->barcodes->count()) == $this->Quantity){
+//            $state = 1; // not done
+//        }elseif ($this->sum($this->barcodes->count()) > $this->Quantity){
+//            $state = 2;
+//        }
         return [
             "id" => (int)$this->id,
             "product_id" => $this->product->id,
             "ProductName" => $this->product->ProductName,
             "ProductNumber" =>  $this->product?->ProductNumber,
             "Quantity" => (string)$this->Quantity,
+            "Progress" => $this->sum($this->barcodes->count()) .'/'. $this->Quantity,
         ];
 
     }

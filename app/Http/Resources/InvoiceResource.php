@@ -24,16 +24,10 @@ class InvoiceResource extends JsonResource
             $testBarcodes[] = $item->Barcode;
         }
 
-//        $total = $this->invoiceItems->sum(function ($invoiceItem) {
-//            return $invoiceItem->Quantity;
-//        });
-        $scanned = $this->invoiceItems->sum(function ($invoiceItem) {
-            return $invoiceItem->barcodes->count();
-        });
         $state = 0; // not done
-        if ($scanned == $this->Sum) {
+        if (count($barcodes) == $this->Sum) {
             $state = 1; // done
-        } elseif ($scanned > $this->Sum) {
+        } elseif (count($barcodes) > $this->Sum) {
             $state = 2; // over done
         }
         return [
@@ -46,20 +40,10 @@ class InvoiceResource extends JsonResource
             "Type" => $this->Type,
             'Sum' => $this->Sum,
             'Barcodes' => $barcodes,
-            'Done' => $this->invoiceItems->sum(function ($invoiceItem) {
-                    return $invoiceItem->barcodes->count();
-                }) >= $this->Sum,
-            'TestDone' => $this->invoiceItems->sum(function ($invoiceItem) {
-                    return $invoiceItem->testBarcodes->count();
-                }) >= $this->Sum,
             'TestBarcodes' => $testBarcodes,
-
-            'Progress' => $this->invoiceItems->sum(function ($invoiceItem) {
-                    return $invoiceItem->barcodes->count();
-                }) . '/' .
-                $this->invoiceItems->sum(function ($invoiceItem) {
-                    return $invoiceItem->Quantity;
-                }),
+//            'Done' => count($barcodes) >= $this->Sum,
+//            'TestDone' => count($testBarcodes) >= $this->Sum,
+            'Progress' => count($barcodes) . '/' . $this->Sum,
             'State' => $state,
 
             "DeliveryDate" => $this->DeliveryDate,

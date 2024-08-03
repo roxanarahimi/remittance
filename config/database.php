@@ -103,7 +103,6 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
 
-//2227253790,Xoxo,
         ],
 
     ],

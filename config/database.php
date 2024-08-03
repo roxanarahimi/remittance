@@ -92,6 +92,8 @@ return [
 //            // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
 //        ],
         'sqlsrv' => [
+                        'password' => '7*~~r`RsCnQ!CzHxzjWe',
+            //            'database' => 'Rahkaran_Alpa',
             'driver' => 'sqlsrv',
             // 'host' => '172.17.202.25',
             //'host' => '92.61.182.38',
@@ -101,10 +103,8 @@ return [
             'host' => '172.17.56.6',
             'port' => '1433',
             'database' => 'Rahkaran_Alpa',
-//            'database' => 'Rahkaran_Alpa',
-            'username' => 'sa',
-//            'password' => '7*~~r`RsCnQ!CzHxzjWe',
-            'password' => '1qaz!QAZ',
+            'username' => 'IT',
+//            'password' => '1qaz!QAZ',
             'charset' => 'utf8',
             'prefix' => '',
 

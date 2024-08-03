@@ -100,10 +100,11 @@ return [
 //            'host' => '92.61.183.36',
             'host' => '172.17.56.6',
             'port' => '1433',
-            'database' => 'Rahkaran_Alpa',
+            'database' => 'sa',
+//            'database' => 'Rahkaran_Alpa',
             'username' => 'IT',
 //            'password' => '7*~~r`RsCnQ!CzHxzjWe',
-            'password' => 'sa',
+            'password' => '1qaz!QAZ',
             'charset' => 'utf8',
             'prefix' => '',
 

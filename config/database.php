@@ -94,12 +94,10 @@ return [
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'host' => '92.61.183.36',
-//            'host' => '172.17.56.6',
             'port' => '1433',
             'database' => 'Rahkaran_Alpa',
             'username' => 'IT',
-//            'password' => '7*~~r`RsCnQ!CzHxzjWe',
-            'password' => 'IT2024#Alpa1402',
+            'password' => 'Alpa@2024#Alpa1403',
             'charset' => 'utf8',
             'prefix' => '',
 

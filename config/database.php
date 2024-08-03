@@ -103,7 +103,7 @@ return [
             'database' => 'Rahkaran_Alpa',
             'username' => 'IT',
 //            'password' => '7*~~r`RsCnQ!CzHxzjWe',
-            'password' => '1qaz!QAZ',
+            'password' => 'sa',
             'charset' => 'utf8',
             'prefix' => '',
 

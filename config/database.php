@@ -101,7 +101,8 @@ return [
             'port' => '1433',
             'database' => 'Rahkaran_Alpa',
             'username' => 'IT',
-            'password' => '7*~~r`RsCnQ!CzHxzjWe',
+//            'password' => '7*~~r`RsCnQ!CzHxzjWe',
+            'password' => '1qaz!QAZ',
             'charset' => 'utf8',
             'prefix' => '',
 

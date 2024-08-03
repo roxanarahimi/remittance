@@ -93,8 +93,8 @@ return [
 //        ],
         'sqlsrv' => [
             'driver' => 'sqlsrv',
-//            'host' => '92.61.183.36',
-            'host' => '172.17.56.6',
+            'host' => '92.61.183.36',
+//            'host' => '172.17.56.6',
             'port' => '1433',
             'database' => 'Rahkaran_Alpa',
             'username' => 'IT',

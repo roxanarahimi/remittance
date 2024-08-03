@@ -97,8 +97,9 @@ return [
             'host' => '172.17.56.6',
             'port' => '1433',
             'database' => 'Rahkaran_Alpa',
-            'username' => 'sa',
-            'password' => '7*~~r`RsCnQ!CzHxzjWe',
+            'username' => 'IT',
+//            'password' => '7*~~r`RsCnQ!CzHxzjWe',
+            'password' => 'IT2024#Alpa1402',
             'charset' => 'utf8',
             'prefix' => '',
 

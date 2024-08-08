@@ -34,7 +34,7 @@ class InvoiceResource extends JsonResource
             "id" => $this->id,
             "OrderID" => $this->OrderID,
             "OrderNumber" => $this->OrderNumber,
-            "AddressName" => $this->address->AddressName . ' ' . $this->OrderNumber,
+            "AddressName" => $this->address->AddressName,
             "Address" => $this->address->Address,
             "Phone" => $this->address->Phone,
             "Type" => $this->Type,

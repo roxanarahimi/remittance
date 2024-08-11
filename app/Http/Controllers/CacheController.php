@@ -255,7 +255,7 @@ class CacheController extends Controller
                         'AddressName' => $item->Customer->CustomerAddress->Address->Name,
                         'Address' => $item->Customer->CustomerAddress->Address->Details,
                         'Phone' => $item->Customer->CustomerAddress->Address->Phone,
-                        'city' => $item->Customer->CustomerAddress->Address->Region->Name
+                        'city' => $item->Customer->CustomerAddress->Address->Region?->Name
                     ]);
                 }
                 foreach ($item->OrderItems as $item2) {

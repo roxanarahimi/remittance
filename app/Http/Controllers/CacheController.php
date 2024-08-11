@@ -149,6 +149,7 @@ class CacheController extends Controller
             $d2 = $this->getInventoryVouchersDeputation($deputationIds);
             $d3 = $this->getOrders($orderIDs);
 
+
             foreach ($d1 as $item) {
                 $invoice = Invoice::create([
                     'Type' => 'InventoryVoucher',
@@ -165,7 +166,7 @@ class CacheController extends Controller
                         'AddressName' => $item->Store->Name,
                         'Address' => $item->Store->Plant->Address->Details,
                         'Phone' => $item->Store->Plant->Address->Phone,
-                        'city' => $item->Store->Plant->Address->Region->Name,
+                        'city' => $item->City,
                     ]);
                 }
                 foreach ($item->OrderItems as $item2) {
@@ -207,7 +208,7 @@ class CacheController extends Controller
                         'AddressName' => $item->AddressName,
                         'Address' => $item->Details,
                         'Phone' => $item->Phone,
-                        'city' => $item->Region->Name
+                        'city' => $item->City
                     ]);
                 }
                 foreach ($item->OrderItems as $item2) {
@@ -255,7 +256,7 @@ class CacheController extends Controller
                         'AddressName' => $item->Customer->CustomerAddress->Address->Name,
                         'Address' => $item->Customer->CustomerAddress->Address->Details,
                         'Phone' => $item->Customer->CustomerAddress->Address->Phone,
-                        'city' => $item->Customer->CustomerAddress->Address->Region?->Name
+                        'city' => $item->City
                     ]);
                 }
                 foreach ($item->OrderItems as $item2) {

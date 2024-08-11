@@ -39,27 +39,27 @@ class RemittanceController extends Controller
 {
     public function __construct(Request $request)
     {
-        $this->middleware(Token::class)->except('readOnly1','readOnly2');
+        $this->middleware(Token::class)->except('readOnly1', 'readOnly2');
     }
 
     public function index(Request $request)
     {
         try {
             $info = Remittance::orderByDesc('id');
-                if (isset($request['orderID'])){
-                    $info = $info->where('orderID',$request['orderID']);
-                }
-                if (isset($request['search'])){
-                    $info = $info->where('barcode',$request['search']);
-                }
-                if (isset($request['count'])){
+            if (isset($request['orderID'])) {
+                $info = $info->where('orderID', $request['orderID']);
+            }
+            if (isset($request['search'])) {
+                $info = $info->where('barcode', $request['search']);
+            }
+            if (isset($request['count'])) {
                 $count = $request['count'];
-                    $info = $info->take($count)->get();
-                    $info = RemittanceResource::collection($info);
-                }else{
-                    $info = $info->paginate(100);
-                    $data = RemittanceResource::collection($info);
-                }
+                $info = $info->take($count)->get();
+                $info = RemittanceResource::collection($info);
+            } else {
+                $info = $info->paginate(100);
+                $data = RemittanceResource::collection($info);
+            }
 
             return response($info, 200);
         } catch (\Exception $exception) {
@@ -218,7 +218,8 @@ class RemittanceController extends Controller
         return $dat2;
     }
 
-    public function readOnly2(Request $request){
+    public function readOnly2(Request $request)
+    {
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
@@ -279,39 +280,39 @@ class RemittanceController extends Controller
             $item->{'ok'} = 1;
             $item->{'AddressName'} = $item->{'CounterpartEntityText'} . ' ' . $item->{'OrderNumber'};
             $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
-                ->select(["InventoryVoucherItemID","LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
-                   "LGS3.InventoryVoucherItem.PartRef", "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
+                ->select(["InventoryVoucherItemID", "LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
+                    "LGS3.InventoryVoucherItem.PartRef", "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
                 ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
                 ->where('InventoryVoucherRef', $item->{'OrderID'})
                 ->whereIn('PartRef', $partIDs)
                 ->OrderBy('PartRef')
                 ->get()->toArray();
 
-            foreach($details as $itemN){
+            foreach ($details as $itemN) {
                 $itemX = InventoryVoucherItem::where('InventoryVoucherItemID', $itemN->{'InventoryVoucherItemID'})->first();
                 $q = $itemX->Quantity;
                 $int = (int)$itemX->Quantity;
-                if(str_contains($itemX->PartUnit->Name,'پک')){
-                    $t = (int)PartUnit::where('PartID',$itemX->PartRef)->where('Name','like','%کارتن%')->pluck('DSRatio')[0];
-                    $q = (string)floor($int/$t);
+                if (str_contains($itemX->PartUnit->Name, 'پک')) {
+                    $t = (int)PartUnit::where('PartID', $itemX->PartRef)->where('Name', 'like', '%کارتن%')->pluck('DSRatio')[0];
+                    $q = (string)floor($int / $t);
                     $itemN->{'Quantity'} = $q;
                 }
             }
 
-            $detailsU =[];
-            foreach($details as $d){
-                $ref = array_filter($details,function ($b) use ($d) {
+            $detailsU = [];
+            foreach ($details as $d) {
+                $ref = array_filter($details, function ($b) use ($d) {
                     return $b->PartRef == $d->PartRef;
                 });
-               $q =  array_sum(array_column($ref, 'Quantity'));
+                $q = array_sum(array_column($ref, 'Quantity'));
 
-               $f = array_filter($detailsU,function ($e) use ($d) {
-                   return $e->PartRef == $d->PartRef;
-               });
-               if (!$f){
-                   $d->Quantity = $q;
-                   $detailsU[] = $d;
-               }
+                $f = array_filter($detailsU, function ($e) use ($d) {
+                    return $e->PartRef == $d->PartRef;
+                });
+                if (!$f) {
+                    $d->Quantity = $q;
+                    $detailsU[] = $d;
+                }
 
 
             }
@@ -343,6 +344,7 @@ class RemittanceController extends Controller
         return response()->json($paginator, 200);
 
     }
+
     public function readOnly1(Request $request)
     {
 //        $t = PartUnit::where('PartID',"1746")->where('Name','like','%کارتن%')->get();
@@ -494,7 +496,7 @@ class RemittanceController extends Controller
                 $item->{'ok'} = 1;
                 $item->{'AddressName'} = $item->{'CounterpartEntityText'} . ' ' . $item->{'OrderNumber'};
                 $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
-                    ->select(["InventoryVoucherItemID","LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
+                    ->select(["InventoryVoucherItemID", "LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
                         "LGS3.InventoryVoucherItem.PartRef", "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
                     ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
                     ->where('InventoryVoucherRef', $item->{'OrderID'})
@@ -502,28 +504,28 @@ class RemittanceController extends Controller
                     ->OrderBy('PartRef')
                     ->get()->toArray();
 
-                foreach($details as $itemN){
+                foreach ($details as $itemN) {
                     $itemX = InventoryVoucherItem::where('InventoryVoucherItemID', $itemN->{'InventoryVoucherItemID'})->first();
                     $q = $itemX->Quantity;
                     $int = (int)$itemX->Quantity;
-                    if(str_contains($itemX->PartUnit->Name,'پک')){
-                        $t = (int)PartUnit::where('PartID',$itemX->PartRef)->where('Name','like','%کارتن%')->pluck('DSRatio')[0];
-                        $q = (string)floor($int/$t);
+                    if (str_contains($itemX->PartUnit->Name, 'پک')) {
+                        $t = (int)PartUnit::where('PartID', $itemX->PartRef)->where('Name', 'like', '%کارتن%')->pluck('DSRatio')[0];
+                        $q = (string)floor($int / $t);
                         $itemN->{'Quantity'} = $q;
                     }
                 }
 
-                $detailsU =[];
-                foreach($details as $d){
-                    $ref = array_filter($details,function ($b) use ($d) {
+                $detailsU = [];
+                foreach ($details as $d) {
+                    $ref = array_filter($details, function ($b) use ($d) {
                         return $b->PartRef == $d->PartRef;
                     });
-                    $q =  array_sum(array_column($ref, 'Quantity'));
+                    $q = array_sum(array_column($ref, 'Quantity'));
 
-                    $f = array_filter($detailsU,function ($e) use ($d) {
+                    $f = array_filter($detailsU, function ($e) use ($d) {
                         return $e->PartRef == $d->PartRef;
                     });
-                    if (!$f){
+                    if (!$f) {
                         $d->Quantity = (string)$q;
                         $detailsU[] = $d;
                     }
@@ -620,80 +622,77 @@ class RemittanceController extends Controller
 //
 
         $dat1 = InvoiceAddress::orderBy('id')->get();
-        foreach ($dat1 as $item){
-            if ($item['city'] == ''){
-                $dat2 = Address::select('GNR3.Address.AddressID','GNR3.Address.Name as AddressName',
-                    'GNR3.RegionalDivision.RegionalDivisionID','GNR3.RegionalDivision.Name as City')
-                    ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID','=','GNR3.Address.RegionalDivisionRef' )
-                    ->where('AddressID',$item['AddressID']) ->first();
-                $item->update(['city'=>$dat2['City']]);
+        foreach ($dat1 as $item) {
+            if ($item['city'] == '') {
+                $dat2 = Address::select('GNR3.Address.AddressID', 'GNR3.Address.Name as AddressName', 'GNR3.RegionalDivision.Name as City')
+                    ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
+                    ->where('AddressID', $item['AddressID'])->first();
+                $item->update(['city' => $dat2['City']]);
             }
-
         }
-
-        return $dat1;
+        $dat3 = Address::select('GNR3.Address.AddressID', 'GNR3.Address.Name as AddressName', 'GNR3.RegionalDivision.Name as City')
+            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
+            ->where('AddressID', '192300')->get();
+        $item->update(['city' => $dat2['City']]);
+        return $dat3;
     }
 
     public function query(Request $request)
     {
-       switch($request['type']){
-           case('انبار'):{
-               $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
-                   "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef","AddressID")
-                   ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
-                   ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-                   ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-                   ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
-                   ->where('LGS3.InventoryVoucher.Number', $request['orderNumber'])
-                   ->first();
+        switch ($request['type']) {
+            case('انبار'):
+            {
+                $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+                    "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef", "AddressID")
+                    ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+                    ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+                    ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+                    ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
+                    ->where('LGS3.InventoryVoucher.Number', $request['orderNumber'])
+                    ->first();
 
-               return new InventoryVoucherResource($dat);
+                return new InventoryVoucherResource($dat);
 
-           }
-           case('نمایندگی'):{
-               $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID",
-                   "LGS3.InventoryVoucher.Number",
-                   "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartEntityRef","CounterpartEntityText",
-                   "AddressID",'GNR3.Address.Name as AddressName', 'GNR3.Address.Phone','Details')
-                   ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
-                   ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
-                   ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
-                   ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
-                   ->where('LGS3.InventoryVoucher.Number', $request['orderNumber'])
-                   ->first();
+            }
+            case('نمایندگی'):
+            {
+                $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID",
+                    "LGS3.InventoryVoucher.Number",
+                    "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartEntityRef", "CounterpartEntityText",
+                    "AddressID", 'GNR3.Address.Name as AddressName', 'GNR3.Address.Phone', 'Details')
+                    ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
+                    ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
+                    ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
+                    ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
+                    ->where('LGS3.InventoryVoucher.Number', $request['orderNumber'])
+                    ->first();
 
-               return new InventoryVoucherResource($dat);
+                return new InventoryVoucherResource($dat);
 //               return $dat;
 
 
-           }
-           case('فروش'):{
-               $dat = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
-                   "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef',
-                   'GNR3.Address.AddressID')
-                   ->where('SLS3.Order.Number', $request['orderNumber'])
-                   ->first();
+            }
+            case('فروش'):
+            {
+                $dat = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
+                    "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef',
+                    'GNR3.Address.AddressID')
+                    ->where('SLS3.Order.Number', $request['orderNumber'])
+                    ->first();
 
-               return new OrderResource($dat);
-           }
-           default:{
-              $m = ' لطفا نوع حواله را ارسال کنید.
+                return new OrderResource($dat);
+            }
+            default:
+            {
+                $m = ' لطفا نوع حواله را ارسال کنید.
               type:
               نمایندگی
               انبار
               فروش';
-              return $m;
+                return $m;
 
-           }
-       }
-
-
-
-
-
-
-
-
+            }
+        }
 
     }
 

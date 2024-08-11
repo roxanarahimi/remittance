@@ -165,7 +165,7 @@ class CacheController extends Controller
                         'AddressName' => $item->Store->Name,
                         'Address' => $item->Store->Plant->Address->Details,
                         'Phone' => $item->Store->Plant->Address->Phone,
-                        'city' => $item->Store->Plant->Address->Region->Name,
+                        'city' => $item->Store->Plant->Address->Region?->Name,
                     ]);
                 }
                 foreach ($item->OrderItems as $item2) {
@@ -207,7 +207,7 @@ class CacheController extends Controller
                         'AddressName' => $item->AddressName,
                         'Address' => $item->Details,
                         'Phone' => $item->Phone,
-                        'city' => $item->Region->Name
+                        'city' => $item->Region?->Name
                     ]);
                 }
                 foreach ($item->OrderItems as $item2) {
@@ -255,7 +255,7 @@ class CacheController extends Controller
                         'AddressName' => $item->Customer->CustomerAddress->Address->Name,
                         'Address' => $item->Customer->CustomerAddress->Address->Details,
                         'Phone' => $item->Customer->CustomerAddress->Address->Phone,
-                        'city' => $item->Customer->CustomerAddress->Address->Region->Name
+                        'city' => $item->Customer->CustomerAddress->Address->Region?->Name
                     ]);
                 }
                 foreach ($item->OrderItems as $item2) {

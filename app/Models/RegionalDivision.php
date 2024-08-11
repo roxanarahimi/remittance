@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class RegionalDivision extends Model
 {
     protected $connection = 'sqlsrv';
-    protected $table = 'GNR3.Address';
+    protected $table = 'GNR3.RegionalDivision';
     protected $hidden = ['Version'];
 
 

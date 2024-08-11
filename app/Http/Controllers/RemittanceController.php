@@ -617,8 +617,8 @@ class RemittanceController extends Controller
 //            return 0;
 //        }
 //
-        $dat2 = Address::select('GNR3.Address.AddressID','GNR3.Address.AddressName',
-            'GNR3.RegionalDivision.RegionalDivisionID','GNR3.RegionalDivision.Name')
+        $dat2 = Address::select('GNR3.Address.AddressID','GNR3.Address.Name as AddressName',
+            'GNR3.RegionalDivision.RegionalDivisionID','GNR3.RegionalDivision.Name as City')
             ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID','=','GNR3.Address.RegionalDivisionRef' )
             ->get();
         return $dat2;

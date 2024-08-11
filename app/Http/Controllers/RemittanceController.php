@@ -633,7 +633,6 @@ class RemittanceController extends Controller
         $dat3 = Address::select('GNR3.Address.AddressID', 'GNR3.Address.Name as AddressName', 'GNR3.RegionalDivision.Name as City')
             ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
             ->where('AddressID', '192300')->get();
-        $item->update(['city' => $dat2['City']]);
         return $dat3;
     }
 

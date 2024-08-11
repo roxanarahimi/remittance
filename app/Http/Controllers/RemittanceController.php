@@ -14,6 +14,7 @@ use App\Models\Address;
 use App\Models\InventoryVoucher;
 use App\Models\InventoryVoucherItem;
 use App\Models\Invoice;
+use App\Models\InvoiceAddress;
 use App\Models\InvoiceItem;
 use App\Models\InvoiceProduct;
 use App\Models\Order;
@@ -617,11 +618,13 @@ class RemittanceController extends Controller
 //            return 0;
 //        }
 //
+
+        $dat1 = InvoiceAddress::all()->paginate(100);
         $dat2 = Address::select('GNR3.Address.AddressID','GNR3.Address.Name as AddressName',
             'GNR3.RegionalDivision.RegionalDivisionID','GNR3.RegionalDivision.Name as City')
             ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID','=','GNR3.Address.RegionalDivisionRef' )
            ->take(200) ->get();
-        return $dat2;
+        return $dat1;
     }
 
     public function query(Request $request)

@@ -619,11 +619,15 @@ class RemittanceController extends Controller
 //        }
 //
 
-        $dat1 = InvoiceAddress::orderBy('id')->paginate(100);
-        $dat2 = Address::select('GNR3.Address.AddressID','GNR3.Address.Name as AddressName',
-            'GNR3.RegionalDivision.RegionalDivisionID','GNR3.RegionalDivision.Name as City')
-            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID','=','GNR3.Address.RegionalDivisionRef' )
-           ->take(200) ->get();
+        $dat1 = InvoiceAddress::orderBy('id')->get();
+        foreach ($dat1 as $item){
+            $dat2 = Address::select('GNR3.Address.AddressID','GNR3.Address.Name as AddressName',
+                'GNR3.RegionalDivision.RegionalDivisionID','GNR3.RegionalDivision.Name as City')
+                ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID','=','GNR3.Address.RegionalDivisionRef' )
+                ->where('AddressID',$item['AddressID']) ->first();
+            $item->update(['city'=>$dat2['city']]);
+        }
+
         return $dat1;
     }
 

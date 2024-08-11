@@ -625,7 +625,7 @@ class RemittanceController extends Controller
                 'GNR3.RegionalDivision.RegionalDivisionID','GNR3.RegionalDivision.Name as City')
                 ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID','=','GNR3.Address.RegionalDivisionRef' )
                 ->where('AddressID',$item['AddressID']) ->first();
-            $item->update(['city'=>$dat2['city']]);
+            $item->update(['city'=>$dat2['City']]);
         }
 
         return $dat1;

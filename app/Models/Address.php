@@ -26,4 +26,8 @@ class Address extends Model
         return $this->belongsTo(PartyAddress::class, 'AddressRef', 'AddressID');
     }
 
+    public function Region()
+    {
+        return $this->hasOne(RegionalDivision::class, 'RegionalDivisionID', 'RegionalDivisionRef');
+    }
 }

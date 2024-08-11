@@ -56,7 +56,8 @@ class CacheController extends Controller
             })
             ->pluck('StoreID');
         $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
-            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef","AddressID",'GNR3.RegionalDivision.Name as City')
+            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef","AddressID",
+            'GNR3.RegionalDivision.Name as City')
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -164,7 +165,7 @@ class CacheController extends Controller
                         'AddressName' => $item->Store->Name,
                         'Address' => $item->Store->Plant->Address->Details,
                         'Phone' => $item->Store->Plant->Address->Phone,
-                        'city' => $item->Store->Plant->Address->City,
+                        'city' => $item->Store->Plant->Address->Region->Name,
                     ]);
                 }
                 foreach ($item->OrderItems as $item2) {
@@ -206,7 +207,7 @@ class CacheController extends Controller
                         'AddressName' => $item->AddressName,
                         'Address' => $item->Details,
                         'Phone' => $item->Phone,
-                        'city' => $item->City
+                        'city' => $item->Region->Name
                     ]);
                 }
                 foreach ($item->OrderItems as $item2) {
@@ -254,7 +255,7 @@ class CacheController extends Controller
                         'AddressName' => $item->Customer->CustomerAddress->Address->Name,
                         'Address' => $item->Customer->CustomerAddress->Address->Details,
                         'Phone' => $item->Customer->CustomerAddress->Address->Phone,
-                        'city' => $item->Customer->CustomerAddress->Address->City
+                        'city' => $item->Customer->CustomerAddress->Address->Region->Name
                     ]);
                 }
                 foreach ($item->OrderItems as $item2) {

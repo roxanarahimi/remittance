@@ -620,7 +620,7 @@ class RemittanceController extends Controller
         $dat2 = Address::select('GNR3.Address.AddressID','GNR3.Address.Name as AddressName',
             'GNR3.RegionalDivision.RegionalDivisionID','GNR3.RegionalDivision.Name as City')
             ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID','=','GNR3.Address.RegionalDivisionRef' )
-            ->get();
+           ->take(200) ->get();
         return $dat2;
     }
 

@@ -10,6 +10,7 @@ use App\Http\Resources\InvoiceItemResource;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\RemittanceResource;
+use App\Models\Address;
 use App\Models\InventoryVoucher;
 use App\Models\InventoryVoucherItem;
 use App\Models\Invoice;
@@ -609,12 +610,18 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
-
-        $nowHour  = $datetime->format( 'G');
-        if (((int)$nowHour < 8) || ((int)$nowHour > 19)){
-            return 0;
-        }
+//        $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
+//
+//        $nowHour  = $datetime->format( 'G');
+//        if (((int)$nowHour < 8) || ((int)$nowHour > 19)){
+//            return 0;
+//        }
+//
+        $dat2 = Address::select('GNR3.Address.AddressID','GNR3.Address.AddressName',
+            'GNR3.RegionalDivision.RegionalDivisionID','GNR3.RegionalDivision.Name')
+            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID','=','GNR3.Address.RegionalDivisionRef' )
+            ->get();
+        return $dat2;
     }
 
     public function query(Request $request)

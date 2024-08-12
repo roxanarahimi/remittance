@@ -131,11 +131,11 @@ class CacheController extends Controller
     public function cacheInvoice()
     {
         try {
-
-            Invoice::query()->truncate();
-            InvoiceItem::query()->truncate();
-            InvoiceAddress::query()->truncate();
-            InvoiceProduct::query()->truncate();
+//
+//            Invoice::query()->truncate();
+//            InvoiceItem::query()->truncate();
+//            InvoiceAddress::query()->truncate();
+//            InvoiceProduct::query()->truncate();
 
 
             $this->cacheProducts();

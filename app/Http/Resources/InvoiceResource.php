@@ -25,9 +25,11 @@ class InvoiceResource extends JsonResource
         }
 
         $state = 0; // not done
-        if (count($barcodes) == $this->Sum) {
+        if (count($testBarcodes) < $this->Sum) {
+            $state = 0; // not done
+        }elseif(count($testBarcodes) == $this->Sum) {
             $state = 1; // done
-        } elseif (count($barcodes) > $this->Sum) {
+        } elseif (count($testBarcodes) > $this->Sum) {
             $state = 2; // over done
         }
         return [
@@ -42,9 +44,8 @@ class InvoiceResource extends JsonResource
             'Sum' => $this->Sum,
             'Barcodes' => $barcodes,
             'TestBarcodes' => $testBarcodes,
-//            'Done' => count($barcodes) >= $this->Sum,
-//            'TestDone' => count($testBarcodes) >= $this->Sum,
             'Progress' => count($barcodes) . '/' . $this->Sum,
+            'ProgressTest' => count($testBarcodes) . '/' . $this->Sum,
             'State' => $state,
 
             "DeliveryDate" => $this->DeliveryDate,

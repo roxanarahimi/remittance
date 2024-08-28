@@ -46,7 +46,8 @@ class InvoiceResource extends JsonResource
             'TestBarcodes' => $testBarcodes,
             'Progress' => count($barcodes) . '/' . $this->Sum,
             'ProgressTest' => count($testBarcodes) . '/' . $this->Sum,
-            'State' => $state,
+            'State' => 2,
+//            'State' => $state,
 
             "DeliveryDate" => $this->DeliveryDate,
             "OrderItems" => InvoiceItemResource::collection($this->invoiceItems),

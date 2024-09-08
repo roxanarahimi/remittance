@@ -132,10 +132,7 @@ class CacheController extends Controller
     {
         try {
 //
-            $products = Product::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->get();
 
-            return $products;
-            return InvoiceProduct::orderBy('id','DESC')->paginate(100);
 
             Invoice::query()->truncate();
             InvoiceItem::query()->truncate();
@@ -179,20 +176,26 @@ class CacheController extends Controller
                     if ($exist){
                         $exist->update(['Quantity',$exist->Quantity + $item2->Quantity]);
                     }else{
-                        $invoiceItem = InvoiceItem::create([
-                            'invoice_id' => $invoice->id,
-                            'ProductNumber' => $item2->Part->Code,
-                            'Quantity' => $item2->Quantity,
-                        ]);
+                        if (!str_contains($item2->Part->Name,'لیوانی')){
+                            $invoiceItem = InvoiceItem::create([
+                                'invoice_id' => $invoice->id,
+                                'ProductNumber' => $item2->Part->Code,
+                                'Quantity' => $item2->Quantity,
+                            ]);
+                        }
+
                     }
 
                     $product = InvoiceProduct::where('ProductNumber', $item2->Part->Code)->first();
                     if (!$product) {
-                        InvoiceProduct::create([
-                            'ProductName' => $item2->Part->Name,
-                            'ProductNumber' => $item2->Part->Code,
-                            'Description' => $item2->Part->Description,
-                        ]);
+                        if (!str_contains($item2->Part->Name,'لیوانی')){
+                            InvoiceProduct::create([
+                                'ProductName' => $item2->Part->Name,
+                                'ProductNumber' => $item2->Part->Code,
+                                'Description' => $item2->Part->Description,
+                            ]);
+                        }
+
                     }
                 }
 
@@ -227,20 +230,26 @@ class CacheController extends Controller
                     if ($exist){
                         $exist->update(['Quantity',$exist->Quantity + $q]);
                     }else{
-                        $invoiceItem = InvoiceItem::create([
-                            'invoice_id' => $invoice->id,
-                            'ProductNumber' => $item2->Part->Code,
-                            'Quantity' => $q,
-                        ]);
+                        if (!str_contains($item2->Part->Name,'لیوانی')){
+                            $invoiceItem = InvoiceItem::create([
+                                'invoice_id' => $invoice->id,
+                                'ProductNumber' => $item2->Part->Code,
+                                'Quantity' => $q,
+                            ]);
+                        }
+
                     }
 
                     $product = InvoiceProduct::where('ProductNumber', $item2->Part->Code)->first();
                     if (!$product) {
-                        InvoiceProduct::create([
-                            'ProductName' => $item2->Part->Name,
-                            'ProductNumber' => $item2->Part->Code,
-                            'Description' => $item2->Part->Description,
-                        ]);
+                        if (!str_contains($item2->Part->Name,'لیوانی')){
+                            InvoiceProduct::create([
+                                'ProductName' => $item2->Part->Name,
+                                'ProductNumber' => $item2->Part->Code,
+                                'Description' => $item2->Part->Description,
+                            ]);
+                        }
+
                     }
                 }
 
@@ -269,19 +278,25 @@ class CacheController extends Controller
                     if ($exist){
                         $exist->update(['Quantity',$exist->Quantity + $item2->Quantity]);
                     }else{
-                        $invoiceItem = InvoiceItem::create([
-                            'invoice_id' => $invoice->id,
-                            'ProductNumber' => $item2->Product->Number,
-                            'Quantity' => $item2->Quantity,
-                        ]);
+                        if (!str_contains($item2->Product->Name,'لیوانی')){
+                            $invoiceItem = InvoiceItem::create([
+                                'invoice_id' => $invoice->id,
+                                'ProductNumber' => $item2->Product->Number,
+                                'Quantity' => $item2->Quantity,
+                            ]);
+                        }
+
                     }
                     $product = InvoiceProduct::where('ProductNumber', $item2->Product->Number)->first();
                     if (!$product) {
-                        InvoiceProduct::create([
-                            'ProductName' => $item2->Product->Name,
-                            'ProductNumber' => $item2->Product->Number,
-                            'Description' => $item2->Product->Description
-                        ]);
+                        if (!str_contains($item2->Product->Name,'لیوانی')){
+                            InvoiceProduct::create([
+                                'ProductName' => $item2->Product->Name,
+                                'ProductNumber' => $item2->Product->Number,
+                                'Description' => $item2->Product->Description
+                            ]);
+                        }
+
                     }
                 }
             }

@@ -39,7 +39,6 @@ class CacheController extends Controller
                 'Description' => $item->Description
             ]);
         }
-        return InvoiceProduct::all();
     }
 
     public function getInventoryVouchers($inventoryVoucherIDs)
@@ -133,6 +132,8 @@ class CacheController extends Controller
     {
         try {
 //
+            return InvoiceProduct::orderByDecs('id')->painate(100);
+
             Invoice::query()->truncate();
             InvoiceItem::query()->truncate();
             InvoiceAddress::query()->truncate();

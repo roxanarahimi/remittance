@@ -21,10 +21,7 @@ class CacheController extends Controller
 //        InvoiceProduct::query()->truncate();
         $productnumbers = InvoiceProduct:://        where('CreationDate', '>=', today()->subDays(2))->
         pluck('ProductNumber');
-        $products = Product::where(function ($query) {
-            $query->where('Name', 'like', '%نودالیت%')
-                ->whereNot('Name', 'like', '%لیوانی%');
-    })->whereNotIn('Number', $productnumbers)->get();
+        $products = Product::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNotIn('Number', $productnumbers)->get();
         foreach ($products as $item) {
             InvoiceProduct::create([
                 'ProductName' => $item->Name,
@@ -34,10 +31,7 @@ class CacheController extends Controller
         }
         $Codes = InvoiceProduct:://        where('CreationDate', '>=', today()->subDays(2))->
         pluck('ProductNumber');
-        $parts = Part::where(function ($query) {
-            $query->where('Name', 'like', '%نودالیت%')
-                ->whereNot('Name', 'like', '%لیوانی%');
-        })->whereNotIn('Code', $Codes)->get();
+        $parts = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNotIn('Code', $Codes)->get();
         foreach ($parts as $item) {
             InvoiceProduct::create([
                 'ProductName' => $item->Name,
@@ -49,10 +43,7 @@ class CacheController extends Controller
 
     public function getInventoryVouchers($inventoryVoucherIDs)
     {
-        $partIDs = Part::where(function ($query) {
-            $query->where('Name', 'like', '%نودالیت%')
-                ->whereNot('Name', 'like', '%لیوانی%');
-        })->pluck("PartID");
+        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -88,10 +79,7 @@ class CacheController extends Controller
 
     public function getInventoryVouchersDeputation($deputationIds)
     {
-        $partIDs = Part::where(function ($query) {
-            $query->where('Name', 'like', '%نودالیت%')
-                ->whereNot('Name', 'like', '%لیوانی%');
-        })->pluck("PartID");
+        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->pluck("PartID");
         $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
             "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef",
             "AddressID",'GNR3.Address.Name as AddressName', 'GNR3.Address.Phone','Details','GNR3.RegionalDivision.Name as City')
@@ -144,7 +132,7 @@ class CacheController extends Controller
     {
         try {
 //
-//            return InvoiceProduct::orderBy('id','DESC')->paginate(100);
+            return InvoiceProduct::orderBy('id','DESC')->paginate(100);
 
             Invoice::query()->truncate();
             InvoiceItem::query()->truncate();

@@ -21,7 +21,7 @@ class CacheController extends Controller
 //        InvoiceProduct::query()->truncate();
         $productnumbers = InvoiceProduct:://        where('CreationDate', '>=', today()->subDays(2))->
         pluck('ProductNumber');
-        $products = Product::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNotIn('Number', $productnumbers)->get();
+        $products = Product::whereNot('Name', 'like', '%لیوانی%')->where('Name', 'like', '%نودالیت%')->whereNotIn('Number', $productnumbers)->get();
         foreach ($products as $item) {
             InvoiceProduct::create([
                 'ProductName' => $item->Name,
@@ -31,7 +31,7 @@ class CacheController extends Controller
         }
         $Codes = InvoiceProduct:://        where('CreationDate', '>=', today()->subDays(2))->
         pluck('ProductNumber');
-        $parts = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNotIn('Code', $Codes)->get();
+        $parts = Part::whereNot('Name', 'like', '%لیوانی%')->where('Name', 'like', '%نودالیت%')->whereNotIn('Code', $Codes)->get();
         foreach ($parts as $item) {
             InvoiceProduct::create([
                 'ProductName' => $item->Name,
@@ -43,7 +43,7 @@ class CacheController extends Controller
 
     public function getInventoryVouchers($inventoryVoucherIDs)
     {
-        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->pluck("PartID");
+        $partIDs = Part::whereNot('Name', 'like', '%لیوانی%')->where('Name', 'like', '%نودالیت%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -79,7 +79,7 @@ class CacheController extends Controller
 
     public function getInventoryVouchersDeputation($deputationIds)
     {
-        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->pluck("PartID");
+        $partIDs = Part::whereNot('Name', 'like', '%لیوانی%')->where('Name', 'like', '%نودالیت%')->pluck("PartID");
         $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
             "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef",
             "AddressID",'GNR3.Address.Name as AddressName', 'GNR3.Address.Phone','Details','GNR3.RegionalDivision.Name as City')

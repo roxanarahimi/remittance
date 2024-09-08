@@ -39,6 +39,7 @@ class CacheController extends Controller
                 'Description' => $item->Description
             ]);
         }
+        return InvoiceProduct::all();
     }
 
     public function getInventoryVouchers($inventoryVoucherIDs)

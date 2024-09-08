@@ -132,7 +132,7 @@ class CacheController extends Controller
     {
         try {
 //
-            return InvoiceProduct::orderByDecs('id')->painate(100);
+            return InvoiceProduct::orderBy('id','DESC')->painate(100);
 
             Invoice::query()->truncate();
             InvoiceItem::query()->truncate();

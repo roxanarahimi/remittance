@@ -164,7 +164,7 @@ class RemittanceController extends Controller
 
     public function getInventoryVouchers()
     {
-        $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
+        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -220,7 +220,7 @@ class RemittanceController extends Controller
 
     public function readOnly2(Request $request)
     {
-        $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
+        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -363,7 +363,7 @@ class RemittanceController extends Controller
         $data = InvoiceResource::collection($d3);
         return response()->json($d3, 200);
 
-        $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
+        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -436,7 +436,7 @@ class RemittanceController extends Controller
 
 
             //Mainnnnnnnnn
-            $partIDs = Part::where('Name', 'like', '%نودالیت%')->pluck("PartID");
+            $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->pluck("PartID");
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')

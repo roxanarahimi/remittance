@@ -110,21 +110,22 @@ class TestController extends Controller
 
     public function update(Request $request, Test $test)
     {
-        $validator = Validator::make($request->all('title'),
-            [
-//              'title' => 'required|unique:Tests,title,' . $test['id'],
-//                'title' => 'required',
-            ],
-            [
-//                'title.required' => 'لطفا عنوان را وارد کنید',
-//                'title.unique' => 'این عنوان قبلا ثبت شده است',
-            ]
-        );
+//        $validator = Validator::make($request->all('title'),
+//            [
+////              'title' => 'required|unique:Tests,title,' . $test['id'],
+////                'title' => 'required',
+//            ],
+//            [
+////                'title.required' => 'لطفا عنوان را وارد کنید',
+////                'title.unique' => 'این عنوان قبلا ثبت شده است',
+//            ]
+//        );
 
-        if ($validator->fails()) {
-            return response()->json($validator->messages(), 422);
-        }
+//        if ($validator->fails()) {
+//            return response()->json($validator->messages(), 422);
+//        }
         try {
+            return $test;
             $test->update($request->all());
             return response(new TestResource($test), 200);
         } catch (\Exception $exception) {

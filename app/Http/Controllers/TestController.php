@@ -125,7 +125,6 @@ class TestController extends Controller
 //            return response()->json($validator->messages(), 422);
 //        }
         try {
-            return $test;
             $test->update($request->all());
             return response(new TestResource($test), 200);
         } catch (\Exception $exception) {

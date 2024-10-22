@@ -35,7 +35,7 @@ class InvoiceResource extends JsonResource
             $state = 2; // over done
         }
         if ($this->OrderNumber== "64659") {
-            $state = 2; // not done
+            $state = 1; // not done
         }
         return [
             "id" => $this->id,

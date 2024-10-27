@@ -158,7 +158,7 @@ class CacheController extends Controller
                     'OrderID' => $item->InventoryVoucherID,
                     'OrderNumber' => $item->Number,
                     'AddressID' => $item->Store->Plant->Address->AddressID,
-                    'Sum' => $item->OrderItems->sum('Quantity'),
+                    'Sum' => $item->OrderItems->whereNot('Name', 'like', '%لیوانی%')->sum('Quantity'),
                     'DeliveryDate' => $item->DeliveryDate
                 ]);
                 $address = InvoiceAddress::where('AddressID', $item->Store->Plant->Address->AddressID)->first();
@@ -206,7 +206,7 @@ class CacheController extends Controller
                     'OrderID' => $item->InventoryVoucherID,
                     'OrderNumber' => $item->Number,
                     'AddressID' => $item->AddressID,
-                    'Sum' => $item->OrderItems->sum('Quantity'),
+                    'Sum' => $item->OrderItems->whereNot('Name', 'like', '%لیوانی%')->sum('Quantity'),
                     'DeliveryDate' => $item->DeliveryDate
                 ]);
                 $address = InvoiceAddress::where('AddressID', $item->AddressID)->first();
@@ -260,7 +260,7 @@ class CacheController extends Controller
                     'OrderID' => $item->OrderID,
                     'OrderNumber' => $item->Number,
                     'AddressID' => $item->AddressID,
-                    'Sum' => $item->OrderItems->sum('Quantity'),
+                    'Sum' => $item->OrderItems->whereNot('Name', 'like', '%لیوانی%')->sum('Quantity'),
                     'DeliveryDate' => $item->DeliveryDate
                 ]);
                 $address = InvoiceAddress::where('AddressID', $item->Customer->CustomerAddress->Address->AddressID)->first();

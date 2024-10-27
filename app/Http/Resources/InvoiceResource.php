@@ -34,9 +34,9 @@ class InvoiceResource extends JsonResource
         } elseif (count($testBarcodes) > $this->Sum) {
             $state = 2; // over done
         }
-        if ($this->OrderNumber== "64659") {
-            $state = 2; // not done
-        }
+//        if ($this->OrderNumber== "64659") {
+//            $state = 2; // not done
+//        }
         return [
             "id" => $this->id,
             "OrderID" => $this->OrderID,

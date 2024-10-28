@@ -624,7 +624,7 @@ class RemittanceController extends Controller
                 ->orderByDesc('OrderID')
                 ->orderByDesc('Type')
                 ->paginate(50);
-            $data = InvoiceResource::collection($d3);
+//            $data = InvoiceResource::collection($d3);
             return response()->json($d3, 200);
 
 

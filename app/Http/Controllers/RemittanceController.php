@@ -628,19 +628,19 @@ class RemittanceController extends Controller
             return response()->json($d3, 200);
 
 
-        $dat1 = InvoiceAddress::orderBy('id')->get();
-        foreach ($dat1 as $item) {
-            if ($item['city'] == '') {
-                $dat2 = Address::select('GNR3.Address.AddressID', 'GNR3.Address.Name as AddressName', 'GNR3.RegionalDivision.Name as City')
-                    ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
-                    ->where('AddressID', $item['AddressID'])->first();
-                $item->update(['city' => $dat2['City']]);
-            }
-        }
-        $dat3 = Address::select('GNR3.Address.AddressID', 'GNR3.Address.Name as AddressName', 'GNR3.RegionalDivision.Name as City')
-            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
-           ->paginate(100);
-        return $dat3;
+//        $dat1 = InvoiceAddress::orderBy('id')->get();
+//        foreach ($dat1 as $item) {
+//            if ($item['city'] == '') {
+//                $dat2 = Address::select('GNR3.Address.AddressID', 'GNR3.Address.Name as AddressName', 'GNR3.RegionalDivision.Name as City')
+//                    ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
+//                    ->where('AddressID', $item['AddressID'])->first();
+//                $item->update(['city' => $dat2['City']]);
+//            }
+//        }
+//        $dat3 = Address::select('GNR3.Address.AddressID', 'GNR3.Address.Name as AddressName', 'GNR3.RegionalDivision.Name as City')
+//            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
+//           ->paginate(100);
+//        return $dat3;
     }
 
     public function query(Request $request)

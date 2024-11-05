@@ -613,6 +613,8 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        $dat2 = DB::connection('sqlsrv')->table('DBO.MS_VWStorePartFactorRemainQuantity')->get();
+        return $dat2;
 //        $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
 //
 //        $nowHour  = $datetime->format( 'G');
@@ -620,12 +622,12 @@ class RemittanceController extends Controller
 //            return 0;
 //        }
 //
-            $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
-                ->orderByDesc('OrderID')
-                ->orderByDesc('Type')
-                ->paginate(50);
-//            $data = InvoiceResource::collection($d3);
-            return response()->json($d3, 200);
+//            $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
+//                ->orderByDesc('OrderID')
+//                ->orderByDesc('Type')
+//                ->paginate(50);
+////            $data = InvoiceResource::collection($d3);
+//            return response()->json($d3, 200);
 
 
 //        $dat1 = InvoiceAddress::orderBy('id')->get();

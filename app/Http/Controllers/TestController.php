@@ -34,9 +34,23 @@ class TestController extends Controller
 //             return Invoice::all();
 //            (new CacheController)->cacheProducts();
 //            return InvoiceProduct::select('id','ProductName as Name','ProductNumber','Description')->get();
+                $info = Test::orderByDesc('id');
+
+                if (isset($request['search'])) {
+                    $info = $info->where('Barcode', $request['search']);
+                }
+                if (isset($request['count'])) {
+                    $count = $request['count'];
+                    $info = $info->take($count)->get();
+                    $info = TestResource::collection($info);
+                } else {
+                    $info = $info->paginate(100);
+                    $data = TestResource::collection($info);
+                }
 
 
-                $data = Test::orderByDesc('id')->get();
+
+//                $data = Test::orderByDesc('id')->get();
             return response(TestResource::collection($data), 200);
         } catch (\Exception $exception) {
             return response($exception);

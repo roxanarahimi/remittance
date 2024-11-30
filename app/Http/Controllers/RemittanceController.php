@@ -50,7 +50,7 @@ class RemittanceController extends Controller
                 $info = $info->where('orderID', $request['orderID']);
             }
             if (isset($request['search'])) {
-                $info = $info->where('barcode', $request['search']);
+                $info = $info->where('barcode','like', '%'.$request['search'].'%');
             }
             if (isset($request['count'])) {
                 $count = $request['count'];

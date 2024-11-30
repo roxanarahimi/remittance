@@ -51,7 +51,7 @@ class TestController extends Controller
 
 
 //                $data = Test::orderByDesc('id')->get();
-            return response(TestResource::collection($data), 200);
+            return response(TestResource::collection($info), 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

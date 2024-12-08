@@ -613,8 +613,20 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $dat2 = DB::connection('sqlsrv')->table('DBO.MS_VWStorePartFactorRemainQuantity')->get();
-        return $dat2;
+//        $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
+//            ->whereNot('Type', 'Order')
+//            ->orderByDesc('Type')
+//            ->orderByDesc('OrderID')
+//            ->paginate(100);
+        $dat1 = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
+            ->orderByDesc('OrderID')
+            ->where('Type','InventoryVoucher')
+            ->get()->count();
+        $dat2 = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
+            ->orderByDesc('OrderID')
+            ->where('Type','Deputation')
+            ->get()->count();
+        return ['InventoryVoucher'=> $dat1, 'Deputation'=> $dat2, ];
 //        $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
 //
 //        $nowHour  = $datetime->format( 'G');

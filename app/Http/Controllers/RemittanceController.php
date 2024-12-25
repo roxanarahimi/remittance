@@ -617,7 +617,7 @@ class RemittanceController extends Controller
         $t->update([
             'Quantity'=>'320'
         ]);
-        $t2 = InvoiceItem::where('id','9773')->first();
+        $t2 = InvoiceItem::where('id','9774')->first();
         $t2->update([
             'Quantity'=>'320'
         ]);

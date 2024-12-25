@@ -613,20 +613,30 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        $t = InvoiceItem::where('id','9773')->first();
+        $t->update([
+            'Quantity'=>'320'
+        ]);
+        $t2 = InvoiceItem::where('id','9773')->first();
+        $t2->update([
+            'Quantity'=>'320'
+        ]);
+        $x=Invoice::where('id','2163')->first();
+        $x->update('Sum',700);
 //        $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
 //            ->whereNot('Type', 'Order')
 //            ->orderByDesc('Type')
 //            ->orderByDesc('OrderID')
 //            ->paginate(100);
-        $dat1 = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
-            ->orderByDesc('OrderID')
-            ->where('Type','InventoryVoucher')
-            ->get()->count();
-        $dat2 = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
-            ->orderByDesc('OrderID')
-            ->where('Type','Deputation')
-            ->get()->count();
-        return ['InventoryVoucher'=> $dat1, 'Deputation'=> $dat2, ];
+//        $dat1 = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
+//            ->orderByDesc('OrderID')
+//            ->where('Type','InventoryVoucher')
+//            ->get()->count();
+//        $dat2 = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
+//            ->orderByDesc('OrderID')
+//            ->where('Type','Deputation')
+//            ->get()->count();
+//        return ['InventoryVoucher'=> $dat1, 'Deputation'=> $dat2, ];
 //        $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
 //
 //        $nowHour  = $datetime->format( 'G');

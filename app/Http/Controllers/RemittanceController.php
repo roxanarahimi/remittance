@@ -613,16 +613,16 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $t = InvoiceItem::where('id','9773')->first();
-        $t->update([
-            'Quantity'=>'320'
-        ]);
-        $t2 = InvoiceItem::where('id','9774')->first();
-        $t2->update([
-            'Quantity'=>'320'
-        ]);
+//        $t = InvoiceItem::where('id','9773')->first();
+//        $t->update([
+//            'Quantity'=>'320'
+//        ]);
+//        $t2 = InvoiceItem::where('id','9774')->first();
+//        $t2->update([
+//            'Quantity'=>'320'
+//        ]);
         $x=Invoice::where('id','2163')->first();
-        $x->update(['Sum',700]);
+        $x->update(['Sum',"700"]);
 //        $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
 //            ->whereNot('Type', 'Order')
 //            ->orderByDesc('Type')

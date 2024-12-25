@@ -622,7 +622,7 @@ class RemittanceController extends Controller
 //            'Quantity'=>'320'
 //        ]);
         $x=Invoice::where('id','2163')->first();
-        $x->update(['Sum',"700"]);
+        $x->update(['Sum'=>700]);
 //        $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
 //            ->whereNot('Type', 'Order')
 //            ->orderByDesc('Type')

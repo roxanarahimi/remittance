@@ -701,6 +701,8 @@ class RemittanceController extends Controller
                 "Barcode" => $item,
             ]);
         }
+        $x = Invoice::where('id',2163)->first();
+        return response(new InvoiceResource($x), 200);
 //        $t = InvoiceItem::where('id','9773')->first();
 //        $t->update([
 //            'Quantity'=>'320'

@@ -59,3 +59,8 @@ Route::controller(App\Http\Controllers\CacheController::class)->group(function (
         Route::post('/cache', 'cacheInvoice');
 });
 
+
+Route::controller(App\Http\Controllers\RemittanceController::class)->group(function () {
+        Route::get('/report', 'report');
+});
+

@@ -701,7 +701,7 @@ class RemittanceController extends Controller
 //                "Barcode" => $item,
 //            ]);
 //        }
-        $bars = InvoiceBarcode::where('id','>',900)->get();
+        $bars = InvoiceBarcode::where('id','>',200)->get();
         foreach ($bars as $item) {
            $item->delete();
         }

@@ -701,10 +701,11 @@ class RemittanceController extends Controller
 //                "Barcode" => $item,
 //            ]);
 //        }
-        $bars = InvoiceBarcode::where('id', '>', 200)->get();
-        foreach ($bars as $item) {
-            $item->delete();
-        }
+
+//        $bars = InvoiceBarcode::where('id', '>', 200)->get();
+//        foreach ($bars as $item) {
+//            $item->delete();
+//        }
         DB::statement('ALTER TABLE invoice_barcodes AUTO_INCREMENT = 201;');
         $t = [
             "701030135101800000883B21004000512996",
@@ -1608,12 +1609,12 @@ class RemittanceController extends Controller
             "7011762424090000000099A1000800049972",
             "7011762424090000000099A1000800049968"
         ];
-//        foreach ($t as $item) {
-//            $bar = InvoiceBarcode::create([
-//                "invoice_id" => 2175,
-//                "Barcode" => $item,
-//            ]);
-//        }
+        foreach ($t as $item) {
+            $bar = InvoiceBarcode::create([
+                "invoice_id" => 2175,
+                "Barcode" => $item,
+            ]);
+        }
 
         $x = Invoice::where('id', 2175)->first();
         return response(new InvoiceResource($x), 200);

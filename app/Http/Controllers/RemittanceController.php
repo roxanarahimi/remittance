@@ -1736,12 +1736,13 @@ class RemittanceController extends Controller
     public function report(Request $request)
     {
         try {
-            $data = InvoiceBarcode::orderByDesc('id');
+            $info = InvoiceBarcode::orderByDesc('id');
             if (isset($request['Barcode'])){
-                $data = $data->where('Barcode','like', '%'.$request['Barcode'].'%');
+                $info = $info->where('Barcode','like', '%'.$request['Barcode'].'%');
             }
-            $data = $data->paginate(200);
-            return response(InvoiceBarcodeResource::collection($data), 200);
+            $info = $info->paginate(200);
+            $data = InvoiceBarcodeResource::collection($info);
+            return response($info, 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

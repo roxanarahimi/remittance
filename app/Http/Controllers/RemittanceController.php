@@ -743,16 +743,36 @@ class RemittanceController extends Controller
 
     }
 
+
+    public function getInvoiceBarcodes(Request $request)
+    {
+        $info = InvoiceBarcode::orderByDesc('id');
+        if (isset($request['search'])){
+            $info = $info->where('Barcode','like', '%'.$request['search'].'%');
+        }
+        $info = $info->paginate(100);
+        $data = InvoiceBarcodeResource::collection($info);
+        return $info;
+    }
+    public function getRemittances(Request $request)
+    {
+        $info = Remittance::orderByDesc('id');
+        if (isset($request['search'])) {
+            $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
+        }
+
+        $info = $info->paginate(100);
+        $data = RemittanceResource::collection($info);
+        return $info;
+
+    }
     public function report(Request $request)
     {
         try {
-            $info = InvoiceBarcode::orderByDesc('id');
-            if (isset($request['Barcode'])){
-                $info = $info->where('Barcode','like', '%'.$request['Barcode'].'%');
-            }
-            $info = $info->paginate(200);
-            $data = InvoiceBarcodeResource::collection($info);
-            return response($info, 200);
+            $i1 = $this->getInvoiceBarcodes($request);
+            $i2 = $this->getRemittances($request);
+            $d = $i1->merge($i2);
+            return response($d, 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

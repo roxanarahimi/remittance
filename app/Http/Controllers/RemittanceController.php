@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Http\Middleware\Token;
 use App\Http\Resources\InventoryVoucherItemResource;
 use App\Http\Resources\InventoryVoucherResource;
+use App\Http\Resources\InvoiceBarcodeResource;
 use App\Http\Resources\InvoiceItemResource;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\OrderResource;
@@ -1735,8 +1736,12 @@ class RemittanceController extends Controller
     public function report(Request $request)
     {
         try {
-            $data = Invoice::orderByDesc('id')->get();
-            return response(InvoiceResource::collection($data), 200);
+            $data = InvoiceBarcode::orderByDesc('id');
+            if (isset($request['Barcode'])){
+                $data = $data->where('Barcode','like', '%'.$request['Barcode'].'%')->get();
+            }
+            $data = $data->paginate(1000);
+            return response(InvoiceBarcodeResource::collection($data), 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

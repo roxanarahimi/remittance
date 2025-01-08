@@ -701,7 +701,7 @@ class RemittanceController extends Controller
 //                "Barcode" => $item,
 //            ]);
 //        }
-        DB::statement("ALTER TABLE invoice_barcodes SET AUTO_INCREMENT = 201;");
+        DB::statement('ALTER TABLE invoice_barcodes AUTO_INCREMENT = 201;');
         $t = [
             "701030135101800000883B21004000512996",
             "701030135101800000883B11004000512339",

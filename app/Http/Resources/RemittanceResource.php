@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Controllers\DateController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,8 +20,8 @@ class RemittanceResource extends JsonResource
             "orderID" => $this->orderID,
             "addressName" => $this->addressName,
             "barcode" => $this->barcode,
-            "created_at" => $this->created_at,
-            "updated_at" => $this->updated_at,
+            "created_at" => explode(' ',(new DateController)->toPersian($this->created_at))[0],
+
 
         ];
     }

@@ -772,10 +772,23 @@ class RemittanceController extends Controller
             $i1 = $this->getInvoiceBarcodes($request);
             $i2 = $this->getRemittances($request);
 
+            $filtered = json_decode(json_encode($i1));
+            $filtered2 = json_decode(json_encode($i2));
+            $input1 = array_values($filtered);
+            $input2 = array_values($filtered2);
+            $input = array_merge($input1, $input2);
 
 
-            $collected = $i1->union($i2);
-            $items = $collected->paginate(200);
+            $offset = 0;
+            $perPage = 100;
+            if ($request['page'] && $request['page'] > 1) {
+                $offset = ($request['page'] - 1) * $perPage;
+            }
+            $info = array_slice($input, $offset, $perPage);
+            $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+
+            return response()->json($paginator, 200);
+
 
             return response($items, 200);
         } catch (\Exception $exception) {

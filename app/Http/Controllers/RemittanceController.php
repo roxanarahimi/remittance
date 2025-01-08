@@ -1740,7 +1740,7 @@ class RemittanceController extends Controller
             if (isset($request['Barcode'])){
                 $data = $data->where('Barcode','like', '%'.$request['Barcode'].'%')->get();
             }
-            $data = $data->paginate(1000);
+            $data = $data->paginate(200);
             return response(InvoiceBarcodeResource::collection($data), 200);
         } catch (\Exception $exception) {
             return response($exception);

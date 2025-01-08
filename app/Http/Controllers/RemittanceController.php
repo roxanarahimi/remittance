@@ -1738,7 +1738,7 @@ class RemittanceController extends Controller
         try {
             $data = InvoiceBarcode::orderByDesc('id');
             if (isset($request['Barcode'])){
-                $data = $data->where('Barcode','like', '%'.$request['Barcode'].'%')->get();
+                $data = $data->where('Barcode','like', '%'.$request['Barcode'].'%');
             }
             $data = $data->paginate(200);
             return response(InvoiceBarcodeResource::collection($data), 200);

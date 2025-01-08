@@ -775,7 +775,7 @@ class RemittanceController extends Controller
 
 
             $collected = $i1->union($i2);
-            $items = (collect($collected))->paginate(200);
+            $items = $collected->paginate(200);
 
             return response($items, 200);
         } catch (\Exception $exception) {

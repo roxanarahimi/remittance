@@ -760,7 +760,6 @@ class RemittanceController extends Controller
         if (isset($request['search'])) {
             $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
         }
-
         $info = $info->get();
         $data = RemittanceResource::collection($info);
         return $info;
@@ -785,12 +784,13 @@ class RemittanceController extends Controller
                 $offset = ($request['page'] - 1) * $perPage;
             }
             $info = array_slice($input, $offset, $perPage);
+            $data = InvoiceBarcodeResource::collection($info);
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+
 
             return response()->json($paginator, 200);
 
 
-            return response($items, 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

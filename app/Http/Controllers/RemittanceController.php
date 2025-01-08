@@ -771,7 +771,7 @@ class RemittanceController extends Controller
         try {
             $i1 = $this->getInvoiceBarcodes($request);
             $i2 = $this->getRemittances($request);
-            return response($i1, 200);
+            return response(json_encode($i1), 200);
 
             $d = json_encode($i1)['data']->merge(json_encode($i2)['data']);
             return response($d, 200);

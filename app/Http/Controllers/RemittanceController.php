@@ -771,7 +771,7 @@ class RemittanceController extends Controller
         try {
             $i1 = $this->getInvoiceBarcodes($request);
             $i2 = $this->getRemittances($request);
-            $d = $i1->merge($i2);
+            $d = $i1['data']->merge($i2['data']);
             return response($d, 200);
         } catch (\Exception $exception) {
             return response($exception);

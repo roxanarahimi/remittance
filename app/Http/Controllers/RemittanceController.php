@@ -751,8 +751,8 @@ class RemittanceController extends Controller
             $info = $info->where('Barcode','like', '%'.$request['search'].'%');
         }
         $info = $info->get();
-        $data = InvoiceBarcodeResource::collection($info);
-        return $info;
+        return InvoiceBarcodeResource::collection($info);
+
     }
     public function getRemittances(Request $request)
     {
@@ -761,8 +761,8 @@ class RemittanceController extends Controller
             $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
         }
         $info = $info->get();
-        $data = RemittanceResource::collection($info);
-        return $info;
+
+        return RemittanceResource::collection($info);
 
     }
     public function report(Request $request)
@@ -784,7 +784,6 @@ class RemittanceController extends Controller
                 $offset = ($request['page'] - 1) * $perPage;
             }
             $info = array_slice($input, $offset, $perPage);
-            $data = InvoiceBarcodeResource::collection($info);
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
 
 

@@ -750,7 +750,7 @@ class RemittanceController extends Controller
         if (isset($request['search'])){
             $info = $info->where('Barcode','like', '%'.$request['search'].'%');
         }
-        $info = $info->paginate(100);
+        $info = $info->get(100);
         $data = InvoiceBarcodeResource::collection($info);
         return $info;
     }
@@ -761,7 +761,7 @@ class RemittanceController extends Controller
             $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
         }
 
-        $info = $info->paginate(100);
+        $info = $info->get(100);
         $data = RemittanceResource::collection($info);
         return $info;
 
@@ -771,10 +771,13 @@ class RemittanceController extends Controller
         try {
             $i1 = $this->getInvoiceBarcodes($request);
             $i2 = $this->getRemittances($request);
-            return response(json_encode($i1,true), 200);
 
-            $d = json_encode($i1)['data']->merge(json_encode($i2)['data']);
-            return response($d, 200);
+
+
+            $collected = $i1->union($i2);
+            $items = (collect($collected))->paginate(200);
+
+            return response($items, 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

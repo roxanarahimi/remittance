@@ -616,6 +616,11 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
 
+        $info = InvoiceBarcode::orderByDesc('id')->where('Barcode','like', '%'.$request['search'].'%')->get();
+
+        $info2 = Remittance::orderByDesc('id')->where('barcode', 'like', '%' . $request['search'] . '%')->get();
+
+        return response([$info,$info2],200);
 //        $bars = InvoiceBarcode::where('id', '>', 200)->get();
 //        foreach ($bars as $item) {
 //            $item->delete();
@@ -628,7 +633,7 @@ class RemittanceController extends Controller
 //            ]);
 //        }
 
-        $x = Invoice::where('id', 2175)->first();
+//        $x = Invoice::where('id', 2175)->first();
         return response(new InvoiceResource($x), 200);
 //        $t = InvoiceItem::where('id','9773')->first();
 //        $t->update([
@@ -749,6 +754,8 @@ class RemittanceController extends Controller
         $info = InvoiceBarcode::orderByDesc('id');
         if (isset($request['search'])){
             $info = $info->where('Barcode','like', '%'.$request['search'].'%');
+        }else{
+            $info = $info->take(200);
         }
         $info = $info->get();
         return InvoiceBarcodeResource::collection($info);
@@ -759,6 +766,8 @@ class RemittanceController extends Controller
         $info = Remittance::orderByDesc('id');
         if (isset($request['search'])) {
             $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
+        }else{
+            $info = $info->take(200);
         }
         $info = $info->get();
 

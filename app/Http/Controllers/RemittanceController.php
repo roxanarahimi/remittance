@@ -755,7 +755,7 @@ class RemittanceController extends Controller
         if (isset($request['search'])){
             $info = $info->where('Barcode','like', '%'.$request['search'].'%');
         }else{
-            $info = $info->take(200);
+            $info = $info->take(500);
         }
         $info = $info->get();
         return InvoiceBarcodeResource::collection($info);
@@ -767,7 +767,7 @@ class RemittanceController extends Controller
         if (isset($request['search'])) {
             $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
         }else{
-            $info = $info->take(200);
+            $info = $info->take(500);
         }
         $info = $info->get();
 

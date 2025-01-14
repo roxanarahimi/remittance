@@ -788,7 +788,7 @@ class RemittanceController extends Controller
 
 
             $offset = 0;
-            $perPage = 100;
+            $perPage = 200;
             if ($request['page'] && $request['page'] > 1) {
                 $offset = ($request['page'] - 1) * $perPage;
             }

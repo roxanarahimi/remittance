@@ -14,7 +14,7 @@ class DateController extends Controller
             \IntlDateFormatter::FULL,
             'Asia/Tehran',
             \IntlDateFormatter::TRADITIONAL,
-            "yyyy-MM-d H:m:s"
+            "yyyy-MM-d H:mm:ss"
         );
 
 

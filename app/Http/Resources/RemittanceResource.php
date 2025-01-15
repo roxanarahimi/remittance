@@ -20,7 +20,7 @@ class RemittanceResource extends JsonResource
             "orderID" => $this->orderID,
             "addressName" => $this->addressName,
             "barcode" => $this->barcode,
-            "created_at" => explode(' ',(new DateController)->toPersian($this->created_at))[0],
+            'date' => explode(' ',(new DateController)->toPersian($this->created_at))[0].' '.explode(' ',(new DateController)->toPersian($this->created_at))[1]
 
 
         ];

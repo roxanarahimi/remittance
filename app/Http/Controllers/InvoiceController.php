@@ -54,11 +54,11 @@ class InvoiceController extends Controller
             $data = $data->get();
             $info = InvoiceResource2::collection($data);
 //
-//            $infoo = array_filter((array)$info, function($element) {
-//                return $element['Difference'] != 0;
-//            });
+            $infoo = array_filter($info, function($element) {
+                return $element['Difference'] != 0;
+            });
 
-            return response($info, 200);
+            return response($infoo, 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

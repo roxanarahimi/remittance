@@ -615,11 +615,11 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $tt = Invoice::where('OrderNumber','103604')->first();
-//        foreach($tt as $item){
-            $tt->update(["Sum"=>200]);
-//        }
-        return new InvoiceResource($tt);
+        $tt = Invoice::orderByDesc('id')->take(2000)->get();
+        foreach($tt as $item){
+            $item->update(["Sum"=>$item->invoiceItems->sum('Quantity')]);
+        }
+        return 'Done';
 //        if (isset($request['StartDate'])){
 //            $s = (new DateController)->jalali_to_gregorian($request['StartDate']);
 //            $e = (new DateController)->jalali_to_gregorian($request['EndDate']);

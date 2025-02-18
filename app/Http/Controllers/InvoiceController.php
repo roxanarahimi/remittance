@@ -36,7 +36,7 @@ class InvoiceController extends Controller
     public function filter(Request $request)
     {
         try {//where('CreationDate', '>=', today()->subDays(2))->
-            $data = Invoice::where('created_at', '>=', today()->subDays(20))->withCount('barcodes')->get();
+            $data = Invoice::where('created_at', '>=', today()->subDays(20))->get();
 
                         return response(InvoiceResource2::collection($data), 200);
 

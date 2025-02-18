@@ -39,9 +39,9 @@ class InvoiceController extends Controller
             $data = Invoice::where('created_at', '>=', today()->subDays(20))->get();
 
             $info = InvoiceResource2::collection($data);
-            for ($i = 0; $i <= count($info); $i++) {
+            for ($i = 0; $i < count($info); $i++) {
                 if ($info[$i]['State'] != 1) {
-                    array_splice($info[$i]);
+                    unset($info[$i]);
                 }
             }
 

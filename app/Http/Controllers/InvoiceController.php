@@ -51,17 +51,8 @@ class InvoiceController extends Controller
                 $data = $data->where('OrderNumber', $request['OrderNumber']);
             }
 
-
-            //->where('created_at', '>=', today()->subDays(20))
-
             $data = $data->get();
-//
             $info = InvoiceResource2::collection($data);
-//            for ($i = 0; $i < count($info); $i++) {
-//                if ((integer)$info[$i]['State'] != 1) {
-//                    unset($info[$i]);
-//                }
-//            }
 
             return response($info, 200);
 

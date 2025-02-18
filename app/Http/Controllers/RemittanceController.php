@@ -615,15 +615,20 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        if (isset($request['StartDate'])){
-            $s = (new DateController)->jalali_to_gregorian($request['StartDate']);
-            $e = (new DateController)->jalali_to_gregorian($request['EndDate']);
-
-//            $data = $data->where('created_at', '>=', $s)
-//                ->where('created_at', '<=', $e);
-
-            return [$s,$e];
+        $tt = Invoice::orderByDesc('id')->get();
+        foreach($tt as $item){
+            $item->update(["Sum"=>$item->OrderItems->sum('Quantity')]);
         }
+        return 'Done';
+//        if (isset($request['StartDate'])){
+//            $s = (new DateController)->jalali_to_gregorian($request['StartDate']);
+//            $e = (new DateController)->jalali_to_gregorian($request['EndDate']);
+//
+////            $data = $data->where('created_at', '>=', $s)
+////                ->where('created_at', '<=', $e);
+//
+//            return [$s,$e];
+
 //
 //        $info = InvoiceBarcode::orderByDesc('id')->where('Barcode','like', '%'.$request['search'].'%')->get();
 //
@@ -643,7 +648,7 @@ class RemittanceController extends Controller
 //        }
 
 //        $x = Invoice::where('id', 2175)->first();
-        return response(new InvoiceResource($x), 200);
+//        return response(new InvoiceResource($x), 200);
 //        $t = InvoiceItem::where('id','9773')->first();
 //        $t->update([
 //            'Quantity'=>'320'

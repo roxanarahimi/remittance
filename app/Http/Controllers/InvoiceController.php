@@ -39,11 +39,6 @@ class InvoiceController extends Controller
             $data = Invoice::orderByDesc('id')->where('created_at', '>=', today()->subDays(20))->get();
 
             $info = InvoiceResource2::collection($data);
-            for ($i = 0; $i < count($info); $i++) {
-                if ((integer)$info[$i]['Scanned'] >= (integer)$info[$i]['Sum']) {
-                    unset($info[$i]);
-                }
-            }
 
             return response($info, 200);
 

@@ -51,7 +51,7 @@ class InvoiceController extends Controller
                 $info = $info->where('OrderNumber', $request['OrderNumber']);
             }
 
-            $info = $info->get()->toArray();
+            $info = $info->get();
             $filtered = array_filter($info, function ($element) {
                 $barcodes1 = $element->barcodes;
                 $barcodes2 = Remittance::orderByDesc('id')->where('orderID', $element->OrderID)->get();

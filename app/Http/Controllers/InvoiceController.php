@@ -36,29 +36,39 @@ class InvoiceController extends Controller
     public function filter(Request $request)
     {
         try {
-            $data = Invoice::orderByDesc('id')->where('Type','!=','Order');
+            $info = Invoice::orderByDesc('id')->where('Type','!=','Order');
 
             if (isset($request['StartDate'])) {
 
                 $s = (new DateController)->jalali_to_gregorian($request['StartDate']);
                 $e = (new DateController)->jalali_to_gregorian($request['EndDate']);
 
-                $data = $data->whereBetween('created_at', [$s.' 00:00:00', $e.' 23:59:59']);
+                $info = $info->whereBetween('created_at', [$s.' 00:00:00', $e.' 23:59:59']);
 
             }
 
             if (isset($request['OrderNumber'])) {
-                $data = $data->where('OrderNumber', $request['OrderNumber']);
+                $info = $info->where('OrderNumber', $request['OrderNumber']);
             }
 
-            $data = $data->get();
-            $info = InvoiceResource2::collection($data);
+            $info = $info->get()->toArray();
+            $data = InvoiceResource2::collection($info);
 
-            $infoo = array_filter(json_decode($info->toJson(), true), function($element) {
+            $filtered = array_filter($info, function($element) {
                 return $element['Difference'] != 0;
             });
 
-            return response($infoo, 200);
+            $input = array_values($filtered);
+            $offset = 0;
+            $perPage = 100;
+            if ($request['page'] && $request['page'] > 1) {
+                $offset = ($request['page'] - 1) * $perPage;
+            }
+            $info = array_slice($input, $offset, $perPage);
+            $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+
+
+            return response($paginator, 200);
      } catch (\Exception $exception) {
             return response($exception);
         }

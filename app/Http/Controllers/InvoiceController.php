@@ -41,7 +41,7 @@ class InvoiceController extends Controller
             if (isset($request['StartDate'])) {
                 $s = date((new DateController)->jalali_to_gregorian($request['StartDate']));
                 $e = date((new DateController)->jalali_to_gregorian($request['EndDate']));
-                $data = $data->whereDate('created_at', '>=', $s)->whereDate('created_at', '<=', $e);
+                $data = $data->whereDate('created_at', '<=', $e)->whereDate('created_at', '>=', $s);
             }
 
             if (isset($request['OrderNumber'])) {

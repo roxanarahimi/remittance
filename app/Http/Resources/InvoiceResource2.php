@@ -44,7 +44,7 @@ class InvoiceResource2 extends JsonResource
             'count' => $this->invoiceItems->sum('Quantity'),
 
             "DeliveryDate" => $this->DeliveryDate,
-            'DeliveryDate22' => (new DateController)->toPersian(explode(' ',$this->DeliveryDate)[0]),
+            'DeliveryDate22' => (new DateController)->toPersian($this->DeliveryDate),
             'created_at' => explode(' ',(new DateController)->toPersian($this->created_at))[0].' '.explode(' ',(new DateController)->toPersian($this->created_at))[1]
 
 

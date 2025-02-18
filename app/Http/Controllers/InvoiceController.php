@@ -52,21 +52,10 @@ class InvoiceController extends Controller
             }
 
             $info = $info->get();
-//            $filtered = array_filter($info, function ($element) {
-//                $barcodes1 = $element->barcodes;
-//                $barcodes2 = Remittance::orderByDesc('id')->where('orderID', $element->OrderID)->get();
-//                $count = $element->invoiceItems->sum('Quantity');
-//                $Sum = $element->Sum;
-//                $Scanned = count($barcodes1) + count($barcodes2);
-//                $Difference = $count - $Scanned;
-//                return $Difference != 0;
-//            });
-//            $input = array_values($filtered);
-
             $data = InvoiceResource2::collection($info);
-
+            return response($info, 200);
             $info = array_filter((array)$info,function ($element){
-                return $element->Difference != 0;
+                return $element->{'Difference'} != 0;
             });
             $info = array_values($info);
 

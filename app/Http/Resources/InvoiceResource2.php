@@ -39,12 +39,12 @@ class InvoiceResource2 extends JsonResource
             "AddressName" => $this->address?->AddressName,
             "Address" => $this->address?->Address,
             'Sum' => $this->Sum,
-            'Sumx' => $this->invoiceItems->sum('Quantity'),
             'Scanned' => count($barcodes)+ $cc,
-//            'Barcodes' => $barcodes,
             'State' => $state,
-            "DeliveryDate" => $this->DeliveryDate,
-//            'DeliveryDate' => (new DateController)->toPersian($this->DeliveryDate),
+            'count' => $this->invoiceItems->sum('Quantity'),
+
+//            "DeliveryDate" => $this->DeliveryDate,
+            'DeliveryDate' => explode(' ',(new DateController)->toPersian($this->DeliveryDate))[0],
             'created_at' => explode(' ',(new DateController)->toPersian($this->created_at))[0].' '.explode(' ',(new DateController)->toPersian($this->created_at))[1]
 
 

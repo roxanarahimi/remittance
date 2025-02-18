@@ -20,16 +20,17 @@ class InvoiceResource2 extends JsonResource
         foreach ($this->barcodes as $item) {
             $barcodes[] = $item->Barcode;
         }
-        $cc = count(Remittance::orderByDesc('id')->where('orderID',$this->OrderID)->get());
+        $r = Remittance::orderByDesc('id')->where('orderID', $this->OrderID)->get();
+        $cc = count($r);
 
         $state = 0; // not done
-        if (count($barcodes)+$cc < $this->Sum) {
+        if (count($barcodes) + $cc < $this->Sum) {
             $state = 0; // not done
-        }elseif (count($barcodes)+$cc  < $this->Sum) {
+        } elseif (count($barcodes) + $cc < $this->Sum) {
             $state = 0; // not done
-        }elseif(count($barcodes)+$cc  == $this->Sum) {
+        } elseif (count($barcodes) + $cc == $this->Sum) {
             $state = 1; // done
-        } elseif (count($barcodes)+$cc  > $this->Sum) {
+        } elseif (count($barcodes) + $cc > $this->Sum) {
             $state = 2; // over done
         }
         return [
@@ -38,13 +39,14 @@ class InvoiceResource2 extends JsonResource
             "OrderNumber" => $this->OrderNumber,
             "AddressName" => $this->address?->AddressName,
             "Address" => $this->address?->Address,
-            'Sum' => $this->Sum,
-            'Scanned' => count($barcodes)+ $cc,
-            'State' => $state,
             'count' => $this->invoiceItems->sum('Quantity'),
+            'Sum' => $this->Sum,
+            'Scanned' => count($barcodes) + $cc,
+            'Difference' => ($this->invoiceItems->sum('Quantity')) - (count($barcodes) + $cc),
 
+            'Barcodes' => array_merge($barcodes, $r),
             "DeliveryDate" => $this->DeliveryDate,
-            'created_at' => explode(' ',(new DateController)->toPersian($this->created_at))[0].' '.explode(' ',(new DateController)->toPersian($this->created_at))[1]
+            'created_at' => explode(' ', (new DateController)->toPersian($this->created_at))[0] . ' ' . explode(' ', (new DateController)->toPersian($this->created_at))[1]
 
 
         ];

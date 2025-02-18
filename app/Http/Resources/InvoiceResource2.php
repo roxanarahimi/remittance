@@ -17,9 +17,9 @@ class InvoiceResource2 extends JsonResource
     public function toArray(Request $request): array
     {
 
-        $barcodes2 = Remittance::orderByDesc('id')->where('orderID', $this->OrderID)->get()->toArray();
+
         $count = $this->invoiceItems->sum('Quantity');
-        $scanned = count($this->barcodes) + count($barcodes2);
+        $scanned = count($this->barcodes) + count($this->barcodes2);
         return [
             "id" => $this->id,
             "OrderID" => $this->OrderID,

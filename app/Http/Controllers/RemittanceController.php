@@ -619,7 +619,7 @@ class RemittanceController extends Controller
 //        foreach($tt as $item){
             $tt->update(["Sum"=>$tt->OrderItems->sum('Quantity')]);
 //        }
-        return 'Done';
+        return new InvoiceResource($tt);
 //        if (isset($request['StartDate'])){
 //            $s = (new DateController)->jalali_to_gregorian($request['StartDate']);
 //            $e = (new DateController)->jalali_to_gregorian($request['EndDate']);

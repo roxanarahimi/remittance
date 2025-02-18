@@ -58,6 +58,16 @@ class InvoiceController extends Controller
                 return $element['Difference'] != 0;
             });
             $infooo = array_values($infoo);
+
+            $offset = 0;
+            $perPage = 100;
+            if ($request['page'] && $request['page'] > 1) {
+                $offset = ($request['page'] - 1) * $perPage;
+            }
+            $info = array_slice($infooo, $offset, $perPage);
+            $paginator = new LengthAwarePaginator($info, count($infooo), $perPage, $request['page']);
+            return response()->json($paginator, 200);
+
             return response($infooo, 200);
         } catch (\Exception $exception) {
             return response($exception);

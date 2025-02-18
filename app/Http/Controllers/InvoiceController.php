@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\Token;
+use App\Http\Resources\InvoiceItemResource;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\RemittanceResource;
 use App\Models\Invoice;
@@ -35,7 +36,7 @@ class InvoiceController extends Controller
     {
         try {//where('CreationDate', '>=', today()->subDays(2))->
             $data = Invoice::where('created_at', '>=', today()->subDays(20))->withCount('barcodes')->get();
-                        return response($data, 200);
+                        return response(InvoiceResource::collection($data), 200);
 
 //            $data = Remittance::where('orderID','284128')->get();
 //            return response(["count"=>count($data),"data"=>RemittanceResource::collection($data)], 200);

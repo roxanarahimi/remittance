@@ -42,7 +42,8 @@ class DateController extends Controller
             \IntlDateFormatter::GREGORIAN,
             "yyyy-MM-d HH:mm:ss"
         );
-        return $formatterGregorian->format($jalaliDate);
+        $dateTime = \datetime::createfromformat('Y-m-d H:i:s',$jalaliDate);
+        return $formatterGregorian->format($dateTime);
 
     }
 }

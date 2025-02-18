@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Http\Resources;
+
+use App\Http\Controllers\DateController;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class InvoiceResource2 extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        $barcodes = [];
+        foreach ($this->barcodes as $item) {
+            $barcodes[] = $item->Barcode;
+        }
+        $testBarcodes = [];
+        foreach ($this->testBarcodes as $item) {
+            $testBarcodes[] = $item->Barcode;
+        }
+
+        $state = 0; // not done
+        if (count($testBarcodes) < $this->Sum) {
+            $state = 0; // not done
+        }elseif (count($testBarcodes) < $this->Sum) {
+            $state = 0; // not done
+        }elseif(count($testBarcodes) == $this->Sum) {
+            $state = 1; // done
+        } elseif (count($testBarcodes) > $this->Sum) {
+            $state = 2; // over done
+        }
+//        if ($this->OrderNumber== "64659") {
+//            $state = 2; // not done
+//        }
+        return [
+            "id" => $this->id,
+            "OrderID" => $this->OrderID,
+            "OrderNumber" => $this->OrderNumber,
+            "AddressName" => $this->address->AddressName,
+            "Address" => $this->address->Address,
+            'Sum' => $this->Sum,
+            'Barcodes' => $barcodes,
+            'State' => $state,
+            'DeliveryDate' => explode(' ',(new DateController)->toPersian($this->DeliveryDate))[0].' '.explode(' ',(new DateController)->toPersian($this->DeliveryDate))[1],
+            'created_at' => explode(' ',(new DateController)->toPersian($this->created_at))[0].' '.explode(' ',(new DateController)->toPersian($this->created_at))[1],
+            "OrderItems" => InvoiceItemResource::collection($this->invoiceItems),
+
+
+        ];
+    }
+}

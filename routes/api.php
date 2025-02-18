@@ -64,3 +64,8 @@ Route::controller(App\Http\Controllers\RemittanceController::class)->group(funct
         Route::get('/report', 'report');
 });
 
+
+Route::controller(App\Http\Controllers\InvoiceController::class)->group(function () {
+        Route::get('/filter', 'filter');
+});
+

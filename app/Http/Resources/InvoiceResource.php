@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Controllers\DateController;
 use App\Models\InvoiceItem;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -54,8 +55,12 @@ class InvoiceResource extends JsonResource
 //            'State' => 2,
             'State' => $state,
 
-            "DeliveryDate" => $this->DeliveryDate,
+//            "DeliveryDate" => $this->DeliveryDate,
+            'DeliveryDate' => explode(' ',(new DateController)->toPersian($this->DeliveryDate))[0].' '.explode(' ',(new DateController)->toPersian($this->DeliveryDate))[1],
+
             "OrderItems" => InvoiceItemResource::collection($this->invoiceItems),
+            'created_at' => explode(' ',(new DateController)->toPersian($this->created_at))[0].' '.explode(' ',(new DateController)->toPersian($this->created_at))[1]
+
 
         ];
     }

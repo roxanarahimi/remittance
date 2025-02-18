@@ -29,6 +29,31 @@ class InvoiceController extends Controller
         }
     }
 
+    public function filter(Request $request)
+    {
+        try {
+            $data = Invoice::orderByDesc('id')->where('OrderNumber','284128')->orWhere('OrderId','284128')->get();
+            return response(InvoiceResource::collection($data), 200);
+
+//            $data = Invoice::orderByDesc('id');
+            if ($request['StartDate']) {
+//                return $request['StartDate'];
+                return (new DateController)->toGREGORIAN($request['StartDate']);
+            }
+            if ($request['EndDate']) {
+
+            }
+            if ($request['OrderNumber']) {
+
+            }
+
+//            $data = $data->get();
+//            return response(InvoiceResource::collection($data), 200);
+        } catch (\Exception $exception) {
+            return response($exception);
+        }
+    }
+
     public function show(Invoice $invoice)
     {
         try {

@@ -616,7 +616,7 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $info = Invoice::where('Sum',0)->paginate(200);
+        $info = Invoice::where('Sum',0)->get();
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->pluck("PartID");
 
         foreach($info as $item){
@@ -638,7 +638,7 @@ class RemittanceController extends Controller
             }
             $item->update(["Sum"=>$item->invoiceItems->sum('Quantity')]);
         }
-        $data = InvoiceResource::collection($info);
+        return InvoiceResource::collection($info);
         return $info;
 
         $tt = Invoice::orderByDesc('id')->get();

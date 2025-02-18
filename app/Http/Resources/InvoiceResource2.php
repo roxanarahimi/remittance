@@ -19,24 +19,18 @@ class InvoiceResource2 extends JsonResource
         foreach ($this->barcodes as $item) {
             $barcodes[] = $item->Barcode;
         }
-        $testBarcodes = [];
-        foreach ($this->testBarcodes as $item) {
-            $testBarcodes[] = $item->Barcode;
-        }
 
         $state = 0; // not done
-        if (count($testBarcodes) < $this->Sum) {
+        if (count($barcodes) < $this->Sum) {
             $state = 0; // not done
-        }elseif (count($testBarcodes) < $this->Sum) {
+        }elseif (count($barcodes) < $this->Sum) {
             $state = 0; // not done
-        }elseif(count($testBarcodes) == $this->Sum) {
+        }elseif(count($barcodes) == $this->Sum) {
             $state = 1; // done
-        } elseif (count($testBarcodes) > $this->Sum) {
+        } elseif (count($barcodes) > $this->Sum) {
             $state = 2; // over done
         }
-//        if ($this->OrderNumber== "64659") {
-//            $state = 2; // not done
-//        }
+
         return [
             "id" => $this->id,
             "OrderID" => $this->OrderID,

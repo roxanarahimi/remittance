@@ -38,6 +38,7 @@ class InvoiceResource2 extends JsonResource
             "AddressName" => $this->address?->AddressName,
             "Address" => $this->address?->Address,
             'Sum' => $this->Sum,
+            'Scanned' => count($barcodes),
             'Barcodes' => $barcodes,
             'State' => $state,
 

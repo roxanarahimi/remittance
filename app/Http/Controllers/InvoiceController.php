@@ -52,15 +52,15 @@ class InvoiceController extends Controller
             }
 
             $info = $info->get();
-            return response(InvoiceResource2::collection($info), 200);
-            $info = array_filter((array)$info,function ($element){
-                return $element->{'Difference'} != 0;
+            $info =InvoiceResource2::collection($info);
+            $x = array_filter((array)$info,function ($element){
+                return $element['Difference'] != 0;
             });
-            $info = array_values($info);
+            $y = array_values($x);
 
 
 
-            return response($info, 200);
+            return response($y, 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

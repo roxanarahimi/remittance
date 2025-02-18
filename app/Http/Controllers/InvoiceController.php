@@ -73,7 +73,7 @@ class InvoiceController extends Controller
                 $offset = ($request['page'] - 1) * $perPage;
             }
             $info = array_slice($info, $offset, $perPage);
-            $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+            $paginator = new LengthAwarePaginator($info, count($info), $perPage, $request['page']);
 
 
             return response($paginator, 200);

@@ -54,17 +54,19 @@ class InvoiceController extends Controller
             $info = $info->get()->toArray();
             $data = InvoiceResource2::collection($info);
 
-            $filtered = array_filter($info, function($element) {
-                return $element['Difference'] != 0;
-            });
 
-            $input = array_values($filtered);
+
             $offset = 0;
             $perPage = 100;
             if ($request['page'] && $request['page'] > 1) {
                 $offset = ($request['page'] - 1) * $perPage;
             }
-            $info = array_slice($input, $offset, $perPage);
+            $filtered = array_filter($info, function($element) {
+                return $element['Difference'] != 0;
+            });
+            $input = array_values($filtered);
+
+            $info = array_slice($info, $offset, $perPage);
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
 
 

@@ -41,7 +41,7 @@ class InvoiceResource2 extends JsonResource
 //            'Sum' => $this->Sum,
             'Sum' => $this->invoiceItems->sum('Quantity'),
             'Scanned' => count($barcodes)+ $cc,
-            'Barcodes' => $barcodes,
+//            'Barcodes' => $barcodes,
             'State' => $state,
             "DeliveryDate" => $this->DeliveryDate,
 //            'DeliveryDate' => (new DateController)->toPersian($this->DeliveryDate),

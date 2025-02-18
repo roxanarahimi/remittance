@@ -43,7 +43,7 @@ class InvoiceController extends Controller
                 $s = (new DateController)->jalali_to_gregorian($request['StartDate']);
                 $e = (new DateController)->jalali_to_gregorian($request['EndDate']);
 
-                $data = $data->whereBetween('created_at', [$s, $e]);
+                $data = $data->whereBetween('created_at', [$s.' 00:00:00', $e.' 23:59:59']);
 
             }
 

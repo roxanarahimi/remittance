@@ -22,7 +22,7 @@ class DateController extends Controller
     }
     public function toGREGORIAN()
     {
-        $jalaliDate = "1370-10-26 00:00:00";
+        $jalaliDate = "1370-10-26";
         $formatterGregorian = new \IntlDateFormatter(
             'en_US', // English locale with Gregorian calendar
             \IntlDateFormatter::FULL,
@@ -31,8 +31,8 @@ class DateController extends Controller
             \IntlDateFormatter::GREGORIAN,
             "yyyy-MM-d HH:mm:ss"
         );
-//        $dateTime = \datetime::createfromformat('Y-m-d H:i:s',$jalaliDate);
-        return $formatterGregorian->format($jalaliDate);
+        $dateTime = \datetime::createfromformat('Y-m-d H:i:s',$jalaliDate);
+        return $formatterGregorian->format($dateTime);
 
     }
 }

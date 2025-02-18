@@ -764,6 +764,9 @@ class RemittanceController extends Controller
     public function getRemittances(Request $request)
     {
         $info = Remittance::orderByDesc('id');
+//        if (isset($request['OrderNumber'])){
+//            $info = $info->where('orderID', 'like', '%' . $request['search'] . '%');
+//        }
         if (isset($request['search'])) {
             $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
         }else{

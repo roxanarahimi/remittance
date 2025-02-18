@@ -33,10 +33,12 @@ class InvoiceController extends Controller
 
     public function filter(Request $request)
     {
-        try {
-//            $data = Invoice::where('OrderID','284128')->orWhere('OrderNumber','99197')->get();
-            $data = Remittance::where('orderID','284128')->get();
-            return response(["count"=>count($data),"data"=>RemittanceResource::collection($data)], 200);
+        try {//where('CreationDate', '>=', today()->subDays(2))->
+            $data = Invoice::where('created_at', '>=', today()->subWeeks(2))->withCount('Barcodes')->get();
+                        return response($data, 200);
+
+//            $data = Remittance::where('orderID','284128')->get();
+//            return response(["count"=>count($data),"data"=>RemittanceResource::collection($data)], 200);
 
 //            $data = Invoice::orderByDesc('id');
             if ($request['StartDate']) {

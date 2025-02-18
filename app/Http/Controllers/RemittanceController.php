@@ -615,7 +615,7 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $tt = Invoice::orderByDesc('id')->where('OrderNumber','103604')->first();
+        $tt = Invoice::where('OrderNumber','103604')->first();
 //        foreach($tt as $item){
             $tt->update(["Sum"=>$tt->OrderItems->sum('Quantity')]);
 //        }

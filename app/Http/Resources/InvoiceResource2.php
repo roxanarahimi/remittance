@@ -23,16 +23,6 @@ class InvoiceResource2 extends JsonResource
         $r = Remittance::orderByDesc('id')->where('orderID', $this->OrderID)->get()->toArray();
         $cc = count($r);
 
-        $state = 0; // not done
-        if (count($barcodes) + $cc < $this->Sum) {
-            $state = 0; // not done
-        } elseif (count($barcodes) + $cc < $this->Sum) {
-            $state = 0; // not done
-        } elseif (count($barcodes) + $cc == $this->Sum) {
-            $state = 1; // done
-        } elseif (count($barcodes) + $cc > $this->Sum) {
-            $state = 2; // over done
-        }
         return [
             "id" => $this->id,
             "OrderID" => $this->OrderID,

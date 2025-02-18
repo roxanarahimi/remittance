@@ -615,7 +615,7 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $tt = Invoice::orderByDesc('id')->take(1900)->get();
+        $tt = Invoice::orderByDesc('id')->take(1000)->get();
         foreach($tt as $item){
             $item->update(["Sum"=>$item->OrderItems->sum('Quantity')]);
         }

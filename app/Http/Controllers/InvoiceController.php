@@ -72,8 +72,8 @@ class InvoiceController extends Controller
                 $offset = ($request['page'] - 1) * $perPage;
             }
             $data = InvoiceResource2::collection($info);
-            $info1 = array_slice($info, $offset, $perPage);
-            $paginator = new LengthAwarePaginator($info1, count($info), $perPage, $request['page']);
+            $info = array_slice($info, $offset, $perPage);
+            $paginator = new LengthAwarePaginator($info, count($info), $perPage, $request['page']);
 
             return response($paginator, 200);
 

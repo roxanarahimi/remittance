@@ -616,7 +616,7 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $data = Invoice::where('Sum',0)->get();
+        $data = Invoice::where('Sum',0)->paginate(200);
         return InvoiceResource::collection($data);
 
         $tt = Invoice::orderByDesc('id')->get();

@@ -43,7 +43,7 @@ class InvoiceResource2 extends JsonResource
             'State' => $state,
 
 //            "DeliveryDate" => $this->DeliveryDate,
-            'DeliveryDate' => explode(' ',(new DateController)->toPersian($this->DeliveryDate))[0],
+            'DeliveryDate' => explode(' ',(new DateController)->toPersian($this->DeliveryDate)),
 
 //            "OrderItems" => InvoiceItemResource::collection($this->invoiceItems),
             'created_at' => explode(' ',(new DateController)->toPersian($this->created_at))[0].' '.explode(' ',(new DateController)->toPersian($this->created_at))[1]

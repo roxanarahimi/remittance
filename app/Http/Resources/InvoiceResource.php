@@ -47,6 +47,7 @@ class InvoiceResource extends JsonResource
             "Phone" => $this->address->Phone,
             "Type" => $this->Type,
             'Sum' => $this->Sum,
+            'count' => $this->OrderItems->sum('Quantity'),
             'Barcodes' => $barcodes,
             'TestBarcodes' => $testBarcodes,
             'Progress' => count($barcodes) . '/' . $this->Sum,

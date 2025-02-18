@@ -627,6 +627,8 @@ class RemittanceController extends Controller
                 ->where('InventoryVoucherRef', $item->{'OrderID'})
                 ->whereIn('PartRef', $partIDs)
                 ->get()->toArray();
+
+            return $details;
             foreach($details as $item){
                 if (!str_contains($item->ProductName,'لیوانی')){
                     $invoiceItem = InvoiceItem::create([

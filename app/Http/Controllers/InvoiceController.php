@@ -38,9 +38,8 @@ class InvoiceController extends Controller
         try {
             $data = Invoice::orderByDesc('id')->where('created_at', '>=', today()->subDays(20))->get();
 
-            $info = InvoiceResource2::collection($data);
 
-            return response($info, 200);
+            return response(InvoiceResource2::collection($data), 200);
 
 //            $data = Remittance::where('orderID','284128')->get();
 //            return response(["count"=>count($data),"data"=>RemittanceResource::collection($data)], 200);

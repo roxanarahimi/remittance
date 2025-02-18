@@ -21,6 +21,7 @@ use App\Models\InvoiceBarcode;
 use App\Models\InvoiceItem;
 use App\Models\InvoiceProduct;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Part;
 use App\Models\PartUnit;
 use App\Models\PartyAddress;
@@ -621,35 +622,13 @@ class RemittanceController extends Controller
 
 //        $info = Invoice::where('Sum',0)->get();
         $orderIDs = Invoice::where('Type', 'Order')->orderBy('id')->pluck('OrderID');
-        $d3 = $this->getOrders($orderIDs);
 
         foreach($info as $item){
-            $dat = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
-                "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef',
-                'GNR3.Address.AddressID','GNR3.RegionalDivision.Name as City')
-                ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
-                ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
-                ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
-                ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID','=','GNR3.Address.RegionalDivisionRef' )
-//            ->where('SLS3.Order.Date', '>=', today()->subDays(2))
-                ->whereNotIn('SLS3.Order.OrderID', $orderIDs)
-                ->where('SLS3.Order.OrderID', $info['OrderID'])
-                ->where('SLS3.Order.InventoryRef', 1)
-                ->where('SLS3.Order.State', 2)
-                ->where('SLS3.Order.FiscalYearRef', 1403)
-                ->where('SLS3.CustomerAddress.Type', 2)
-                ->whereHas('OrderItems')
-                ->whereHas('OrderItems', function ($q) {
-                    $q->havingRaw('SUM(Quantity) >= ?', [50]);
-                })
-                ->orderBy('OrderID')
-                ->get();
-
-            return $details;
-            foreach($details as $item){
-                if (!str_contains($item2->Product->Name,'لیوانی')){
+            $dat = OrderItem::where('SLS3.Order.OrderID', $info['OrderID'])->get();
+            foreach($dat as $item2){
+                if (!str_contains($item2->Product->Name,'لیوانی')&&str_contains($item2->Product->Name,'نودالیت')){
                     $invoiceItem = InvoiceItem::create([
-                        'invoice_id' => $invoice->id,
+                        'invoice_id' => $item->id,
                         'ProductNumber' => $item2->Product->Number,
                         'Quantity' => $item2->Quantity,
                     ]);

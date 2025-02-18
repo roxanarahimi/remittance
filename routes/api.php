@@ -71,6 +71,6 @@ Route::controller(App\Http\Controllers\InvoiceController::class)->group(function
 
 
 Route::controller(App\Http\Controllers\DateController::class)->group(function () {
-        Route::get('/tt', 'toGREGORIAN');
+        Route::get('/tt', 'jalali_to_gregorian');
 });
 

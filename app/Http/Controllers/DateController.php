@@ -20,6 +20,39 @@ class DateController extends Controller
         return $formatter->format($dateTime);
 
     }
+    function jalali_to_gregorian(Request $request)
+    {
+        $mod = '';
+        $jy = explode('-',$request['date'])[0];
+        $jm = explode('-',$request['date'])[1];
+        $jd = explode('-',$request['date'])[2];
+        if ($jy > 979) {
+            $gy = 1600;
+            $jy -= 979;
+        } else {
+            $gy = 621;
+        }
+
+        $days = (365 * $jy) + (((int)($jy / 33)) * 8) + ((int)((($jy % 33) + 3) / 4)) + 78 + $jd + (($jm < 7) ? ($jm - 1) * 31 : (($jm - 7) * 30) + 186);
+        $gy += 400 * ((int)($days / 146097));
+        $days %= 146097;
+        if ($days > 36524) {
+            $gy += 100 * ((int)(--$days / 36524));
+            $days %= 36524;
+            if ($days >= 365) $days++;
+        }
+        $gy += 4 * ((int)(($days) / 1461));
+        $days %= 1461;
+        $gy += (int)(($days - 1) / 365);
+        if ($days > 365) $days = ($days - 1) % 365;
+        $gd = $days + 1;
+        foreach (array(0, 31, ((($gy % 4 == 0) and ($gy % 100 != 0)) or ($gy % 400 == 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31) as $gm => $v) {
+            if ($gd <= $v) break;
+            $gd -= $v;
+        }
+
+        return ($mod === '') ? array($gy, $gm, $gd) : $gy . $mod . $gm . $mod . $gd;
+    }
     public function toGREGORIAN()
     {
         $jalaliDate = "1370-10-26 00:00:00";

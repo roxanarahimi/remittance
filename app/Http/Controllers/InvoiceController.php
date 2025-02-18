@@ -35,7 +35,7 @@ class InvoiceController extends Controller
 
     public function filter(Request $request)
     {
-        try {//where('CreationDate', '>=', today()->subDays(2))->
+        try {
             $data = Invoice::orderByDesc('id')->where('created_at', '>=', today()->subDays(20))->get();
 
             $info = InvoiceResource2::collection($data);

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Http\Controllers\DateController;
+use App\Models\Remittance;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -30,7 +31,7 @@ class InvoiceResource2 extends JsonResource
         } elseif (count($barcodes) > $this->Sum) {
             $state = 2; // over done
         }
-
+        $cc = count(Remittance::orderByDesc('id')->where('orderID',$this->OrderID)->get());
         return [
             "id" => $this->id,
             "OrderID" => $this->OrderID,
@@ -38,7 +39,7 @@ class InvoiceResource2 extends JsonResource
             "AddressName" => $this->address?->AddressName,
             "Address" => $this->address?->Address,
             'Sum' => $this->Sum,
-            'Scanned' => count($barcodes),
+            'Scanned' => count($barcodes)+ $cc,
             'Barcodes' => $barcodes,
             'State' => $state,
 //            "DeliveryDate" => $this->DeliveryDate,

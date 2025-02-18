@@ -22,7 +22,7 @@ class DateController extends Controller
         return $formatter->format($dateTime);
 
     }
-    public function toGREGORIAN($date)
+    public function toGREGORIAN()
     {
 //        date_default_timezone_set('Asia/Tehran');
 //        $formatter=new \IntlDateFormatter(

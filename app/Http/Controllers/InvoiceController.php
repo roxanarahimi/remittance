@@ -57,7 +57,7 @@ class InvoiceController extends Controller
             $infoo = array_filter(json_decode($info->toJson(), true), function($element) {
                 return $element['Difference'] != 0;
             });
-
+            $infooo = array_values($infoo);
             return response($infoo, 200);
         } catch (\Exception $exception) {
             return response($exception);

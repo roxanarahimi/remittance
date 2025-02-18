@@ -43,7 +43,7 @@ class InvoiceController extends Controller
                 $ss = date((new DateController)->jalali_to_gregorian($request['StartDate']));
                 $s = \datetime::createfromformat('Y-m-d H:i:s',$ss.' 00:00:00');
                 $ee = date((new DateController)->jalali_to_gregorian($request['EndDate']));
-                $e = \datetime::createfromformat('Y-m-d H:i:s',$ee.' 00:00:00');
+                $e = \datetime::createfromformat('Y-m-d H:i:s',$ee.' 23:59:59');
 
                 $data = $data->whereDate('created_at', '<=', $e)->whereDate('created_at', '>=', $s);
             }

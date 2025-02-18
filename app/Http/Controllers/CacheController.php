@@ -199,6 +199,7 @@ class CacheController extends Controller
                     }
                 }
 
+                $invoice->update(['Sum' => $invoice->invoiceItems->sum('Quantity')]);
             }
             foreach ($d2 as $item) {
                 $invoice = Invoice::create([
@@ -252,7 +253,7 @@ class CacheController extends Controller
 
                     }
                 }
-
+                $invoice->update(['Sum' => $invoice->invoiceItems->sum('Quantity')]);
             }
             foreach ($d3 as $item) {
                 $invoice = Invoice::create([
@@ -299,6 +300,7 @@ class CacheController extends Controller
 
                     }
                 }
+                $invoice->update(['Sum' => $invoice->invoiceItems->sum('Quantity')]);
             }
             $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
             $nowTime  = $datetime->format( 'Y-m-d G:i');

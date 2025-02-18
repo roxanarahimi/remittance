@@ -33,9 +33,7 @@ class DateController extends Controller
 //            \IntlDateFormatter::GREGORIAN,
 //            "yyyy-MM-d HH:mm:ss"
 //        );
-        $jalaliDate = "1402-11-29 00:00:00";
-
-// Create a formatter for the Gregorian calendar
+        $jalaliDate = "1370-10-26 00:00:00.0000";
         $formatterGregorian = new \IntlDateFormatter(
             'en_US', // English locale with Gregorian calendar
             \IntlDateFormatter::FULL,
@@ -44,16 +42,7 @@ class DateController extends Controller
             \IntlDateFormatter::GREGORIAN,
             "yyyy-MM-d HH:mm:ss"
         );
-
-// Format the timestamp into a Gregorian date
-        $gregorianDate = $formatterGregorian->format('Y-m-d H:i:s',$jalaliDate);
-
-//        echo "Jalali Date: $jalaliDate\n";
-        echo "Gregorian Date: ".$gregorianDate."\n";
-
-
-//        $dateTime = \datetime::createfromformat('Y-m-d H:i:s',$date.' 00:00:00');
-//        return $formatter->format($dateTime);
+        return $formatterGregorian->format('Y-m-d H:i:s',$jalaliDate);
 
     }
 }

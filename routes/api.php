@@ -69,3 +69,8 @@ Route::controller(App\Http\Controllers\InvoiceController::class)->group(function
         Route::get('/filter', 'filter');
 });
 
+
+Route::controller(App\Http\Controllers\DateController::class)->group(function () {
+        Route::get('/tt', 'toGREGORIAN');
+});
+

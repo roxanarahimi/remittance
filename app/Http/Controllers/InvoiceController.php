@@ -39,8 +39,12 @@ class InvoiceController extends Controller
             $data = Invoice::orderByDesc('id');
 
             if (isset($request['StartDate'])) {
-                $s = date((new DateController)->jalali_to_gregorian($request['StartDate']));
-                $e = date((new DateController)->jalali_to_gregorian($request['EndDate']));
+
+                $ss = date((new DateController)->jalali_to_gregorian($request['StartDate']));
+                $s = \datetime::createfromformat('Y-m-d H:i:s',$ss.' 00:00:00');
+                $ee = date((new DateController)->jalali_to_gregorian($request['EndDate']));
+                $e = \datetime::createfromformat('Y-m-d H:i:s',$ee.' 00:00:00');
+
                 $data = $data->whereDate('created_at', '<=', $e)->whereDate('created_at', '>=', $s);
             }
 

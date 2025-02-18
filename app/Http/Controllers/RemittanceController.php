@@ -616,10 +616,8 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
         if (isset($request['StartDate'])){
-            $ss = date((new DateController)->jalali_to_gregorian($request['StartDate']));
-            $s = \datetime::createfromformat('Y-m-d H:i:s',$ss.' 00:00:00');
-            $ee = date((new DateController)->jalali_to_gregorian($request['EndDate']));
-            $e = \datetime::createfromformat('Y-m-d H:i:s',$ee.' 00:00:00');
+            $s = (new DateController)->jalali_to_gregorian($request['StartDate']);
+            $e = (new DateController)->jalali_to_gregorian($request['EndDate']);
 
 //            $data = $data->where('created_at', '>=', $s)
 //                ->where('created_at', '<=', $e);

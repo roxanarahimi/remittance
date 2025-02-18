@@ -38,18 +38,21 @@ class InvoiceController extends Controller
         try {
             $data = Invoice::orderByDesc('id');
 
-            if (isset($request['StartDate'])){
+            if (isset($request['StartDate'])) {
                 $s = (new DateController)->jalali_to_gregorian($request['StartDate']);
                 $e = (new DateController)->jalali_to_gregorian($request['EndDate']);
-              $data = $data->where('created_at', '>=', $s)
+                $data = $data->where('created_at', '>=', $s)
                     ->where('created_at', '<=', $e);
             }
 
+            if (isset($request['OrderNumber'])) {
+                $data = $data->where('OrderNumber', $request['OrderNumber']);
+            }
 
 
             //->where('created_at', '>=', today()->subDays(20))
 
-                $data = $data->get();
+            $data = $data->get();
 
             $info = InvoiceResource2::collection($data);
             for ($i = 0; $i < count($info); $i++) {

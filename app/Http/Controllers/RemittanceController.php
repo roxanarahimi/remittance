@@ -615,12 +615,20 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        if (isset($request['StartDate'])){
+            $s = (new DateController)->jalali_to_gregorian($request['StartDate']);
+            $e = (new DateController)->jalali_to_gregorian($request['EndDate']);
+//            $data = $data->where('created_at', '>=', $s)
+//                ->where('created_at', '<=', $e);
 
-        $info = InvoiceBarcode::orderByDesc('id')->where('Barcode','like', '%'.$request['search'].'%')->get();
-
-        $info2 = Remittance::orderByDesc('id')->where('barcode', 'like', '%' . $request['search'] . '%')->get();
-
-        return response([$info,$info2],200);
+            return [$s,$e];
+        }
+//
+//        $info = InvoiceBarcode::orderByDesc('id')->where('Barcode','like', '%'.$request['search'].'%')->get();
+//
+//        $info2 = Remittance::orderByDesc('id')->where('barcode', 'like', '%' . $request['search'] . '%')->get();
+//
+//        return response([$info,$info2],200);
 //        $bars = InvoiceBarcode::where('id', '>', 200)->get();
 //        foreach ($bars as $item) {
 //            $item->delete();

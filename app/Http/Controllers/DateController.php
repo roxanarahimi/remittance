@@ -22,7 +22,7 @@ class DateController extends Controller
     }
     public function toGREGORIAN()
     {
-        $jalaliDate = "1370-10-26";
+        $jalaliDate = "1370-10-26 00:00:00";
         $formatterGregorian = new \IntlDateFormatter(
             'en_US', // English locale with Gregorian calendar
             \IntlDateFormatter::FULL,

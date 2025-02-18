@@ -616,7 +616,8 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $info = Invoice::where('Sum',0)->get();
+        $info = Invoice::where('OrderNumber','1074880')->get();
+//        $info = Invoice::where('Sum',0)->get();
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->pluck("PartID");
 
         foreach($info as $item){

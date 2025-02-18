@@ -615,13 +615,16 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        $data = Invoice::orderByDesc('id')->first();
         if (isset($request['StartDate'])){
             $s = (new DateController)->jalali_to_gregorian($request['StartDate']);
             $e = (new DateController)->jalali_to_gregorian($request['EndDate']);
 //            $data = $data->where('created_at', '>=', $s)
 //                ->where('created_at', '<=', $e);
 
-            return [$s,$e];
+            $data = Invoice::orderByDesc('id')->whereDate('created_at', '<=', $e)->get();
+
+            return [$data];
         }
 //
 //        $info = InvoiceBarcode::orderByDesc('id')->where('Barcode','like', '%'.$request['search'].'%')->get();

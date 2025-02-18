@@ -58,7 +58,7 @@ class InvoiceController extends Controller
                 return $element['Difference'] != 0;
             });
             $infooo = array_values($infoo);
-            return response($infoo, 200);
+            return response($infooo, 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

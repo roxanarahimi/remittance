@@ -628,10 +628,10 @@ class RemittanceController extends Controller
                 ->whereIn('PartRef', $partIDs)
                 ->get()->toArray();
             foreach($details as $item){
-                if (!str_contains($item->Product->Name,'لیوانی')){
+                if (!str_contains($item->ProductName,'لیوانی')){
                     $invoiceItem = InvoiceItem::create([
                         'invoice_id' => $info->id,
-                        'ProductNumber' => $item->Product->Number,
+                        'ProductNumber' => $item->ProductNumber,
                         'Quantity' => $item->Quantity,
                     ]);
                 }

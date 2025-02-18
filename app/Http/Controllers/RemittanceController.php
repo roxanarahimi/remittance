@@ -623,7 +623,7 @@ class RemittanceController extends Controller
 //            $data = $data->where('created_at', '>=', $s)
 //                ->where('created_at', '<=', $e);
 
-            $data = Invoice::orderByDesc('id')->whereDate('created_at', '<=', $e)->get();
+            $data = Invoice::orderByDesc('id')->whereDate('created_at', '<=', $e)->take(20)->get();
 
             return [InvoiceResource2::collection($data)];
         }

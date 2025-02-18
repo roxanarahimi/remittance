@@ -20,18 +20,18 @@ class InvoiceResource2 extends JsonResource
         foreach ($this->barcodes as $item) {
             $barcodes[] = $item->Barcode;
         }
+        $cc = count(Remittance::orderByDesc('id')->where('orderID',$this->OrderID)->get());
 
         $state = 0; // not done
-        if (count($barcodes) < $this->Sum) {
+        if (count($barcodes)+$cc < $this->Sum) {
             $state = 0; // not done
-        }elseif (count($barcodes) < $this->Sum) {
+        }elseif (count($barcodes)+$cc  < $this->Sum) {
             $state = 0; // not done
-        }elseif(count($barcodes) == $this->Sum) {
+        }elseif(count($barcodes)+$cc  == $this->Sum) {
             $state = 1; // done
-        } elseif (count($barcodes) > $this->Sum) {
+        } elseif (count($barcodes)+$cc  > $this->Sum) {
             $state = 2; // over done
         }
-        $cc = count(Remittance::orderByDesc('id')->where('orderID',$this->OrderID)->get());
         return [
             "id" => $this->id,
             "OrderID" => $this->OrderID,

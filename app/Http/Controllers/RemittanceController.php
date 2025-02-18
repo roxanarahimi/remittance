@@ -620,7 +620,7 @@ class RemittanceController extends Controller
                 $info = Invoice::where('Sum',0)->get();
 
         foreach($info as $item){
-            $dat = OrderItem::where('SLS3.Order.OrderID', $info['OrderID'])->get();
+            $dat = OrderItem::where('OrderRef', $info->OrderID)->get();
             foreach($dat as $item2){
                 if (!str_contains($item2->Product->Name,'لیوانی')&&str_contains($item2->Product->Name,'نودالیت')){
                     $invoiceItem = InvoiceItem::create([

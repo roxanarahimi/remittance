@@ -33,10 +33,10 @@ class InvoiceResource2 extends JsonResource
             'Sum' => $this->Sum,
             'Scanned' => count($barcodes) + $cc,
             'Difference' => ($this->invoiceItems->sum('Quantity')) - (count($barcodes) + $cc),
+            'created_at' => explode(' ', (new DateController)->toPersian($this->created_at))[0] . ' ' . explode(' ', (new DateController)->toPersian($this->created_at))[1],
 
             'Barcodes' => 'http://5.34.204.23/api/report?api_key=Rsxw_q25jhk92345/624087Mnhi.oxcv&OrderNumber='.$this->OrderNumber,
-            "DeliveryDate" => $this->DeliveryDate,
-            'created_at' => explode(' ', (new DateController)->toPersian($this->created_at))[0] . ' ' . explode(' ', (new DateController)->toPersian($this->created_at))[1]
+//            "DeliveryDate" => $this->DeliveryDate,
 
 
         ];

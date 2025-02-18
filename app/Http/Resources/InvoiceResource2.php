@@ -17,7 +17,6 @@ class InvoiceResource2 extends JsonResource
     public function toArray(Request $request): array
     {
 
-
         $count = $this->invoiceItems->sum('Quantity');
         $scanned = count($this->barcodes) + count($this->barcodes2);
         return [

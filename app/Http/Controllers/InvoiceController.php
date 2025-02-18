@@ -55,8 +55,7 @@ class InvoiceController extends Controller
             }
 
             // Fetch and transform data in a single step
-            $filteredData = InvoiceResource2::collection($query->get())
-                ->toArray($request);
+            $filteredData = InvoiceResource2::collection($query->get())->toArray($request);
 
             // Filter out items where 'Difference' is zero
             $filteredData = array_values(array_filter($filteredData, fn($item) => $item['Difference'] != 0));

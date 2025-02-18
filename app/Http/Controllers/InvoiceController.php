@@ -36,14 +36,46 @@ class InvoiceController extends Controller
     public function filter(Request $request)
     {
         try {
-            $data = Invoice::orderByDesc('id')->where('Type','!=','Order');
+            $dataQuery = Invoice::where('Type', '!=', 'Order')->orderByDesc('id');
+
+            if ($request->filled('StartDate') && $request->filled('EndDate')) {
+                $start = (new DateController)->jalali_to_gregorian($request->input('StartDate')) . ' 00:00:00';
+                $end = (new DateController)->jalali_to_gregorian($request->input('EndDate')) . ' 23:59:59';
+                $dataQuery->whereBetween('created_at', [$start, $end]);
+            }
+
+            if ($request->filled('OrderNumber')) {
+                $dataQuery->where('OrderNumber', $request->input('OrderNumber'));
+            }
+
+// Fetch data once instead of reassigning multiple times
+            $data = InvoiceResource2::collection($dataQuery->get())->toArray($request);
+
+// Filter only necessary data before pagination
+            $filteredData = array_values(array_filter($data, fn($item) => $item['Difference'] != 0));
+
+// Pagination
+            $perPage = 100;
+            $page = max(1, (int)$request->input('page', 1));
+            $paginator = new LengthAwarePaginator(
+                array_slice($filteredData, ($page - 1) * $perPage, $perPage),
+                count($filteredData),
+                $perPage,
+                $page,
+                ['path' => $request->url()]
+            );
+
+            return response()->json($paginator, 200);
+
+
+            $data = Invoice::orderByDesc('id')->where('Type', '!=', 'Order');
 
             if (isset($request['StartDate'])) {
 
                 $s = (new DateController)->jalali_to_gregorian($request['StartDate']);
                 $e = (new DateController)->jalali_to_gregorian($request['EndDate']);
 
-                $data = $data->whereBetween('created_at', [$s.' 00:00:00', $e.' 23:59:59']);
+                $data = $data->whereBetween('created_at', [$s . ' 00:00:00', $e . ' 23:59:59']);
 
             }
 
@@ -54,7 +86,7 @@ class InvoiceController extends Controller
             $data = $data->get();
             $info = InvoiceResource2::collection($data);
 //
-            $infoo = array_filter(json_decode($info->toJson(), true), function($element) {
+            $infoo = array_filter(json_decode($info->toJson(), true), function ($element) {
                 return $element['Difference'] != 0;
             });
             $infooo = array_values($infoo);
@@ -68,7 +100,6 @@ class InvoiceController extends Controller
             $paginator = new LengthAwarePaginator($info, count($infooo), $perPage, $request['page']);
             return response()->json($paginator, 200);
 
-            return response($infooo, 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

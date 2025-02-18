@@ -36,14 +36,14 @@ class InvoiceController extends Controller
     public function filter(Request $request)
     {
         try {
-            $info = Invoice::orderByDesc('id')->where('Type','!=','Order');
+            $info = Invoice::orderByDesc('id')->where('Type', '!=', 'Order');
 
             if (isset($request['StartDate'])) {
 
                 $s = (new DateController)->jalali_to_gregorian($request['StartDate']);
                 $e = (new DateController)->jalali_to_gregorian($request['EndDate']);
 
-                $info = $info->whereBetween('created_at', [$s.' 00:00:00', $e.' 23:59:59']);
+                $info = $info->whereBetween('created_at', [$s . ' 00:00:00', $e . ' 23:59:59']);
 
             }
 
@@ -52,26 +52,32 @@ class InvoiceController extends Controller
             }
 
             $info = $info->get()->toArray();
-            $data = InvoiceResource2::collection($info);
-
-
-
-            $offset = 0;
-            $perPage = 100;
-            if ($request['page'] && $request['page'] > 1) {
-                $offset = ($request['page'] - 1) * $perPage;
-            }
-            $filtered = array_filter($info, function($element) {
-                return $element['Difference'] != 0;
+            $filtered = array_filter($info, function ($element) {
+                $barcodes1 = $element->barcodes;
+                $barcodes2 = Remittance::orderByDesc('id')->where('orderID', $element->OrderID)->get();
+                $count = $element->invoiceItems->sum('Quantity');
+                $Sum = $element->Sum;
+                $Scanned = count($barcodes1) + count($barcodes2);
+                $Difference = $count - $Scanned;
+                return $Difference != 0;
             });
             $input = array_values($filtered);
 
+
+            $data = InvoiceResource2::collection($info);
+
+
+            $offset = 0;
+            $perPage = 200;
+            if ($request['page'] && $request['page'] > 1) {
+                $offset = ($request['page'] - 1) * $perPage;
+            }
             $info = array_slice($info, $offset, $perPage);
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
 
 
             return response($paginator, 200);
-     } catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             return response($exception);
         }
     }

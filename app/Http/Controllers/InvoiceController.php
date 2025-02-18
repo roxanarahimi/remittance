@@ -40,7 +40,7 @@ class InvoiceController extends Controller
 
             $info = InvoiceResource2::collection($data);
             for ($i = 0; $i < count($info); $i++) {
-                if ($info[$i]['State'] != 1) {
+                if ($info[$i]['State'] > 0) {
                     unset($info[$i]);
                 }
             }

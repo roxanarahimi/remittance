@@ -10,7 +10,7 @@ class OrderItem extends Model
     use HasFactory;
 
     protected $connection = 'sqlsrv';
-    protected $table = 'SLS3.OrderITem';
+    protected $table = 'SLS3.OrderItem';
     protected $hidden = ['Version'];
 
     public function Order()

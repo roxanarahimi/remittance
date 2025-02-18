@@ -617,12 +617,11 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-                $info = Invoice::where('Sum',0)->get();
-
-        foreach($info as $item){
+        $info = Invoice::where('Sum', 0)->get();
+        foreach ($info as $item) {
             $dat = OrderItem::where('OrderRef', $info->OrderID)->get();
-            foreach($dat as $item2){
-                if (!str_contains($item2->Product->Name,'لیوانی')&&str_contains($item2->Product->Name,'نودالیت')){
+            foreach ($dat as $item2) {
+                if (!str_contains($item2->Product->Name, 'لیوانی') && str_contains($item2->Product->Name, 'نودالیت')) {
                     $invoiceItem = InvoiceItem::create([
                         'invoice_id' => $item->id,
                         'ProductNumber' => $item2->Product->Number,
@@ -630,14 +629,14 @@ class RemittanceController extends Controller
                     ]);
                 }
             }
-            $item->update(["Sum"=>$item->invoiceItems->sum('Quantity')]);
+            $item->update(["Sum" => $item->invoiceItems->sum('Quantity')]);
         }
         return InvoiceResource::collection($info);
         return $info;
 
         $tt = Invoice::orderByDesc('id')->get();
-        foreach($tt as $item){
-            $item->update(["Sum"=>$item->invoiceItems->sum('Quantity')]);
+        foreach ($tt as $item) {
+            $item->update(["Sum" => $item->invoiceItems->sum('Quantity')]);
         }
         return 'Done';
 //        if (isset($request['StartDate'])){
@@ -786,15 +785,16 @@ class RemittanceController extends Controller
     public function getInvoiceBarcodes(Request $request)
     {
         $info = InvoiceBarcode::orderByDesc('id');
-        if (isset($request['search'])){
-            $info = $info->where('Barcode','like', '%'.$request['search'].'%');
-        }else{
+        if (isset($request['search'])) {
+            $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
+        } else {
             $info = $info->take(500);
         }
         $info = $info->get();
         return InvoiceBarcodeResource::collection($info);
 
     }
+
     public function getRemittances(Request $request)
     {
         $info = Remittance::orderByDesc('id');
@@ -803,7 +803,7 @@ class RemittanceController extends Controller
 //        }
         if (isset($request['search'])) {
             $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
-        }else{
+        } else {
             $info = $info->take(500);
         }
         $info = $info->get();
@@ -811,6 +811,7 @@ class RemittanceController extends Controller
         return RemittanceResource::collection($info);
 
     }
+
     public function report(Request $request)
     {
         try {

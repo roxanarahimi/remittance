@@ -806,6 +806,9 @@ class RemittanceController extends Controller
     public function getInvoiceBarcodes(Request $request)
     {
         $info = InvoiceBarcode::orderByDesc('id');
+        if (isset($request['OrderNumber'])){
+            $info = $info->where('OrderNumber',  $request['OrderNumber']);
+        }
         if (isset($request['search'])) {
             $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
         } else {
@@ -819,9 +822,9 @@ class RemittanceController extends Controller
     public function getRemittances(Request $request)
     {
         $info = Remittance::orderByDesc('id');
-//        if (isset($request['OrderNumber'])){
-//            $info = $info->where('orderID', 'like', '%' . $request['search'] . '%');
-//        }
+        if (isset($request['OrderNumber'])){
+            $info = $info->where('addressName', 'like', '%' . $request['OrderNumber'] . '%');
+        }
         if (isset($request['search'])) {
             $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
         } else {

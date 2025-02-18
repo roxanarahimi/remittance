@@ -620,21 +620,21 @@ class RemittanceController extends Controller
 //        $info = Invoice::where('Sum', 0)->get();
         $invoice = Invoice::where('OrderID', '4277467')->with('invoiceItems')->first();
         return $invoice;
-//        $dat = OrderItem::where('OrderRef', $invoice->OrderID)
-//            ->where('OrderRef', $invoice->OrderID)
-//            ->get();
-//
-//        foreach ($dat as $item2) {
-//
-//                if (!str_contains($item2->Product->Name,'لیوانی') && str_contains($item2->Product->Name,'نودالیت')){
-//                    $invoiceItem = InvoiceItem::create([
-//                        'invoice_id' => $invoice->id,
-//                        'ProductNumber' => $item2->Product->Number,
-//                        'Quantity' => $item2->Quantity,
-//                    ]);
-//                }
-//
-//        }
+        $dat = OrderItem::where('OrderRef', $invoice->OrderID)
+            ->where('OrderRef', $invoice->OrderID)
+            ->get();
+
+        foreach ($dat as $item2) {
+
+                if (!str_contains($item2->Product->Name,'لیوانی') && str_contains($item2->Product->Name,'نودالیت')){
+                    $invoiceItem = InvoiceItem::create([
+                        'invoice_id' => $invoice->id,
+                        'ProductNumber' => $item2->Product->Number,
+                        'Quantity' => $item2->Quantity,
+                    ]);
+                }
+
+        }
 
         return InvoiceResource::collection($invoice);
 

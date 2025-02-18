@@ -36,7 +36,20 @@ class InvoiceController extends Controller
     public function filter(Request $request)
     {
         try {
-            $data = Invoice::orderByDesc('id')->where('created_at', '>=', today()->subDays(20))->get();
+            $data = Invoice::orderByDesc('id');
+
+            if (isset($request['StartDate'])){
+                $s = (new DateController)->jalali_to_gregorian($request['StartDate']);
+                $e = (new DateController)->jalali_to_gregorian($request['EndDate']);
+              $data = $data->where('created_at', '>=', $s)
+                    ->where('created_at', '<=', $e);
+            }
+
+
+
+            //->where('created_at', '>=', today()->subDays(20))
+
+                $data = $data->get();
 
             $info = InvoiceResource2::collection($data);
             for ($i = 0; $i < count($info); $i++) {

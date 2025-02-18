@@ -20,12 +20,12 @@ class DateController extends Controller
         return $formatter->format($dateTime);
 
     }
-    function jalali_to_gregorian(Request $request)
+    function jalali_to_gregorian($date)
     {
         $mod = '';
-        $jy = explode('-',$request['date'])[0];
-        $jm = explode('-',$request['date'])[1];
-        $jd = explode('-',$request['date'])[2];
+        $jy = explode('-',$date)[0];
+        $jm = explode('-',$date)[1];
+        $jd = explode('-',$date)[2];
         if ($jy > 979) {
             $gy = 1600;
             $jy -= 979;
@@ -51,7 +51,14 @@ class DateController extends Controller
             $gd -= $v;
         }
 
-        return ($mod === '') ? array($gy, $gm, $gd) : $gy . $mod . $gm . $mod . $gd;
+//        return ($mod === '') ? array($gy, $gm, $gd) : $gy . $mod . $gm . $mod . $gd;
+        if ($gm<10){
+            $gm = '0'.$gm;
+        }
+        if ($gd<10){
+            $gd = '0'.$gd;
+        }
+        return $gy.'-'.$gm.'-'.$gd;
     }
     public function toGREGORIAN()
     {

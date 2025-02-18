@@ -617,6 +617,27 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
         $info = Invoice::where('Sum',0)->paginate(200);
+        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->pluck("PartID");
+
+        foreach($info as $item){
+            $details = DB::connection('sqlsrv')->table('LGS3.InventoryVoucherItem')
+                ->select(["LGS3.Part.Name as ProductName", "LGS3.InventoryVoucherItem.Quantity as Quantity",
+                    "LGS3.Part.PartID as Id", "LGS3.Part.Code as ProductNumber"])
+                ->join('LGS3.Part', 'LGS3.Part.PartID', '=', 'LGS3.InventoryVoucherItem.PartRef')
+                ->where('InventoryVoucherRef', $item->{'OrderID'})
+                ->whereIn('PartRef', $partIDs)
+                ->get()->toArray();
+            foreach($details as $item){
+                if (!str_contains($item->Product->Name,'لیوانی')){
+                    $invoiceItem = InvoiceItem::create([
+                        'invoice_id' => $info->id,
+                        'ProductNumber' => $item->Product->Number,
+                        'Quantity' => $item->Quantity,
+                    ]);
+                }
+            }
+            $item->update(["Sum"=>$item->invoiceItems->sum('Quantity')]);
+        }
         $data = InvoiceResource::collection($info);
         return $info;
 

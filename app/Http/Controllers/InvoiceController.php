@@ -36,7 +36,7 @@ class InvoiceController extends Controller
     public function filter(Request $request)
     {
         try {
-            $data = Invoice::orderByDesc('id');
+            $data = Invoice::orderByDesc('id')->where('Type','!=','Order');
 
             if (isset($request['StartDate'])) {
 

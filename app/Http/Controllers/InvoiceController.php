@@ -36,7 +36,7 @@ class InvoiceController extends Controller
         try {
 //            $data = Invoice::where('OrderID','284128')->orWhere('OrderNumber','99197')->get();
             $data = Remittance::where('orderID','284128')->get();
-            return response(["count"=>$data->count(),"data"=>RemittanceResource::collection($data)], 200);
+            return response(["count"=>count($data),"data"=>RemittanceResource::collection($data)], 200);
 
 //            $data = Invoice::orderByDesc('id');
             if ($request['StartDate']) {

@@ -52,8 +52,9 @@ class InvoiceController extends Controller
             }
 
             $info = $info->get();
+
             $infom =InvoiceResource2::collection($info);
-            return (array)$infom[0];
+            return $infom;
             $x = array_filter((array)$info,function ($element){
                 return $element->{'Difference'} != 0;
             });

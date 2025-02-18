@@ -9,7 +9,6 @@ use App\Http\Resources\InventoryVoucherResource;
 use App\Http\Resources\InvoiceBarcodeResource;
 use App\Http\Resources\InvoiceItemResource;
 use App\Http\Resources\InvoiceResource;
-use App\Http\Resources\InvoiceResource2;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\RemittanceResource;
 use App\Models\Address;
@@ -616,16 +615,16 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $data = Invoice::orderByDesc('id')->first();
         if (isset($request['StartDate'])){
-            $s = (new DateController)->jalali_to_gregorian($request['StartDate']);
-            $e = (new DateController)->jalali_to_gregorian($request['EndDate']);
+            $ss = date((new DateController)->jalali_to_gregorian($request['StartDate']));
+            $s = \datetime::createfromformat('Y-m-d H:i:s',$ss.' 00:00:00');
+            $ee = date((new DateController)->jalali_to_gregorian($request['EndDate']));
+            $e = \datetime::createfromformat('Y-m-d H:i:s',$ee.' 00:00:00');
+
 //            $data = $data->where('created_at', '>=', $s)
 //                ->where('created_at', '<=', $e);
 
-            $data = Invoice::orderByDesc('id')->whereDate('created_at', '<=', $e)->take(20)->get();
-
-            return [InvoiceResource2::collection($data)];
+            return [$s,$e];
         }
 //
 //        $info = InvoiceBarcode::orderByDesc('id')->where('Barcode','like', '%'.$request['search'].'%')->get();

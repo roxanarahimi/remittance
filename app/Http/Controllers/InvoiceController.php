@@ -32,7 +32,7 @@ class InvoiceController extends Controller
     public function filter(Request $request)
     {
         try {
-            $data = Invoice::where('OrderNumber','284128')->get();
+            $data = Invoice::where('OrderID','284128')->orWhere('OrderNumber','284128')->get();
             return response(InvoiceResource::collection($data), 200);
 
 //            $data = Invoice::orderByDesc('id');

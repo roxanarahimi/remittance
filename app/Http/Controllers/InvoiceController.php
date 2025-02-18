@@ -34,7 +34,7 @@ class InvoiceController extends Controller
     public function filter(Request $request)
     {
         try {//where('CreationDate', '>=', today()->subDays(2))->
-            $data = Invoice::where('created_at', '>=', today()->subWeeks(5))->withCount('barcodes')->get();
+            $data = Invoice::where('created_at', '>=', today()->subDays(20))->withCount('barcodes')->get();
                         return response($data, 200);
 
 //            $data = Remittance::where('orderID','284128')->get();

@@ -54,26 +54,12 @@ class InvoiceController extends Controller
             $data = $data->get();
             $info = InvoiceResource2::collection($data);
 
-            return response($info, 200);
+            $infoo = array_filter($info->toArray(), function($element) {
+                return $element['Difference'] != 0;
+            });
 
-//            $data = Remittance::where('orderID','284128')->get();
-//            return response(["count"=>count($data),"data"=>RemittanceResource::collection($data)], 200);
-
-//            $data = Invoice::orderByDesc('id');
-            if ($request['StartDate']) {
-//                return $request['StartDate'];
-                return (new DateController)->toGREGORIAN($request['StartDate']);
-            }
-            if ($request['EndDate']) {
-
-            }
-            if ($request['OrderNumber']) {
-
-            }
-
-//            $data = $data->get();
-//            return response(InvoiceResource::collection($data), 200);
-        } catch (\Exception $exception) {
+            return response($infoo, 200);
+     } catch (\Exception $exception) {
             return response($exception);
         }
     }

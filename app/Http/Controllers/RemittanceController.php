@@ -9,6 +9,7 @@ use App\Http\Resources\InventoryVoucherResource;
 use App\Http\Resources\InvoiceBarcodeResource;
 use App\Http\Resources\InvoiceItemResource;
 use App\Http\Resources\InvoiceResource;
+use App\Http\Resources\InvoiceResource2;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\RemittanceResource;
 use App\Models\Address;
@@ -615,6 +616,9 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        $data = Invoice::where('OrderNumber','1042927')->get();
+        return [InvoiceResource::collection($data),InvoiceResource2::collection($data)];
+
         $tt = Invoice::orderByDesc('id')->get();
         foreach($tt as $item){
             $item->update(["Sum"=>$item->invoiceItems->sum('Quantity')]);

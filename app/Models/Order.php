@@ -19,6 +19,7 @@ class Order extends Model
         return $this->hasMany(OrderItem::class, 'OrderRef', 'OrderID')
             ->whereHas('Product', function ($q) {
                 $q->where('Name', 'like', '%نودالیت%');
+                $q->whereNot('Name', 'like', '%لیوانی%');
             });
     }
 

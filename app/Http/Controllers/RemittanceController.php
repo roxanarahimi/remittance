@@ -807,7 +807,9 @@ class RemittanceController extends Controller
     {
         $info = InvoiceBarcode::orderByDesc('id');
         if (isset($request['OrderNumber'])){
-            $info = $info->where('OrderNumber',  $request['OrderNumber']);
+            $info = $info->whereHas('invoice', function ($q) use ($request) {
+                $q->where('OrderNumber',  $request['OrderNumber']);
+            });
         }
         if (isset($request['search'])) {
             $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');

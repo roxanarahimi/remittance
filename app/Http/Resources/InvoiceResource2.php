@@ -42,8 +42,8 @@ class InvoiceResource2 extends JsonResource
             'Scanned' => count($barcodes)+ $cc,
             'Barcodes' => $barcodes,
             'State' => $state,
-//            "DeliveryDate" => $this->DeliveryDate,
-            'DeliveryDate' => (new DateController)->toPersian($this->DeliveryDate),
+            "DeliveryDate" => $this->DeliveryDate,
+//            'DeliveryDate' => (new DateController)->toPersian($this->DeliveryDate),
             'created_at' => explode(' ',(new DateController)->toPersian($this->created_at))[0].' '.explode(' ',(new DateController)->toPersian($this->created_at))[1]
 
 

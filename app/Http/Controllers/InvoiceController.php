@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Middleware\Token;
 use App\Http\Resources\InvoiceResource;
+use App\Http\Resources\RemittanceResource;
 use App\Models\Invoice;
+use App\Models\Remittance;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -32,8 +34,9 @@ class InvoiceController extends Controller
     public function filter(Request $request)
     {
         try {
-            $data = Invoice::where('OrderID','284128')->orWhere('OrderNumber','284128')->get();
-            return response(InvoiceResource::collection($data), 200);
+//            $data = Invoice::where('OrderID','284128')->orWhere('OrderNumber','99197')->get();
+            $data = Remittance::where('orderID','284128')->get();
+            return response(RemittanceResource::collection($data), 200);
 
 //            $data = Invoice::orderByDesc('id');
             if ($request['StartDate']) {

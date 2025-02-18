@@ -33,7 +33,7 @@ class DateController extends Controller
 //            \IntlDateFormatter::GREGORIAN,
 //            "yyyy-MM-d HH:mm:ss"
 //        );
-        $jalaliDate = "1370-10-26 00:00:00.0000";
+        $jalaliDate = "1370-10-26 00:00:00";
         $formatterGregorian = new \IntlDateFormatter(
             'en_US', // English locale with Gregorian calendar
             \IntlDateFormatter::FULL,

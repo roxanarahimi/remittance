@@ -38,7 +38,14 @@ class InvoiceController extends Controller
         try {//where('CreationDate', '>=', today()->subDays(2))->
             $data = Invoice::where('created_at', '>=', today()->subDays(20))->get();
 
-                        return response(InvoiceResource2::collection($data), 200);
+            $info = InvoiceResource2::collection($data);
+            for ($i=0; $i<= count($info); $i++){
+                if($info[$i]['Sum']<= $info[$i]['Scanned']){
+                    array_splice($info[$i]);
+                }
+            }
+
+                        return response($info, 200);
 
 //            $data = Remittance::where('orderID','284128')->get();
 //            return response(["count"=>count($data),"data"=>RemittanceResource::collection($data)], 200);

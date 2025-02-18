@@ -617,7 +617,7 @@ class RemittanceController extends Controller
     {
         $tt = Invoice::where('OrderNumber','103604')->first();
 //        foreach($tt as $item){
-            $tt->update(["Sum"=>$tt->OrderItems->sum('Quantity')]);
+            $tt->update(["Sum"=>200]);
 //        }
         return new InvoiceResource($tt);
 //        if (isset($request['StartDate'])){

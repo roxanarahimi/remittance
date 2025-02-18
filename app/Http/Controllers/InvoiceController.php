@@ -36,33 +36,29 @@ class InvoiceController extends Controller
     public function filter(Request $request)
     {
         try {
-            $info = Invoice::orderByDesc('id')->where('Type', '!=', 'Order');
+            $data = Invoice::orderByDesc('id')->where('Type','!=','Order');
 
             if (isset($request['StartDate'])) {
 
                 $s = (new DateController)->jalali_to_gregorian($request['StartDate']);
                 $e = (new DateController)->jalali_to_gregorian($request['EndDate']);
 
-                $info = $info->whereBetween('created_at', [$s . ' 00:00:00', $e . ' 23:59:59']);
+                $data = $data->whereBetween('created_at', [$s.' 00:00:00', $e.' 23:59:59']);
 
             }
 
             if (isset($request['OrderNumber'])) {
-                $info = $info->where('OrderNumber', $request['OrderNumber']);
+                $data = $data->where('OrderNumber', $request['OrderNumber']);
             }
 
-            $info = $info->get();
+            $data = $data->get();
+            $info = InvoiceResource2::collection($data);
 
-            $infom =InvoiceResource2::collection($info);
-            return (array)$infom;
-            $x = array_filter((array)$info,function ($element){
-                return $element->{'Difference'} != 0;
+            $infoo = array_filter($info->toArray(), function($element) {
+                return $element['Difference'] != 0;
             });
-            $y = array_values($x);
 
-
-
-            return response($y, 200);
+            return response($infoo, 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

@@ -16,13 +16,8 @@ class InvoiceResource2 extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $barcodes = [];
-        foreach ($this->barcodes as $item) {
-            $barcodes[] = $item->Barcode;
-        }
-        $r = Remittance::orderByDesc('id')->where('orderID', $this->OrderID)->get()->toArray();
-        $cc = count($r);
 
+        $barcodes2 = Remittance::orderByDesc('id')->where('orderID', $this->OrderID)->get()->toArray();
         return [
             "id" => $this->id,
             "OrderID" => $this->OrderID,
@@ -31,8 +26,8 @@ class InvoiceResource2 extends JsonResource
             "Address" => $this->address?->Address,
             'count' => $this->invoiceItems->sum('Quantity'),
             'Sum' => $this->Sum,
-            'Scanned' => count($barcodes) + $cc,
-            'Difference' => ($this->invoiceItems->sum('Quantity')) - (count($barcodes) + $cc),
+            'Scanned' => count($this->barcodes) + count($barcodes2),
+            'Difference' => ($this->invoiceItems->sum('Quantity')) - (count($this->barcodes) + count($barcodes2)),
             'created_at' => explode(' ', (new DateController)->toPersian($this->created_at))[0] . ' ' . explode(' ', (new DateController)->toPersian($this->created_at))[1],
 
             'Barcodes' => 'http://5.34.204.23/api/report?api_key=Rsxw_q25jhk92345/624087Mnhi.oxcv&OrderNumber='.$this->OrderNumber,

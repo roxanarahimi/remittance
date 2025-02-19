@@ -58,7 +58,14 @@ class InvoiceController extends Controller
             $filteredData = InvoiceResource2::collection($query->get())->toArray($request);
 
             // Filter out items where 'Difference' is zero
-            $filteredData = array_values(array_filter($filteredData, fn($item) => $item['Difference'] != 0));
+            $f = array_filter($filteredData, function($item) use ($request) {
+                if ($request->filled(['DiffStart', 'DiffEnd'])) {
+                    return ($item->Difference >= $request['DiffStart'] && $item->Difference >= $request['DiffEnd']);
+                }else{
+                    return $item->Difference != 0;
+                }
+            });
+            $filteredData = array_values();
 
             // Paginate the filtered data
             $paginator = new LengthAwarePaginator(

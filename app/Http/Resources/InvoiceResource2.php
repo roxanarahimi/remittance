@@ -24,11 +24,10 @@ class InvoiceResource2 extends JsonResource
             "OrderID" => $this->OrderID,
             "OrderNumber" => $this->OrderNumber,
             "AddressName" => $this->address?->AddressName,
-            "Address" => $this->address?->Address,
             'count' => $count,
             'Sum' => $this->Sum,
             'Scanned' => $scanned,
-            'Difference' => $count - $scanned,
+            'Difference' =>  $scanned - $count,
             'created_at' => explode(' ', (new DateController)->toPersian($this->created_at))[0] . ' ' . explode(' ', (new DateController)->toPersian($this->created_at))[1],
 
             'Barcodes' => 'http://5.34.204.23/api/report?api_key=Rsxw_q25jhk92345/624087Mnhi.oxcv&OrderNumber='.$this->OrderNumber,

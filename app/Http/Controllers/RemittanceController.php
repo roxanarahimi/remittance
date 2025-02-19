@@ -619,7 +619,7 @@ class RemittanceController extends Controller
     {
 
         $x = 100-200;
-        return $request['ss']>=$x;
+        return (integer)$request['ss']>=$x;
 //        $info = Invoice::where('Sum', 0)->get();
         $invoice = Invoice::where('OrderID', '4277467')->with('invoiceItems')->first();
         return $invoice;

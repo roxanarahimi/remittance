@@ -65,7 +65,7 @@ class InvoiceController extends Controller
                     return $item->Difference != 0;
                 }
             });
-            $filteredData = array_values();
+            $filteredData = array_values($f);
 
             // Paginate the filtered data
             $paginator = new LengthAwarePaginator(

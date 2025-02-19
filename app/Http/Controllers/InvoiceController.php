@@ -60,9 +60,9 @@ class InvoiceController extends Controller
             // Filter out items where 'Difference' is zero
             $f = array_filter($filteredData, function($item) use ($request) {
                 if ($request->filled(['StartDiff', 'EndDiff'])) {
-                    return ($item->Difference >= $request['StartDiff'] && $item->Difference >= $request['EndDiff']);
+                    return ($item['Difference'] >= $request['StartDiff'] && $item['Difference'] >= $request['EndDiff']);
                 }else{
-                    return $item->Difference != 0;
+                    return $item['Difference'] != 0;
                 }
             });
             $filteredData = array_values($f);

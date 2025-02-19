@@ -36,6 +36,7 @@ class InvoiceController extends Controller
     public function filter(Request $request)
     {
         try {
+            return gettype(-4);
             $perPage = 100;
             $page = max(1, (int) $request->input('page', 1));
 
@@ -60,7 +61,7 @@ class InvoiceController extends Controller
             // Filter out items where 'Difference' is zero
             $f = array_filter($filteredData, function($item) use ($request) {
                 if ($request->filled(['StartDiff', 'EndDiff'])) {
-                    return ($item['Difference'] >= $request['StartDiff'] && $item['Difference'] >= $request['EndDiff']);
+                    return ((integer)$item['Difference'] >= (integer)$request['StartDiff'] && (integer)$item['Difference'] >= (integer)$request['EndDiff']);
                 }else{
                     return $item['Difference'] != 0;
                 }

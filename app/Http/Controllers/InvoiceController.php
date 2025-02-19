@@ -36,8 +36,6 @@ class InvoiceController extends Controller
     public function filter(Request $request)
     {
         try {
-            $x = 3-7;
-            return gettype($x);
             $perPage = 100;
             $page = max(1, (int) $request->input('page', 1));
 

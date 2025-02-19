@@ -37,7 +37,7 @@ class InvoiceController extends Controller
     {
         try {
             $perPage = 100;
-            $page = max(1, (int) $request->input('page', 1));
+            $page = max(1, (int)$request->input('page', 1));
 
             // Build base query
             $query = Invoice::where('Type', '!=', 'Order')->orderByDesc('id');
@@ -54,20 +54,21 @@ class InvoiceController extends Controller
             }
 
 
-
             // Fetch and transform data in a single step
-            $filteredData = InvoiceResource2::collection($query->get())->toArray($request);
+            $filteredData = InvoiceResource2::collection($query->get())->toArray();
 
             // Filter out items where 'Difference' is zero
-            if ($request->filled(['StartDiff', 'EndDiff'])) {  $f = array_filter($filteredData, function($item) use ($request) {
+            if ($request->filled(['StartDiff', 'EndDiff'])) {
+                $f = array_filter($filteredData, function ($item) use ($request) {
 
                     return ((integer)$item['Difference'] >= (integer)$request['StartDiff'] && (integer)$item['Difference'] <= (integer)$request['EndDiff']);
 
 //                else{
 //                    return $item['Difference'] != 0;
 //                }
-            });}
-            $filteredData = array_values($f);
+                });
+                $filteredData = array_values($f);
+            }
 
             // Paginate the filtered data
             $paginator = new LengthAwarePaginator(

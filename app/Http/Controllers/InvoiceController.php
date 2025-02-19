@@ -42,6 +42,10 @@ class InvoiceController extends Controller
             // Build base query
             $query = Invoice::where('Type', '!=', 'Order')->orderByDesc('id');
 
+            // Apply order number filter
+            if ($request->filled('OrderNumber')) {
+                $query->where('OrderNumber', $request['OrderNumber']);
+            }
             // Apply date filter if both start and end dates are provided
             if ($request->filled(['StartDate', 'EndDate'])) {
                 $start = (new DateController)->jalali_to_gregorian($request->input('StartDate')) . ' 00:00:00';
@@ -49,10 +53,7 @@ class InvoiceController extends Controller
                 $query->whereBetween('created_at', [$start, $end]);
             }
 
-            // Apply order number filter
-            if ($request->filled('OrderNumber')) {
-                $query->where('OrderNumber', $request->input('OrderNumber'));
-            }
+
 
             // Fetch and transform data in a single step
             $filteredData = InvoiceResource2::collection($query->get())->toArray($request);

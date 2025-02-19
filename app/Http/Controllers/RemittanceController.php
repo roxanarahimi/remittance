@@ -617,6 +617,9 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+
+        $x = 100-200;
+        return $request['ss']>=$x;
 //        $info = Invoice::where('Sum', 0)->get();
         $invoice = Invoice::where('OrderID', '4277467')->with('invoiceItems')->first();
         return $invoice;

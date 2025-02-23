@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('Sum');
             $table->string('AddressID');
             $table->string('DeliveryDate');
+//            $table->boolean('isDeleted')->default(false);
             $table->timestamps();
         });
     }

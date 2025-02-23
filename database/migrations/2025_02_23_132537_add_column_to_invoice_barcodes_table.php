@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('remittances', function (Blueprint $table) {
-            $table->id();
-            $table->string('orderID');
-            $table->string('addressName');
-            $table->string('barcode');
-//            $table->boolean('isDeleted')->default(false);
-            $table->timestamps();
+        Schema::table('invoice_barcodes', function (Blueprint $table) {
+            $table->boolean('isDeleted')->default(false);
         });
     }
 
@@ -26,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('remittances');
+        Schema::table('invoice_barcodes', function (Blueprint $table) {
+            //
+        });
     }
 };

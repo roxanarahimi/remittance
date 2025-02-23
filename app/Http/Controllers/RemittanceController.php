@@ -618,9 +618,9 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
 
-        $x = 100-200;//-100
+        $x = 100 - 200;//-100
 
-        $t=(integer)$request['ss']>=$x;
+        $t = (integer)$request['ss'] >= $x;
         return (boolean)$t;
 //        $info = Invoice::where('Sum', 0)->get();
         $invoice = Invoice::where('OrderID', '4277467')->with('invoiceItems')->first();
@@ -631,13 +631,13 @@ class RemittanceController extends Controller
 
         foreach ($dat as $item2) {
 
-                if (!str_contains($item2->Product->Name,'لیوانی') && str_contains($item2->Product->Name,'نودالیت')){
-                    $invoiceItem = InvoiceItem::create([
-                        'invoice_id' => $invoice->id,
-                        'ProductNumber' => $item2->Product->Number,
-                        'Quantity' => $item2->Quantity,
-                    ]);
-                }
+            if (!str_contains($item2->Product->Name, 'لیوانی') && str_contains($item2->Product->Name, 'نودالیت')) {
+                $invoiceItem = InvoiceItem::create([
+                    'invoice_id' => $invoice->id,
+                    'ProductNumber' => $item2->Product->Number,
+                    'Quantity' => $item2->Quantity,
+                ]);
+            }
 
         }
 
@@ -811,9 +811,9 @@ class RemittanceController extends Controller
     public function getInvoiceBarcodes(Request $request)
     {
         $info = InvoiceBarcode::orderByDesc('id');
-        if (isset($request['OrderNumber'])){
+        if (isset($request['OrderNumber'])) {
             $info = $info->whereHas('invoice', function ($q) use ($request) {
-                $q->where('OrderNumber',  $request['OrderNumber']);
+                $q->where('OrderNumber', $request['OrderNumber']);
             });
         }
         if (isset($request['search'])) {
@@ -829,7 +829,7 @@ class RemittanceController extends Controller
     public function getRemittances(Request $request)
     {
         $info = Remittance::orderByDesc('id');
-        if (isset($request['OrderNumber'])){
+        if (isset($request['OrderNumber'])) {
             $info = $info->where('addressName', 'like', '%' . $request['OrderNumber'] . '%');
         }
         if (isset($request['search'])) {
@@ -873,4 +873,38 @@ class RemittanceController extends Controller
         }
     }
 
+    public function safeDeleteBarcodes(Request $request)
+    {
+        try {
+            $info = InvoiceBarcode::orderByDesc('id')
+                ->where('Barcode', $request['search'])
+                ->whereHas('invoice', function ($q) use ($request) {
+                    $q->where('OrderNumber', $request['OrderNumber']);
+                })->get();
+
+            if ($info) {
+                foreach ($info as $item) {
+                    $item->update(["isDeleted" => true]);
+                }
+            }
+            $info2 = Remittance::orderByDesc('id')
+                ->where('addressName', 'like', '%' . $request['OrderNumber'] . '%')
+                ->where('barcode', $request['search'])->get();
+            if ($info2) {
+                foreach ($info2 as $item) {
+                    $item->update(["isDeleted" => true]);
+                }
+            }
+
+            $d = array_merge((array)InvoiceBarcodeResource::collection($info), (array)RemittanceResource::collection($info2));
+
+
+            return response()->json(['message' => 'Barcode was deleted safely.', 'data' => $d], 200);
+
+
+        } catch (\Exception $exception) {
+            return response($exception);
+        }
+
+    }
 }

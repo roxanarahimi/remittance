@@ -62,6 +62,7 @@ Route::controller(App\Http\Controllers\CacheController::class)->group(function (
 
 Route::controller(App\Http\Controllers\RemittanceController::class)->group(function () {
         Route::get('/report', 'report');
+        Route::post('/delete/barcode', 'report');
 });
 
 

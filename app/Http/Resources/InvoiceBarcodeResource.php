@@ -22,6 +22,7 @@ class InvoiceBarcodeResource extends JsonResource
             "OrderNumber" => $this->invoice?->OrderNumber,//
             "AddressName" => $this->invoice?->address->AddressName,
             "Barcode" => $this->Barcode,
+            "isDeleted" => $this->isDeleted,
             'date' => explode(' ',(new DateController)->toPersian($this->created_at))[0].' '.explode(' ',(new DateController)->toPersian($this->created_at))[1]
 
         ];

@@ -882,7 +882,7 @@ class RemittanceController extends Controller
                 $delete = 1;
             }
             $info = InvoiceBarcode::orderByDesc('id')
-                ->where('Barcode', $request['search'])
+                ->where('Barcode', $request['Barcode'])
                 ->whereHas('invoice', function ($q) use ($request) {
                     $q->where('OrderNumber', $request['OrderNumber']);
                 })->get();
@@ -894,7 +894,7 @@ class RemittanceController extends Controller
             }
             $info2 = Remittance::orderByDesc('id')
                 ->where('addressName', 'like', '%' . $request['OrderNumber'] . '%')
-                ->where('barcode', $request['search'])->get();
+                ->where('barcode', $request['Barcode'])->get();
             if ($info2) {
                 foreach ($info2 as $item) {
                     $item->update(["isDeleted" => $delete]);

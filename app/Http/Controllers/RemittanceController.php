@@ -901,10 +901,14 @@ class RemittanceController extends Controller
                 }
             }
 
-            $d = array_merge((array)InvoiceBarcodeResource::collection($info), (array)RemittanceResource::collection($info2));
+            $filtered = json_decode(json_encode($info));
+            $filtered2 = json_decode(json_encode($info2));
+            $input1 = array_values($filtered);
+            $input2 = array_values($filtered2);
+            $input = array_merge($input1, $input2);
 
 
-            return response()->json(['message' => 'Barcode was deleted safely.', 'data' => $d], 200);
+            return response()->json(['message' => 'Barcode was deleted safely.', 'data' => $input], 200);
 
 
         } catch (\Exception $exception) {

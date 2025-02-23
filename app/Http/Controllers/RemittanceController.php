@@ -879,7 +879,7 @@ class RemittanceController extends Controller
             if ($request->filled('delete')){
                 $delete = $request['delete'];
             }else{
-                $delete = true;
+                $delete = 1;
             }
             $info = InvoiceBarcode::orderByDesc('id')
                 ->where('Barcode', $request['search'])

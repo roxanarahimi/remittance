@@ -876,6 +876,11 @@ class RemittanceController extends Controller
     public function safeDeleteBarcodes(Request $request)
     {
         try {
+            if ($request->filled('delete')){
+                $delete = $request['delete'];
+            }else{
+                $delete = true;
+            }
             $info = InvoiceBarcode::orderByDesc('id')
                 ->where('Barcode', $request['search'])
                 ->whereHas('invoice', function ($q) use ($request) {
@@ -884,7 +889,7 @@ class RemittanceController extends Controller
 
             if ($info) {
                 foreach ($info as $item) {
-                    $item->update(["isDeleted" => true]);
+                    $item->update(["isDeleted" => $delete]);
                 }
             }
             $info2 = Remittance::orderByDesc('id')
@@ -892,7 +897,7 @@ class RemittanceController extends Controller
                 ->where('barcode', $request['search'])->get();
             if ($info2) {
                 foreach ($info2 as $item) {
-                    $item->update(["isDeleted" => true]);
+                    $item->update(["isDeleted" => $delete]);
                 }
             }
 

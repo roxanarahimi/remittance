@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tests', function (Blueprint $table) {
-            $table->renameColumn('invoice_item_id', 'invoice_id');
-
+            $table->boolean('isDeleted')->default(false);
         });
     }
 

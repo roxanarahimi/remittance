@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Controllers\DateController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,11 +17,14 @@ class TestResource extends JsonResource
     {
         return [
             "id"=>$this->id,
-            "invoice_id" => $this->invoice_id,
-            "Barcode" => $this->Barcode,
-            "OrderNumber" => $this->invoice?->OrderNumber,
+            "invoice_id" => $this->invoice_id,//
             "OrderID" => $this->invoice?->OrderID,
-            "created_at" => $this->created_at,
+            "OrderNumber" => $this->invoice?->OrderNumber,//
+            "AddressName" => $this->invoice?->address->AddressName,
+            "Barcode" => $this->Barcode,
+            "isDeleted" => $this->isDeleted,
+            'date' => explode(' ',(new DateController())->toPersian($this->created_at))[0].' '.explode(' ',(new DateController)->toPersian($this->created_at))[1]
+
         ];
     }
 }

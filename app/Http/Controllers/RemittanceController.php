@@ -617,9 +617,31 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+//        $address = InvoiceAddress::where('AddressName', 'LIKE', '%خوانسار%')->get();
+//        $addID = "119558";
+        $invoice = Invoice::create([
+            'Type' => 'Deputation',
+            'OrderID' => "000001",
+            'OrderNumber' => "1149071",
+            'AddressID' => "119558",
+            'Sum' => "10000",
+            'DeliveryDate' => now(),
+        ]);
 
-        $address = InvoiceAddress::where('AddressName','LIKE', '%خوانسار%')->get();
-        return $address;
+        $invoiceItem = InvoiceItem::create([
+            'invoice_id' => $invoice->id,
+            'ProductNumber' => "7010301351",
+            'Quantity' => "5000",
+        ]);
+
+        $invoiceItem = InvoiceItem::create([
+            'invoice_id' => $invoice->id,
+            'ProductNumber' => "7010302351",
+            'Quantity' => "5000",
+        ]);
+
+
+        return response(new InvoiceResource($invoice),200);
         $x = 100 - 200;//-100
 
         $t = (integer)$request['ss'] >= $x;
@@ -878,9 +900,9 @@ class RemittanceController extends Controller
     public function safeDeleteBarcodes(Request $request)
     {
         try {
-            if ($request->filled('delete')){
+            if ($request->filled('delete')) {
                 $delete = $request['delete'];
-            }else{
+            } else {
                 $delete = 1;
             }
             $info = InvoiceBarcode::orderByDesc('id')

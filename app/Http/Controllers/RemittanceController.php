@@ -618,6 +618,8 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
 
+        $address = InvoiceAddress::where('AddressName','LIKE', '%خوانسار%')->get();
+        return $address;
         $x = 100 - 200;//-100
 
         $t = (integer)$request['ss'] >= $x;

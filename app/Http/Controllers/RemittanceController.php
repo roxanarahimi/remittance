@@ -185,7 +185,7 @@ class RemittanceController extends Controller
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
+            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(30))
             ->whereIn('LGS3.Store.StoreID', $storeIDs)
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
             ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
@@ -206,7 +206,7 @@ class RemittanceController extends Controller
             ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
             ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
-            ->where('SLS3.Order.Date', '>=', today()->subDays(7))
+            ->where('SLS3.Order.Date', '>=', today()->subDays(30))
             ->where('SLS3.Order.InventoryRef', 1)
             ->where('SLS3.Order.State', 2)
             ->where('SLS3.Order.FiscalYearRef', 1403)
@@ -246,7 +246,7 @@ class RemittanceController extends Controller
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
+            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(30))
             ->whereIn('LGS3.Store.StoreID', $storeIDs)
             ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
             ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
@@ -260,7 +260,7 @@ class RemittanceController extends Controller
             ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
+            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(30))
             ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
             ->where('GNR3.PartyAddress.IsMainAddress', "1")
             ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
@@ -359,7 +359,8 @@ class RemittanceController extends Controller
 //            ->with('PartUnit')
 //            ->get();
 //        return InventoryVoucherItemResource::collection($t);
-        $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(50))
+        //15
+        $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(30))
             ->whereNot('Type', 'Order')
             ->orderByDesc('Type')
             ->orderByDesc('OrderID')
@@ -385,7 +386,7 @@ class RemittanceController extends Controller
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
+            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(30))
             ->whereIn('LGS3.Store.StoreID', $storeIDs)
             ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
@@ -395,7 +396,7 @@ class RemittanceController extends Controller
             ->get();
 
 
-        $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(7))
+        $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(30))
             ->where(function ($q) {
                 $q->where('Type', 'InventoryVoucher')
                     ->orWhere('Type', 'Deputation');
@@ -462,7 +463,7 @@ class RemittanceController extends Controller
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-                ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
+                ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(30))
                 ->whereIn('LGS3.Store.StoreID', $storeIDs)
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
@@ -476,7 +477,7 @@ class RemittanceController extends Controller
                 ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
                 ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
-                ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
+                ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(30))
                 ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
                 ->where('GNR3.PartyAddress.IsMainAddress', "1")
                 ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')

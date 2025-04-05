@@ -66,7 +66,7 @@ class CacheController extends Controller
             //            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))
             ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $inventoryVoucherIDs)
             ->whereIn('LGS3.Store.StoreID', $storeIDs)
-            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
             ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
                 $q->whereIn('PartRef', $partIDs);
@@ -90,7 +90,7 @@ class CacheController extends Controller
 
             //            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))
             ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $deputationIds)
-            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1403)
+            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
             ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
                 $q->whereIn('PartRef', $partIDs);
@@ -115,7 +115,7 @@ class CacheController extends Controller
             ->whereNotIn('SLS3.Order.OrderID', $orderIDs)
             ->where('SLS3.Order.InventoryRef', 1)
             ->where('SLS3.Order.State', 2)
-            ->where('SLS3.Order.FiscalYearRef', 1403)
+            ->where('SLS3.Order.FiscalYearRef', 1405)
             ->where('SLS3.CustomerAddress.Type', 2)
             ->whereHas('OrderItems')
             ->whereHas('OrderItems', function ($q) {

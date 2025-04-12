@@ -28,6 +28,8 @@ use App\Models\PartyAddress;
 use App\Models\Product;
 use App\Models\Remittance;
 use App\Models\Store;
+use App\Models\Tour;
+use App\Models\Transporter;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -617,12 +619,15 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        $dat = Transporter::orderByDesc('TransPorterID')->paginate(50);
+        $dat2 = Tour::orderByDesc('TourID')->paginate(50);
+        return [$dat,$dat2];
+
         $dat = DB::connection('sqlsrv')->table('LGS3.Transporter')->select("TransporterID")
             ->first();
        $dat = DB::connection('sqlsrv')->table('DSD3.Tour')->select("TourID")
             ->first();
-       $dat= DB::connection('sqlsrv')->getSchemaBuilder()->getColumnListing('DSD3.Tour');
-        return $dat;
+       $dat= DB::connection('sqlsrv')->table('DSD3.Tour')->col();
 //        $address = InvoiceAddress::where('AddressName', 'LIKE', '%خوانسار%')->get();
 //        $addID = "119558";
         $invoice = Invoice::create([

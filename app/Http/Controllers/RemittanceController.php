@@ -617,6 +617,9 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        $dat = DB::connection('sqlsrv')->table('LGS3.Transporter')->select("TransporterID")
+            ->first();
+        return $dat;
 //        $address = InvoiceAddress::where('AddressName', 'LIKE', '%خوانسار%')->get();
 //        $addID = "119558";
         $invoice = Invoice::create([

@@ -619,7 +619,9 @@ class RemittanceController extends Controller
     {
         $dat = DB::connection('sqlsrv')->table('LGS3.Transporter')->select("TransporterID")
             ->first();
-       $dat = DB::connection('sqlsrv')->table('DSD3.Tour')->getColumns();
+       $dat = DB::connection('sqlsrv')->table('DSD3.Tour')->select("TourID")
+            ->first();
+       $dat= DB::connection('sqlsrv')->getSchemaBuilder()->getColumnListing('DSD3.Tour');
         return $dat;
 //        $address = InvoiceAddress::where('AddressName', 'LIKE', '%خوانسار%')->get();
 //        $addID = "119558";

@@ -619,15 +619,13 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $dat = Transporter::orderByDesc('TransPorterID')->paginate(50);
-        $dat2 = Tour::orderByDesc('TourID')->paginate(50);
-        return [$dat,$dat2];
+
 
         $dat = DB::connection('sqlsrv')->table('LGS3.Transporter')->select("TransporterID")
             ->first();
        $dat = DB::connection('sqlsrv')->table('DSD3.Tour')->select("TourID")
             ->first();
-       $dat= DB::connection('sqlsrv')->table('DSD3.Tour')->col();
+       return $dat;
 //        $address = InvoiceAddress::where('AddressName', 'LIKE', '%خوانسار%')->get();
 //        $addID = "119558";
         $invoice = Invoice::create([

@@ -12,4 +12,14 @@ class Tour extends Model
     protected $hidden = ['Version'];
 
     use HasFactory;
+
+    public function TourItems()
+    {
+        return $this->hasMany(TourItem::class, 'TourRef', 'TourID')->with(['Customer','CustomerAddress']);
+//            ->whereHas('Part', function ($q) {
+//                $q->where('Name', 'like', '%نودالیت%');
+//                $q->whereNot('Name', 'like', '%لیوانی%');
+//            })->orderBy('PartRef');
+    }
+
 }

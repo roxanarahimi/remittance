@@ -12,6 +12,7 @@ use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\InvoiceResource2;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\RemittanceResource;
+use App\Http\Resources\TourResource;
 use App\Models\Address;
 use App\Models\InventoryVoucher;
 use App\Models\InventoryVoucherItem;
@@ -620,6 +621,8 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
 
+        $dat = Tour::orderByDesc('TourID')->take(20)->get();
+        return TourResource::collection($dat);
 
         $dat = DB::connection('sqlsrv')->table('LGS3.Transporter')->select("TransporterID")
             ->first();

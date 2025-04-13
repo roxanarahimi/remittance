@@ -21,5 +21,13 @@ class Tour extends Model
 //                $q->whereNot('Name', 'like', '%لیوانی%');
 //            })->orderBy('PartRef');
     }
+    public function Invoices()
+    {
+        return $this->hasMany(TourInvoice::class, 'TourRef', 'TourID')->with(['Order']);
+//            ->whereHas('Part', function ($q) {
+//                $q->where('Name', 'like', '%نودالیت%');
+//                $q->whereNot('Name', 'like', '%لیوانی%');
+//            })->orderBy('PartRef');
+    }
 
 }

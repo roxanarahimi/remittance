@@ -20,6 +20,6 @@ class TourItem extends Model
     }
     public function CustomerAddress()
     {
-        return $this->hasOne(CustomerAddress::class,'CustomerAddressID', 'CustomerAddressRef');
+        return $this->hasOne(CustomerAddress::class,'CustomerAddressID', 'CustomerAddressRef')->with('Address');
     }
 }

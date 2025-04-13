@@ -621,7 +621,7 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
 
-        $dat = Tour::orderByDesc('TourID')->take(20)->get();
+        $dat = Tour::orderBy('TourID')->take(20)->get();
         return TourResource::collection($dat);
 
         $dat = DB::connection('sqlsrv')->table('LGS3.Transporter')->select("TransporterID")

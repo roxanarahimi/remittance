@@ -14,7 +14,7 @@ class TourItem extends Model
     {
         return $this->belongsTo(Tour::class, 'TourID', 'TourRef');
     }
-    public function Costomer()
+    public function Customer()
     {
         return $this->hasOne(Customer::class, 'CustomerID', 'CustomerRef');
     }

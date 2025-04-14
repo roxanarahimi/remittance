@@ -622,7 +622,7 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
 
-        $dat = Transporter::orderByDESC('TransporterID')->take(50)->get();
+        $dat = Transporter::orderByDESC('TransporterID')->first();
         return TransporterResource::collection($dat);
   $dat = Tour::orderByDESC('TourID')->whereHas('invoices')->paginate(50);
         return TourResource::collection($dat);

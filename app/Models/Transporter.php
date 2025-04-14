@@ -18,7 +18,7 @@ class Transporter extends Model
     public function Assignments()
     {
         return $this->hasMany(Assignment::class,  'TransporterRef','TransporterID')
-            ->with('TourAssignmentItem',function ($q){
+            ->with('TourAssignmentItems',function ($q){
                 $q->with('Tour');
             });
     }

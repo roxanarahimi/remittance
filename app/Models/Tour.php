@@ -23,7 +23,7 @@ class Tour extends Model
     }
     public function Invoices()
     {
-        return $this->hasMany(TourInvoice::class, 'TourRef', 'TourID');
+        return $this->hasMany(TourInvoice::class, 'TourID', 'TourRef');
 //            ->whereHas('Part', function ($q) {
 //                $q->where('Name', 'like', '%نودالیت%');
 //                $q->whereNot('Name', 'like', '%لیوانی%');

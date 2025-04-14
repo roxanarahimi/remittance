@@ -20,6 +20,7 @@ class Transporter extends Model
         return $this->hasMany(Assignment::class,  'TransporterRef','TransporterID')
             ->with('TourAssignmentItems',function ($q){
                 $q->with('Tour',function ($z){
+                    $z->whereHas('Invoices');
                     $z->with('Invoices');
                 });
             });

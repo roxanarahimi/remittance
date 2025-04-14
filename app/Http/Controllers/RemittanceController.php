@@ -13,6 +13,7 @@ use App\Http\Resources\InvoiceResource2;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\RemittanceResource;
 use App\Http\Resources\TourResource;
+use App\Http\Resources\TransporterResource;
 use App\Models\Address;
 use App\Models\InventoryVoucher;
 use App\Models\InventoryVoucherItem;
@@ -621,7 +622,9 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
 
-        $dat = Tour::orderByDESC('TourID')->whereHas('invoices')->paginate(50);
+        $dat = Transporter::orderByDESC('TourID')->paginate(10);
+        return TransporterResource::collection($dat);
+  $dat = Tour::orderByDESC('TourID')->whereHas('invoices')->paginate(50);
         return TourResource::collection($dat);
 
         $dat = DB::connection('sqlsrv')->table('LGS3.Transporter')->select("TransporterID")

@@ -16,18 +16,14 @@ class Tour extends Model
     public function TourItems()
     {
         return $this->hasMany(TourItem::class, 'TourRef', 'TourID')->with(['Customer','CustomerAddress']);
-//            ->whereHas('Part', function ($q) {
-//                $q->where('Name', 'like', '%نودالیت%');
-//                $q->whereNot('Name', 'like', '%لیوانی%');
-//            })->orderBy('PartRef');
     }
     public function Invoices()
     {
         return $this->hasMany(TourInvoice::class, 'TourRef', 'TourID')->with('Order');
-//            ->whereHas('Part', function ($q) {
-//                $q->where('Name', 'like', '%نودالیت%');
-//                $q->whereNot('Name', 'like', '%لیوانی%');
-//            })->orderBy('PartRef');
     }
+    public function TourAssignmentItems()
+    {
+        return $this->hasMany(TourAssignmentItem::class, 'TourRef', 'TourID')->with('Assignment');
 
+    }
 }

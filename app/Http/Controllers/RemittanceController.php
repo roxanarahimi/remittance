@@ -955,7 +955,7 @@ class RemittanceController extends Controller
                 }
             }
 
-            if(!$info && !$info2){
+            if(!count($info) && !count($info2)){
                 return response()->json(['message' => 'Barcode & OrderNumber Do not Match!'], 422);
             }
             $filtered = json_decode(json_encode($info));

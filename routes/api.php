@@ -39,10 +39,10 @@ Route::controller(App\Http\Controllers\RemittanceController::class)->group(funct
 Route::controller(App\Http\Controllers\InvoiceBarcodeController::class)->group(function () {
     Route::prefix('barcode')->group(function () {
         Route::post('/', 'index');
-        Route::post('/show/{test}', 'show');
+        Route::post('/show/{invoiceBarcode}', 'show');
         Route::post('/store', 'store');
-        Route::post('/update/{test}', 'update');
-        Route::post('/destroy/{test}', 'destroy');
+        Route::post('/update/{invoiceBarcode}', 'update');
+        Route::post('/destroy/{invoiceBarcode}', 'destroy');
     });
 });
 Route::controller(App\Http\Controllers\TestController::class)->group(function () {

@@ -622,9 +622,9 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
         $dat = Tour::orderByDESC('TourID')->whereHas('invoices', function ($q) use ($request) {
-            $q->where('TourAssignmentItems', function ($z) use ($request) {
-                $z->where('Assignment',function ($x) use ($request) {
-                    $x->where('Transporter',function($y) use ($request) {
+            $q->with('TourAssignmentItems', function ($z) use ($request) {
+                $z->with('Assignment',function ($x) use ($request) {
+                    $x->with('Transporter',function($y) use ($request) {
                         $y->where('TelNumber', $request['mobile']);
                     });
                 });

@@ -621,17 +621,29 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        $dat = Tour::orderByDESC('TourID')->whereHas('invoices', function ($q) use ($request) {
+            $q->where('TourAssignmentItems', function ($z) use ($request) {
+                $z->where('Assignment',function ($x) use ($request) {
+                    $x->where('Transporter',function($y) use ($request) {
+                        $y->where('TelNumber', $request['mobile']);
+                    });
+                });
+            });
+        })
+            ->where('FiscalYearRef', 1405)
+            ->paginate(50);
+        return TourResource::collection($dat);
 
         $dat = Transporter::orderByDESC('TransporterID')->first();
         return new TransporterResource($dat);
-  $dat = Tour::orderByDESC('TourID')->whereHas('invoices')->paginate(50);
+        $dat = Tour::orderByDESC('TourID')->whereHas('invoices')->paginate(50);
         return TourResource::collection($dat);
 
         $dat = DB::connection('sqlsrv')->table('LGS3.Transporter')->select("TransporterID")
             ->first();
-       $dat = DB::connection('sqlsrv')->table('DSD3.Tour')->select("TourID")
+        $dat = DB::connection('sqlsrv')->table('DSD3.Tour')->select("TourID")
             ->first();
-       return $dat;
+        return $dat;
 //        $address = InvoiceAddress::where('AddressName', 'LIKE', '%خوانسار%')->get();
 //        $addID = "119558";
         $invoice = Invoice::create([
@@ -656,7 +668,7 @@ class RemittanceController extends Controller
         ]);
 
 
-        return response(new InvoiceResource($invoice),200);
+        return response(new InvoiceResource($invoice), 200);
         $x = 100 - 200;//-100
 
         $t = (integer)$request['ss'] >= $x;

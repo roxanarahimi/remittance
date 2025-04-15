@@ -623,7 +623,7 @@ class RemittanceController extends Controller
     {
 
         $dat = Transporter::orderByDESC('TransporterID')->first();
-        return TransporterResource::collection($dat);
+        return new TransporterResource($dat);
   $dat = Tour::orderByDESC('TourID')->whereHas('invoices')->paginate(50);
         return TourResource::collection($dat);
 

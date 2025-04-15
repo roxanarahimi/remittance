@@ -114,10 +114,11 @@ class InvoiceBarcodeController extends Controller
         }
     }
 
-    public function destroy(InvoiceBarcode $invoiceBarcode)
+    public function destroy($id)
     {
 
         try {
+            $invoiceBarcode = InvoiceBarcode::findOrFail($id);
             $invoiceBarcode->delete();
             return response('InvoiceBarcode deleted', 200);
         } catch (\Exception $exception) {

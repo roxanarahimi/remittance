@@ -622,9 +622,12 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
         $dat = Tour::orderByDESC('TourID')->whereHas('invoices', function ($q) use ($request) {
+            $q->whereHas('order',function($d){
+                $d->whereHas('orderItems');
+            });
             $q->with('TourAssignmentItems', function ($z) use ($request) {
-                $z->with('Assignment',function ($x) use ($request) {
-                    $x->with('Transporter',function($y) use ($request) {
+                $z->with('Assignment', function ($x) use ($request) {
+                    $x->with('Transporter', function ($y) use ($request) {
                         $y->where('TelNumber', $request['mobile']);
                     });
                 });
@@ -952,6 +955,9 @@ class RemittanceController extends Controller
                 }
             }
 
+            if(!$info && !$info2){
+                return response()->json(['message' => 'Barcode & OrderNumber Do not Match!'], 422);
+            }
             $filtered = json_decode(json_encode($info));
             $filtered2 = json_decode(json_encode($info2));
             $input1 = array_values($filtered);

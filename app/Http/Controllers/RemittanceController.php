@@ -930,42 +930,49 @@ class RemittanceController extends Controller
     public function safeDeleteBarcodes(Request $request)
     {
         try {
-            if ($request->filled('delete')) {
-                $delete = $request['delete'];
-            } else {
-                $delete = 1;
-            }
-            $info = InvoiceBarcode::orderByDesc('id')
-                ->where('Barcode', $request['Barcode'])
-                ->whereHas('invoice', function ($q) use ($request) {
-                    $q->where('OrderNumber', $request['OrderNumber']);
-                })->get();
-
-            if ($info) {
-                foreach ($info as $item) {
-                    $item->update(["isDeleted" => $delete]);
-                }
-            }
-            $info2 = Remittance::orderByDesc('id')
-                ->where('addressName', 'like', '%' . $request['OrderNumber'] . '%')
-                ->where('barcode', $request['Barcode'])->get();
-            if ($info2) {
-                foreach ($info2 as $item) {
-                    $item->update(["isDeleted" => $delete]);
-                }
-            }
-
-            if(!count($info) && !count($info2)){
-                return response()->json(['message' => 'Barcode & OrderNumber Do not Match!'], 422);
-            }
-            $filtered = json_decode(json_encode($info));
-            $filtered2 = json_decode(json_encode($info2));
-            $input1 = array_values($filtered);
-            $input2 = array_values($filtered2);
-            $input = array_merge($input1, $input2);
+            $bar =  InvoiceBarcode::create([
+                "invoice_id" => $request['invoice_id'],
+                "Barcode" => $request['Barcode'],
+                "isDeleted" => 1,
+            ]);
 
 
-            return response()->json(['message' => 'Barcode was deleted safely.', 'data' => $input], 200);
+//            if ($request->filled('delete')) {
+//                $delete = $request['delete'];
+//            } else {
+//                $delete = 1;
+//            }
+//            $info = InvoiceBarcode::orderByDesc('id')
+//                ->where('Barcode', $request['Barcode'])
+//                ->whereHas('invoice', function ($q) use ($request) {
+//                    $q->where('OrderNumber', $request['OrderNumber']);
+//                })->get();
+//
+//            if ($info) {
+//                foreach ($info as $item) {
+//                    $item->update(["isDeleted" => $delete]);
+//                }
+//            }
+//            $info2 = Remittance::orderByDesc('id')
+//                ->where('addressName', 'like', '%' . $request['OrderNumber'] . '%')
+//                ->where('barcode', $request['Barcode'])->get();
+//            if ($info2) {
+//                foreach ($info2 as $item) {
+//                    $item->update(["isDeleted" => $delete]);
+//                }
+//            }
+//
+//            if(!count($info) && !count($info2)){
+//                return response()->json(['message' => 'Barcode & OrderNumber Do not Match!'], 422);
+//            }
+//            $filtered = json_decode(json_encode($info));
+//            $filtered2 = json_decode(json_encode($info2));
+//            $input1 = array_values($filtered);
+//            $input2 = array_values($filtered2);
+//            $input = array_merge($input1, $input2);
+//
+
+            return response()->json(['message' => 'Barcode was deleted safely.', 'data' => new InvoiceBarcodeResource($bar)], 200);
 
 
         } catch (\Exception $exception) {

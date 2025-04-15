@@ -118,7 +118,10 @@ class InvoiceBarcodeController extends Controller
     {
 
         try {
-            $invoiceBarcode = InvoiceBarcode::findOrFail($id);
+            $invoiceBarcode = InvoiceBarcode::find($id);
+            if(!$invoiceBarcode){
+                return response('InvoiceBarcode dose not exist', 422);
+            }
             $invoiceBarcode->delete();
             return response('InvoiceBarcode deleted', 200);
         } catch (\Exception $exception) {

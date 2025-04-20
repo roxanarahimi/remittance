@@ -621,6 +621,26 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        $info = InvoiceBarcode::orderByDesc('id');
+        if (isset($request['OrderNumber'])) {
+            $info = $info->whereHas('invoice', function ($q) use ($request) {
+                $q->where('OrderNumber', $request['OrderNumber']);
+            });
+        }
+        if (isset($request['search'])) {
+            $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
+        } else {
+            $info = $info->take(500);
+        }
+        $info = $info->get()->toArray();
+        $names = array_column($info, 'Barcode');
+
+// Find duplicates
+        $duplicates = array_unique(array_diff_assoc($names, array_unique($names)));
+        return InvoiceBarcodeResource::collection($info);
+
+
+
         $dat = Tour::orderByDESC('TourID')->whereHas('invoices', function ($q) use ($request) {
             $q->whereHas('order',function($d){
                 $d->whereHas('orderItems');
@@ -864,8 +884,7 @@ class RemittanceController extends Controller
 
     public function getInvoiceBarcodes(Request $request)
     {
-//        $info = InvoiceBarcode::orderByDesc('id');
-        $info = InvoiceBarcode::orderByDesc('Barcode');
+        $info = InvoiceBarcode::orderByDesc('id');
         if (isset($request['OrderNumber'])) {
             $info = $info->whereHas('invoice', function ($q) use ($request) {
                 $q->where('OrderNumber', $request['OrderNumber']);

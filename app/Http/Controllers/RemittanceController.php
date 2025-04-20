@@ -621,23 +621,6 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $info = InvoiceBarcode::orderByDesc('id');
-        if (isset($request['OrderNumber'])) {
-            $info = $info->whereHas('invoice', function ($q) use ($request) {
-                $q->where('OrderNumber', $request['OrderNumber']);
-            });
-        }
-        if (isset($request['search'])) {
-            $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
-        } else {
-            $info = $info->take(500);
-        }
-        $info = $info->get()->toArray();
-        $names = array_column($info, 'Barcode');
-
-// Find duplicates
-        $duplicates = array_unique(array_diff_assoc($names, array_unique($names)));
-        return $duplicates;
 
 
 
@@ -927,11 +910,17 @@ class RemittanceController extends Controller
             $filtered2 = json_decode(json_encode($i2));
             $input1 = array_values($filtered);
             $input2 = array_values($filtered2);
+
+            $bars1 = array_column($input1, 'Barcode');
+            $duplicates1 = array_values(array_unique(array_diff_assoc($bars1, array_unique($bars1))));
+            $bars2 = array_column($input2, 'barcode');
+            $duplicates2 = array_values(array_unique(array_diff_assoc($bars2, array_unique($bars2))));
+
             $input = array_merge($input1, $input2);
 
 
             $offset = 0;
-            $perPage = 300;
+            $perPage = 200;
             if ($request['page'] && $request['page'] > 1) {
                 $offset = ($request['page'] - 1) * $perPage;
             }
@@ -939,7 +928,7 @@ class RemittanceController extends Controller
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
 
 
-            return response()->json($paginator, 200);
+            return response()->json([['duplicates'=> [$duplicates1,$duplicates2]],$paginator], 200);
 
 
         } catch (\Exception $exception) {

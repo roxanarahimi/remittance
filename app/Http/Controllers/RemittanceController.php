@@ -637,7 +637,7 @@ class RemittanceController extends Controller
 
 // Find duplicates
         $duplicates = array_unique(array_diff_assoc($names, array_unique($names)));
-        return $info;
+        return $duplicates;
 
 
 

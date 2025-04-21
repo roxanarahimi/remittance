@@ -28,7 +28,7 @@ class TourResource extends JsonResource
 //"SentToHandheld"=> $this->SentToHandheld,
 //"Description"=> $this->Description,
 //            "items"=> $this->TourItems,
-            "invoices" => TourInvoiceResource::collection($this->Invoices),
+            "Invoices" => TourInvoiceResource::collection($this->Invoices),
 
         ];
     }

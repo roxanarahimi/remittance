@@ -629,7 +629,6 @@ class RemittanceController extends Controller
         $dat = Tour::orderByDESC('TourID')->whereHas('invoices', function ($q) use ($request) {
             $q->whereHas('order',function($d){
                 $d->whereHas('orderItems');
-                $d->with('customer');
             });
             $q->with('TourAssignmentItems', function ($z) use ($request) {
                 $z->with('Assignment', function ($x) use ($request) {

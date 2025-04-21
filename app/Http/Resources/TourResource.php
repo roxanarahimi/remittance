@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Controllers\DateController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,11 +18,12 @@ class TourResource extends JsonResource
         return [
 "TourID"=>$this->TourID,
 "Number"=>$this->Number,
-"StartDate"=> $this->StartDate,
-"EndDate"=> $this->EndDate,
+"StartDate"=> explode(' ',(new DateController)->toPersian($this->StartDate))[0].' '.explode(' ',(new DateController)->toPersian($this->StartDate))[1],
+
+            "EndDate"=> $this->EndDate,
 "State"=> $this->State,
 //"FiscalYearRef"=> $this->FiscalYearRef,
-"CreationDate"=> $this->CreationDate,
+"CreationDate"=> explode(' ',(new DateController)->toPersian($this->CreationDate))[0].' '.explode(' ',(new DateController)->toPersian($this->CreationDate))[1],
 //"SentToHandheld"=> $this->SentToHandheld,
 //"Description"=> $this->Description,
 //            "items"=> $this->TourItems,

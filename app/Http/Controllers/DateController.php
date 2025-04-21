@@ -14,7 +14,7 @@ class DateController extends Controller
             \IntlDateFormatter::FULL,
             'Asia/Tehran',
             \IntlDateFormatter::TRADITIONAL,
-            "yyyyMMdd hh:mm:ss z"
+            "yyyy-MM-d HH:mm:ss"
         );
         $dateTime = \datetime::createfromformat('Y-m-d H:i:s',$date);
         return $formatter->format($dateTime);

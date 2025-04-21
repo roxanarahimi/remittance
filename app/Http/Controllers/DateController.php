@@ -22,7 +22,7 @@ class DateController extends Controller
     }
     public function toPersian2($date0)
     {
-        $date = rtrim($date0, ".000");
+        $date = substr($date0, 0 , -4);
         date_default_timezone_set('Asia/Tehran');
 
         $formatter = new \IntlDateFormatter(

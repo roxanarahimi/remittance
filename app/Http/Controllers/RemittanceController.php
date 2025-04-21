@@ -628,18 +628,18 @@ class RemittanceController extends Controller
 //        return $dat;
         $dat = Tour::orderByDESC('TourID')
             ->where('State',2)
-            ->whereHas('invoices', function ($q) use ($request) {
-            $q->whereHas('order',function($d){
-                $d->whereHas('orderItems');
-            });
-//            $q->with('TourAssignmentItems', function ($z) use ($request) {
-//                $z->with('Assignment', function ($x) use ($request) {
-//                    $x->with('Transporter', function ($y) use ($request) {
-//                        $y->where('TelNumber', $request['mobile']);
-//                    });
-//                });
+//            ->whereHas('invoices', function ($q) use ($request) {
+//            $q->whereHas('order',function($d){
+//                $d->whereHas('orderItems');
 //            });
-        })
+////            $q->with('TourAssignmentItems', function ($z) use ($request) {
+////                $z->with('Assignment', function ($x) use ($request) {
+////                    $x->with('Transporter', function ($y) use ($request) {
+////                        $y->where('TelNumber', $request['mobile']);
+////                    });
+////                });
+////            });
+//        })
             ->where('FiscalYearRef', 1405)
 //            ->get();
             ->paginate(100);

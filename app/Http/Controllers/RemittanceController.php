@@ -623,6 +623,7 @@ class RemittanceController extends Controller
     {
         $dat = Tour::orderByDESC('TourID')
             ->where('State',2)
+            ->whereDate('StartDate',date(today()))
             ->whereHas('invoices', function ($q) use ($request) {
                 $q->whereHas('order',function($d){
                     $d->whereHas('orderItems');

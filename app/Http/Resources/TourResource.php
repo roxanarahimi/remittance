@@ -15,11 +15,11 @@ class TourResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $this->EndDate!=null? $end= explode(' ', (new DateController)->toPersian($this->EndDate))[0] . ' ' . explode(' ', (new DateController)->toPersian($this->EndDate))[1]: $end='';
+        $this->EndDate!=null? $end= explode(' ', (new DateController)->toPersian($this->EndDate))[0]: $end='';
         return [
             "TourID" => $this->TourID,
             "Number" => $this->Number,
-            "StartDate" => explode(' ', (new DateController)->toPersian($this->StartDate))[0] . ' ' . explode(' ', (new DateController)->toPersian($this->StartDate))[1],
+            "StartDate" => explode(' ', (new DateController)->toPersian($this->StartDate))[0],
 
             "EndDate" => $end,
             "State" => $this->State,

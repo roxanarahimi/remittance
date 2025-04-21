@@ -16,18 +16,18 @@ class TourResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-"TourID"=>$this->TourID,
-"Number"=>$this->Number,
-"StartDate"=> explode(' ',(new DateController)->toPersian($this->StartDate))[0].' '.explode(' ',(new DateController)->toPersian($this->StartDate))[1],
+            "TourID" => $this->TourID,
+            "Number" => $this->Number,
+            "StartDate" => explode(' ', (new DateController)->toPersian($this->StartDate))[0] . ' ' . explode(' ', (new DateController)->toPersian($this->StartDate))[1],
 
-            "EndDate"=> $this->EndDate,
-"State"=> $this->State,
+            "EndDate" => explode(' ', (new DateController)->toPersian($this->EndDate))[0] . ' ' . explode(' ', (new DateController)->toPersian($this->EndDate))[1],
+            "State" => $this->State,
 //"FiscalYearRef"=> $this->FiscalYearRef,
-"CreationDate"=> explode(' ',(new DateController)->toPersian($this->CreationDate))[0].' '.explode(' ',(new DateController)->toPersian($this->CreationDate))[1],
+            "CreationDate" => explode(' ', (new DateController)->toPersian($this->CreationDate))[0] . ' ' . explode(' ', (new DateController)->toPersian($this->CreationDate))[1],
 //"SentToHandheld"=> $this->SentToHandheld,
 //"Description"=> $this->Description,
 //            "items"=> $this->TourItems,
-            "invoices"=> TourInvoiceResource::collection($this->Invoices) ,
+            "invoices" => TourInvoiceResource::collection($this->Invoices),
 
         ];
     }

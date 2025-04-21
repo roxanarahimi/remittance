@@ -32,8 +32,6 @@ class DateController extends Controller
             \IntlDateFormatter::TRADITIONAL,
             "yyyy-MM-dd HH:mm:ss"
         );
-
-        $date = '2025-04-21 06:23:00';
         $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $date);
         return $formatter->format($dateTime);
 

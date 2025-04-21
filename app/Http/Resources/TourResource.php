@@ -15,7 +15,7 @@ class TourResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $this->EndDate? $end= explode(' ', (new DateController)->toPersian($this->EndDate))[0] . ' ' . explode(' ', (new DateController)->toPersian($this->EndDate))[1]: '';
+        $this->EndDate? $end= explode(' ', (new DateController)->toPersian($this->EndDate))[0] . ' ' . explode(' ', (new DateController)->toPersian($this->EndDate))[1]: $end='';
         return [
             "TourID" => $this->TourID,
             "Number" => $this->Number,

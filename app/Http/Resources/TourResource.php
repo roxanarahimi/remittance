@@ -20,12 +20,12 @@ class TourResource extends JsonResource
 "StartDate"=> $this->StartDate,
 "EndDate"=> $this->EndDate,
 "State"=> $this->State,
-"FiscalYearRef"=> $this->FiscalYearRef,
+//"FiscalYearRef"=> $this->FiscalYearRef,
 "CreationDate"=> $this->CreationDate,
-"SentToHandheld"=> $this->SentToHandheld,
-"Description"=> $this->Description,
+//"SentToHandheld"=> $this->SentToHandheld,
+//"Description"=> $this->Description,
 //            "items"=> $this->TourItems,
-            "invoices"=> $this->Invoices,
+            "invoices"=> TourInvoiceResource::collection($this->Invoices) ,
 
         ];
     }

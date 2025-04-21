@@ -639,7 +639,7 @@ class RemittanceController extends Controller
             });
         })
             ->where('FiscalYearRef', 1405)
-            ->paginate(50);
+            ->paginate(20);
         return TourResource::collection($dat);
 
         $dat = Transporter::orderByDESC('TransporterID')->first();

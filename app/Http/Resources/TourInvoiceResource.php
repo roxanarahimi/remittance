@@ -29,6 +29,7 @@ class TourInvoiceResource extends JsonResource
                 "Tel"=> $this->Order->Customer->Party->Tel,
                 "Phone"=> $this->Order->Customer->CustomerAddress->Address->Phone,
                 "AddressName"=> $this->Order->Customer->CustomerAddress->Address->Name,
+                "City"=> $this->Order->Customer->CustomerAddress->Address->Region->Name,
                 "Address"=> $this->Order->Customer->CustomerAddress->Address->Details,
                 "Latitude"=> $this->Order->Customer->CustomerAddress->Address->Latitude,
                 "Longitude"=> $this->Order->Customer->CustomerAddress->Address->Longitude,

@@ -14,10 +14,29 @@ class DateController extends Controller
             \IntlDateFormatter::FULL,
             'Asia/Tehran',
             \IntlDateFormatter::TRADITIONAL,
-            "yyyy-MM-dd HH:mm:ss"
+            "yyyy-MM-d HH:mm:ss"
         );
         $dateTime = \datetime::createfromformat('Y-m-d H:i:s',$date);
         return $formatter->format($dateTime);
+
+    }
+    public function toPersian2($date)
+    {
+        date_default_timezone_set('Asia/Tehran');
+
+        $formatter = new \IntlDateFormatter(
+            'fa_IR@calendar=persian',
+            \IntlDateFormatter::FULL,
+            \IntlDateFormatter::FULL,
+            'Asia/Tehran',
+            \IntlDateFormatter::TRADITIONAL,
+            "yyyy-MM-dd HH:mm:ss"
+        );
+
+        $date = '2025-04-21 06:23:00';
+        $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $date);
+        return $formatter->format($dateTime);
+
 
     }
     function jalali_to_gregorian($date)

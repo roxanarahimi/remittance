@@ -20,13 +20,13 @@ class DateController extends Controller
         return $formatter->format($dateTime);
 
     }
-    public function toPersian2($date)
+    public function toPersian2($date0)
     {
-        $date = rtrim($date, ".000");
+        $date = rtrim($date0, ".000");
         date_default_timezone_set('Asia/Tehran');
 
         $formatter = new \IntlDateFormatter(
-            'fa_IR@calendar=persian',
+            'en_IR@calendar=persian',
             \IntlDateFormatter::FULL,
             \IntlDateFormatter::FULL,
             'Asia/Tehran',

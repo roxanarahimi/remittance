@@ -15,22 +15,20 @@ class TourResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $this->EndDate ? $end = (new DateController)->toPersian2(date($this->EndDate)) : $end = '';
         return [
-"TourID"=>$this->TourID,
-"Number"=>$this->Number,
-"StartDate"=> explode(' ',(new DateController)->toPersian2($this->StartDate))[0],
-"EndDate"=> $this->EndDate,
-"State"=> $this->State,
+            "TourID" => $this->TourID,
+            "Number" => $this->Number,
+            "StartDate" => (new DateController)->toPersian2($this->StartDate),
+            "EndDate" => $this->$end,
+            "State" => $this->State,
 //"FiscalYearRef"=> $this->FiscalYearRef,
-//"CreationDate"=> $this->CreationDate,
-//'CreationDate' => explode(' ',(new DateController)->toPersian($this->CreationDate))[0].' '.explode(' ',(new DateController)->toPersian($this->CreationDate))[1],
-
-            "CreationDate"=>(new DateController)->toPersian2(date($this->CreationDate)),
+            "CreationDate" => (new DateController)->toPersian2(date($this->CreationDate)),
 
 //"SentToHandheld"=> $this->SentToHandheld,
 //"Description"=> $this->Description,
 //            "items"=> $this->TourItems,
-            "invoices"=> TourInvoiceResource::collection($this->Invoices) ,
+            "invoices" => TourInvoiceResource::collection($this->Invoices),
 
         ];
     }

@@ -626,7 +626,9 @@ class RemittanceController extends Controller
 
 //        $dat = Transporter::where('TelNumber', $request['mobile'])->with('party')->first();
 //        return $dat;
-        $dat = Tour::orderByDESC('TourID')->where('EndDate',null)->whereHas('invoices', function ($q) use ($request) {
+        $dat = Tour::orderByDESC('TourID')
+            ->where('State',2)
+            ->whereHas('invoices', function ($q) use ($request) {
             $q->whereHas('order',function($d){
                 $d->whereHas('orderItems');
             });

@@ -24,7 +24,7 @@ class TourResource extends JsonResource
             "EndDate" => $end,
             "State" => $this->State,
 //"FiscalYearRef"=> $this->FiscalYearRef,
-            "CreationDate" => explode(' ', (new DateController)->toPersian($this->CreationDate))[0] . ' ' . explode(' ', (new DateController)->toPersian($this->CreationDate))[1],
+            "CreationDate" => explode(' ', (new DateController)->toPersian($this->CreationDate))[0],
 //"SentToHandheld"=> $this->SentToHandheld,
 //"Description"=> $this->Description,
 //            "items"=> $this->TourItems,

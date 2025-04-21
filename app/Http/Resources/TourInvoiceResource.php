@@ -22,7 +22,6 @@ class TourInvoiceResource extends JsonResource
             "Customer"=> [
                 "CustomerID"=> $this->Order->Customer->CustomerID,
                 "Number"=> $this->Order->Customer->Number,
-//                "Party"=> $this->Order->Customer->Party,
                 "FullName"=> $this->Order->Customer->Party->FullName,
                 "NationalID"=> $this->Order->Customer->Party->NationalID,
                 "Mobile"=> $this->Order->Customer->Party->Mobile,

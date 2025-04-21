@@ -22,4 +22,8 @@ class Customer extends Model
     {
         return $this->hasOne(CustomerAddress::class, 'CustomerRef','CustomerID');
     }
+    public function Party()
+    {
+        return $this->hasOne(Party::class, 'PartyID','PartyRef');
+    }
 }

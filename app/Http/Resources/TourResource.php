@@ -18,7 +18,7 @@ class TourResource extends JsonResource
         return [
 "TourID"=>$this->TourID,
 "Number"=>$this->Number,
-"StartDate"=> $this->StartDate,
+"StartDate"=> explode(' ',(new DateController)->toPersian($this->StartDate))[0],
 "EndDate"=> $this->EndDate,
 "State"=> $this->State,
 //"FiscalYearRef"=> $this->FiscalYearRef,

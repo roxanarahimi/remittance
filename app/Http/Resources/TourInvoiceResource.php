@@ -21,7 +21,7 @@ class TourInvoiceResource extends JsonResource
             "Amount"=> (integer)$this->Order?->Price,
 //            "OrderRef"=> $this->OrderRef,
 //            "Order"=> $this->Order,
-            "Customer"=> [
+//            "Customer"=> [
                 "CustomerID"=> $this->Order?->Customer->CustomerID,
                 "Number"=> $this->Order?->Customer->Number,
                 "FullName"=> $this->Order?->Customer->Party->FullName,
@@ -34,11 +34,7 @@ class TourInvoiceResource extends JsonResource
                 "Address"=> $this->Order?->Customer->CustomerAddress->Address->Details,
                 "Latitude"=> $this->Order?->Customer->CustomerAddress->Address->Latitude,
                 "Longitude"=> $this->Order?->Customer->CustomerAddress->Address->Longitude,
-
-
-
-
-            ],
+//            ],
 
         ];
     }

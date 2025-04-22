@@ -18,6 +18,7 @@ class TourInvoiceResource extends JsonResource
             "InvoiceID"=> $this->InvoiceID,
             "OrderID"=> $this->Order?->OrderID,
             "OrderNumber"=> $this->Order?->Number,
+            "Amount"=> (integer)$this->Order?->Price,
 //            "OrderRef"=> $this->OrderRef,
 //            "Order"=> $this->Order,
             "Customer"=> [

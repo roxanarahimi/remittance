@@ -633,7 +633,7 @@ class RemittanceController extends Controller
             ->where('FiscalYearRef', 1405)
 //            ->paginate(100);
             ->get();
-        return [count($dat),TourResource::collection($dat)];
+        return TourResource::collection($dat);
 
         $dat = Tour::orderByDESC('TourID')
             ->where('State',2)

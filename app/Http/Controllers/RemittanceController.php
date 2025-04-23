@@ -621,16 +621,6 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-
-       $y= Invoice::find(3474);
-       $y->update(['Sum'=>80]);
-       $x= InvoiceItem::find(15628);
-       $x->delete();
-        return  new InvoiceResource($y);
-
-        $dat = InventoryVoucher::orderByDESC('InventoryVoucherID')->where('InventoryVoucherID',"313195")->get();
-        $dat = InventoryVoucher::orderByDESC('InventoryVoucherID')->where('InventoryVoucherID',"313195")->get();
-        return InventoryVoucherResource::collection($dat);
         $dat = Tour::orderByDESC('TourID')
             ->where('State',2)
 //            ->whereDate('StartDate',date(today()))

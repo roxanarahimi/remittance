@@ -622,7 +622,7 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
 
-        $dat = InventoryVoucher::where('InventoryVoucherID',"313195")->first();
+        $dat = InventoryVoucher::orderByDESC('InventoryVoucherID')->where('InventoryVoucherID',"313195")->get();
         return InventoryVoucherResource::collection($dat);
         $dat = Tour::orderByDESC('TourID')
             ->where('State',2)

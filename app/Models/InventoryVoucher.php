@@ -18,6 +18,7 @@ class InventoryVoucher extends Model
             ->whereHas('Part', function ($q) {
                 $q->where('Name', 'like', '%نودالیت%');
                 $q->whereNot('Name', 'like', '%لیوانی%');
+                $q->whereNot('Name', 'like', '%کیلویی%');
             })->orderBy('PartRef');
     }
 

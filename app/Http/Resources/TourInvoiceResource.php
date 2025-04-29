@@ -20,7 +20,8 @@ class TourInvoiceResource extends JsonResource
             "OrderNumber"=> $this->Order?->Number,
             "Amount"=> (integer)$this->Order?->Price,
 
-            "PartyMobile"=> $this->Tour,
+            "PartyMobile"=> $this->Tour->Party->Mobile,
+            "PartyName"=> $this->Tour->Party->FullName,
 
 //            "OrderRef"=> $this->OrderRef,
 //            "Order"=> $this->Order,

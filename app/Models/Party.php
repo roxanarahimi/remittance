@@ -22,7 +22,7 @@ class Party extends Model
     }
     public function Transporters()
     {
-        return $this->belongsToMany(Transporter::class,'PartyRef','PartyID');
+        return $this->belongsToMany(Transporter::class,'PartyID','PartyRef');
 //            ->whereHas('Assignments',function ($q){
 //                $q->whereHas('TourAssignmentItem',function ($x){
 //                    $x->whereHas('Tour');

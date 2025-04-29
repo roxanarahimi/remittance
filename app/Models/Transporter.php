@@ -17,7 +17,7 @@ class Transporter extends Model
     }
     public function Assignments()
     {
-        return $this->hasMany(Assignment::class,  'TransporterRef','TransporterID')
+        return $this->HasOne(Assignment::class,  'TransporterRef','TransporterID')
             ->whereHas('TourAssignmentItem',function ($a){
                 $a->whereHas('Tour');
             })

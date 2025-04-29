@@ -14,6 +14,6 @@ class TourAssignmentsResource extends JsonResource
      */
     public function toArray(Request $request): TourResource
     {
-        return new TourResource($this->TourAssignmentItem?->Tour);
+        return new TourResource($this->TourAssignmentItem->Tour);
     }
 }

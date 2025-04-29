@@ -12,7 +12,7 @@ class TourInvoice extends Model
     protected $hidden = ['Version'];
     public function Tour()
     {
-        return $this->belongsTo(Tour::class, 'TourID', 'TourRef');
+        return $this->hasOne(Tour::class, 'TourID', 'TourRef');
     }
     public function Order()
     {

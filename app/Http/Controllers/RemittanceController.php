@@ -631,7 +631,9 @@ class RemittanceController extends Controller
             $q->with('TourAssignmentItem', function ($z) use ($request) {
                 $z->with('Assignment', function ($x) use ($request) {
                     $x->with('Transporter', function ($y) use ($request) {
-                        $y->whereHas('TelNumber', $request['mobile']);
+                        $y->with('Party', function ($p) use ($request) {
+                            $p->where('Mobile',$request['mobile']);
+                        });
                     });
                 });
             });

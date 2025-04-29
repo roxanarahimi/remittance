@@ -636,7 +636,7 @@ class RemittanceController extends Controller
                     $d->whereHas('orderItems');
                 });
             $q->with('TourAssignmentItem', function ($z) use ($request) {
-                $z->with('Assignment', function ($x) use ($request) {
+                $z->whereHas('Assignment', function ($x) use ($request) {
                     $x->whereHas('Transporter', function ($y) use ($request) {
                         $y->WhereHas('Party');
                     });

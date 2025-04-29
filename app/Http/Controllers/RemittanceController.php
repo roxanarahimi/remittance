@@ -26,6 +26,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Part;
 use App\Models\PartUnit;
+use App\Models\Party;
 use App\Models\PartyAddress;
 use App\Models\Product;
 use App\Models\Remittance;
@@ -621,6 +622,7 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        $party = Party::where('Mobile',$request['mobile'])->first();
         $dat = Tour::orderByDESC('TourID')
             ->where('State',2)
             ->whereDate('StartDate',date(today()))

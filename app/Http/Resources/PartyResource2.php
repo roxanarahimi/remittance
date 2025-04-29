@@ -19,7 +19,7 @@ class PartyResource2 extends JsonResource
             "Number" => $this->Number,
             "FullName" => $this->FullName,
             "Mobile" => $this->Mobile,
-            "NationalID" => $this->NationalID,
+
             "TransporterID" => $this->Transporter->TransporterID,
             "TransporterCode" => $this->Transporter->Code,
             "TransporterName" => $this->Transporter->FirstName . ' ' . $this->Transporter->LastName,

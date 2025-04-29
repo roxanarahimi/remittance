@@ -11,7 +11,7 @@ class Assignment extends Model
     protected $hidden = ['Version'];
     public function Transporter()
     {
-        return $this->hasOne(Transporter::class, 'TransporterID', 'TransporterRef')->with('Party');
+        return $this->hasOne(Transporter::class, 'TransporterID', 'TransporterRef');
     }
     public function TourAssignmentItems()
     {

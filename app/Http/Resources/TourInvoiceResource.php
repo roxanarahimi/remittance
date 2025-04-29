@@ -22,7 +22,7 @@ class TourInvoiceResource extends JsonResource
 
             "Party Mobile"=> $this->Tour->TourAssignmentItem?->Assignment?->Transporter?->Party->Mobile,
             "Party FullName"=> $this->Tour->TourAssignmentItem?->Assignment?->Transporter?->Party->FullName,
-"Transporter"=> $this->Tour->TourAssignmentItem?->Assignment?->Transporter->FistName.' '. $this->Tour->TourAssignmentItem?->Assignment?->Transporter->LastName,
+"Transporter"=> $this->Tour->TourAssignmentItem?->Assignment?->Transporter->FirstName.' '. $this->Tour->TourAssignmentItem?->Assignment?->Transporter->LastName,
 
 //            "OrderRef"=> $this->OrderRef,
 //            "Order"=> $this->Order,

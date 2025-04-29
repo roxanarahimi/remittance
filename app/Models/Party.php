@@ -20,14 +20,14 @@ class Party extends Model
     {
         return $this->hasOne(PartyAddress::class,'PartyRef','PartyID');
     }
-    public function Transporter()
+    public function Transporters()
     {
-        return $this->belongsTo(Transporter::class,'PartyRef','PartyID')
-            ->whereHas('Assignments',function ($q){
-                $q->whereHas('TourAssignmentItem',function ($x){
-                    $x->whereHas('Tour');
-                });
-            });
+        return $this->belongsToMany(Transporter::class,'PartyRef','PartyID');
+//            ->whereHas('Assignments',function ($q){
+//                $q->whereHas('TourAssignmentItem',function ($x){
+//                    $x->whereHas('Tour');
+//                });
+//            });
 
     }
 }

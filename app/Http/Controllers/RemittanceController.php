@@ -629,6 +629,7 @@ class RemittanceController extends Controller
         $ts = Transporter::orderByDESC('TransporterID')->where('PartyRef',$party['PartyID'])->get();
 ////
 ////        return $party;
+        return [$party,$ts];
         return [new PartyResource2($party),$ts];
 
         $dat = Tour::orderByDESC('TourID')

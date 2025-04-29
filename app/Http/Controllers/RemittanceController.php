@@ -11,6 +11,7 @@ use App\Http\Resources\InvoiceItemResource;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\InvoiceResource2;
 use App\Http\Resources\OrderResource;
+use App\Http\Resources\PartyResource2;
 use App\Http\Resources\RemittanceResource;
 use App\Http\Resources\TourResource;
 use App\Http\Resources\TransporterResource;
@@ -623,6 +624,8 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
         $party = Party::where('Mobile',$request['mobile'])->first();
+        return new PartyResource2($party);
+
         $dat = Tour::orderByDESC('TourID')
             ->where('State',2)
             ->whereDate('StartDate',date(today()))

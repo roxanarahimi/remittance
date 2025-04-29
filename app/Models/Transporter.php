@@ -13,7 +13,7 @@ class Transporter extends Model
 
     public function Party()
     {
-        return $this->hasOne(Party::class,  'PartyRef','PartyID');
+        return $this->hasOne(Party::class,  'PartyID','PartyRef');
     }
     public function Assignments()
     {

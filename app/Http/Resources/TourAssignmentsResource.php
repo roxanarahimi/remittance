@@ -10,10 +10,10 @@ class TourAssignmentsResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @return array<string, mixed>
+     * @return TourResource
      */
-    public function toArray(Request $request): array
+    public function toArray(Request $request): TourResource
     {
-        return parent::toArray($request);
+        return new TourResource($this->TourAssignmentItem->Tour);
     }
 }

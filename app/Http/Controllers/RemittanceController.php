@@ -629,31 +629,32 @@ class RemittanceController extends Controller
 //        return new PartyResource2($party);
 
         $dat = Tour::orderByDESC('TourID')
-            ->where('State',2)
-            ->whereDate('StartDate',date(today()))
+            ->where('State', 2)
+            ->whereDate('StartDate', date(today()))
             ->whereHas('invoices', function ($q) use ($request) {
-                $q->whereHas('order',function($d){
+                $q->whereHas('order', function ($d) {
                     $d->whereHas('orderItems');
                 });
-            $q->whereHas('TourAssignmentItem', function ($z) use ($request) {
+
+            })
+            ->whereHas('TourAssignmentItem', function ($z) use ($request) {
                 $z->whereHas('Assignment', function ($x) use ($request) {
                     $x->whereHas('Transporter', function ($y) use ($request) {
                         $y->WhereHas('Party');
                     });
                 });
-            });
             })
             ->where('FiscalYearRef', 1405)
 //            ->get();
             ->paginate(100);
 
         return TourResource::collection($dat);
- $dat = Tour::orderByDESC('TourID')
-            ->where('State',2)
+        $dat = Tour::orderByDESC('TourID')
+            ->where('State', 2)
 //            ->whereDate('StartDate',date(today()))
-            ->whereDate('StartDate','>=', today()->subDays(1))
+            ->whereDate('StartDate', '>=', today()->subDays(1))
             ->whereHas('invoices', function ($q) use ($request) {
-                $q->whereHas('order',function($d){
+                $q->whereHas('order', function ($d) {
                     $d->whereHas('orderItems');
                 });
             })
@@ -663,11 +664,11 @@ class RemittanceController extends Controller
         return TourResource::collection($dat);
 
         $dat = Tour::orderByDESC('TourID')
-            ->where('State',2)
+            ->where('State', 2)
             ->whereHas('invoices', function ($q) use ($request) {
-            $q->whereHas('order',function($d){
-                $d->whereHas('orderItems');
-            });
+                $q->whereHas('order', function ($d) {
+                    $d->whereHas('orderItems');
+                });
 //            $q->with('TourAssignmentItems', function ($z) use ($request) {
 //                $z->with('Assignment', function ($x) use ($request) {
 //                    $x->with('Transporter', function ($y) use ($request) {
@@ -675,7 +676,7 @@ class RemittanceController extends Controller
 //                    });
 //                });
 //            });
-        })
+            })
             ->where('FiscalYearRef', 1405)
 //            ->get();
             ->paginate(100);
@@ -969,7 +970,7 @@ class RemittanceController extends Controller
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
 
 
-            return response()->json([['duplicates'=> [$duplicates1,$duplicates2]],$paginator], 200);
+            return response()->json([['duplicates' => [$duplicates1, $duplicates2]], $paginator], 200);
 
 
         } catch (\Exception $exception) {
@@ -980,7 +981,7 @@ class RemittanceController extends Controller
     public function safeDeleteBarcodes(Request $request)
     {
         try {
-            $bar =  InvoiceBarcode::create([
+            $bar = InvoiceBarcode::create([
                 "invoice_id" => $request['invoice_id'],
                 "Barcode" => $request['Barcode'],
                 "isDeleted" => 1,

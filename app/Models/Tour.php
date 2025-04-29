@@ -23,7 +23,7 @@ class Tour extends Model
     }
     public function TourAssignmentItem()
     {
-        return $this->belongsTo(TourAssignmentItem::class, 'TourRef','TourID');
+        return $this->belongsTo(TourAssignmentItem::class, 'TourID','TourRef');
 
     }
 

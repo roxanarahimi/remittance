@@ -21,7 +21,7 @@ class PartyResource2 extends JsonResource
             "Mobile"=> $this->Mobile,
             "NationalID"=> $this->NationalID,
 
-            "Tours"=> TourAssignmentItemResource::collection($this->Transporter->Assignment->TourAssignmentItem)
+            "Tours"=> TourAssignmentsResource::collection($this->Transporter->Assignments)
         ];
     }
 }

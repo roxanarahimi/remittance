@@ -18,7 +18,7 @@ class TourAssignmentItem extends Model
     }
     public function Assignment()
     {
-        return $this->belongsTo(Assignment::class, 'AssignmentID', 'AssignmentRef');
+        return $this->belongsTo(Assignment::class,  'AssignmentRef','AssignmentID');
     }
 
 }

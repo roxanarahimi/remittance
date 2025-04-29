@@ -22,7 +22,7 @@ class TourResource extends JsonResource
             "StartDate" => (new DateController)->toPersian2($this->StartDate),
             "EndDate" => $this->$end,
             "State" => $this->State,
-            "Party"=> $this->Transporter->party,
+            "ASSItems"=> $this->TourAssignmentItems,
 //"FiscalYearRef"=> $this->FiscalYearRef,
             "CreationDate" => (new DateController)->toPersian2(date($this->CreationDate)),
 

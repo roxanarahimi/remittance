@@ -18,14 +18,13 @@ class PartyResource2 extends JsonResource
             "PartyID" => $this->PartyID,
             "Number" => $this->Number,
             "FullName" => $this->FullName,
-            "Mobile"=> $this->Mobile,
-            "NationalID"=> $this->NationalID,
-            "Transporter"=> $this->Transporter,
-                "TransporterID"=> $this->Transporter->TransporterID,
-                "TransporterCode"=> $this->Transporter->Code,
-                "TransporterName" => $this->Transporter->FirstName .' '. $this->Transporter->LastName,
+            "Mobile" => $this->Mobile,
+            "NationalID" => $this->NationalID,
+            "TransporterID" => $this->Transporter->TransporterID,
+            "TransporterCode" => $this->Transporter->Code,
+            "TransporterName" => $this->Transporter->FirstName . ' ' . $this->Transporter->LastName,
 
-            "Tours"=> TourAssignmentsResource::collection($this->Transporter->Assignments),
+            "Tours" => TourAssignmentsResource::collection($this->Transporter->Assignments),
         ];
     }
 }

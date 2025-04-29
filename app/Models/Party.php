@@ -20,9 +20,9 @@ class Party extends Model
     {
         return $this->hasOne(PartyAddress::class,'PartyRef','PartyID');
     }
-    public function Transporters()
+    public function Transporter()
     {
-        return $this->hasMany(Transporter::class,'PartyRef','PartyID');
+        return $this->hasOne(Transporter::class,'PartyRef','PartyID');
 //            ->whereHas('Assignments',function ($q){
 //                $q->whereHas('TourAssignmentItem',function ($x){
 //                    $x->whereHas('Tour');

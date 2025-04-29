@@ -626,7 +626,7 @@ class RemittanceController extends Controller
 //        $party = Party::orderByDESC('PartyID')->where('Mobile',$request['mobile'])->with('Transporter')->first();
 //        return [$party];
 
-        $t = Transporter::orderByDESC('TransporterID')->take(50)->get();
+        $t = Transporter::orderByDESC('TransporterID')->where('PartyRef',"259224")->get();
         return [$t];
         return new PartyResource2($party);
 

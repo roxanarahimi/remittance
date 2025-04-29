@@ -15,10 +15,10 @@ class Transporter extends Model
     {
         return $this->hasOne(Party::class, 'PartyID', 'PartyRef');
     }
-    public function Assignments()
+    public function Assignment()
     {
-        return $this->hasMany(Assignment::class,  'TransporterRef','TransporterID')
-            ->with('TourAssignmentItems',function ($q){
+        return $this->hasOne(Assignment::class,  'TransporterRef','TransporterID')
+            ->with('TourAssignmentItem',function ($q){
                 $q->with('Tour');
             });
     }

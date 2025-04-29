@@ -26,4 +26,9 @@ class Tour extends Model
         return $this->belongsTo(TourAssignmentItem::class, 'TourRef', 'TourID')->with('Assignment');
 
     }
+    public function Party()
+    {
+        return $this->hasOne(Party::class, 'PartyID','PartyRef');
+
+    }
 }

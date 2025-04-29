@@ -11,7 +11,7 @@ class Transporter extends Model
     protected $table = 'LGS3.Transporter';
     protected $hidden = ['Version'];
 
-    public function party()
+    public function Party()
     {
         return $this->belongsTo(Party::class, 'PartyID', 'PartyRef');
     }

@@ -20,4 +20,8 @@ class Party extends Model
     {
         return $this->hasOne(PartyAddress::class,'PartyRef','PartyID');
     }
+    public function Transporter()
+    {
+        return $this->hasOne(Transporter::class,'PartyRef','PartyID');
+    }
 }

@@ -625,8 +625,9 @@ class RemittanceController extends Controller
     {
         $party = Party::orderByDESC('PartyID')->where('Mobile',$request['mobile'])
                 ->whereHas('Transporter')
-                ->with('Transporter')
-            ->first(); //if there is an error, check if 2 visitors with same data both have transporters assigned/
+//                ->with('Transporter')
+            ->first();
+        //if there is an error, check if 2 visitors with same data both have transporters assigned/
 
 //        return $party;
 //        return [$party,$ts];

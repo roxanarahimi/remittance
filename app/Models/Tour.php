@@ -21,9 +21,9 @@ class Tour extends Model
     {
         return $this->hasMany(TourInvoice::class, 'TourRef', 'TourID')->with('Order');
     }
-    public function TourAssignmentItem()
+    public function TourAssignmentItems()
     {
-        return $this->hasOne(TourAssignmentItem::class, 'TourRef', 'TourID')->with('Assignment');
+        return $this->hasMany(TourAssignmentItem::class, 'TourRef', 'TourID')->with('Assignment');
 
     }
 }

@@ -12,7 +12,7 @@ class TourAssignmentItem extends Model
 
     public function Tour()
     {
-        return $this->hasOne(Tour::class, 'TourID', 'TourRef');
+        return $this->belongsTo(Tour::class, 'TourID', 'TourRef');
     }
     public function Assignment()
     {

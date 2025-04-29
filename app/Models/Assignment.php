@@ -13,8 +13,8 @@ class Assignment extends Model
     {
         return $this->belongsToMany(Transporter::class, 'TransporterID', 'TransporterRef');
     }
-    public function TourAssignmentItem()
+    public function TourAssignmentItems()
     {
-        return $this->belongsTo(TourAssignmentItem::class, 'AssignmentRef', 'AssignmentID');
+        return $this->hasMany(TourAssignmentItem::class, 'AssignmentRef', 'AssignmentID');
     }
 }

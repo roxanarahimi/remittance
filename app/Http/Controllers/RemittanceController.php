@@ -624,15 +624,13 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
         $party = Party::orderByDESC('PartyID')->where('Mobile',$request['mobile'])
-//            ->where('NationalID',"!=","")
                 ->whereHas('Transporter')
                 ->with('Transporter')
-            ->get();
-//        $ts = Transporter::orderByDESC('TransporterID')->where('PartyRef',$party['PartyID'])->get();
-////
-        return $party;
-        return [$party,$ts];
-        return [new PartyResource2($party),$ts];
+            ->first(); //if there is an error, check if 2 visitors with same data both have transporters assigned/
+
+//        return $party;
+//        return [$party,$ts];
+        return new PartyResource2($party);
 
         $dat = Tour::orderByDESC('TourID')
             ->where('State', 2)

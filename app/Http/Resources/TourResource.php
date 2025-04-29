@@ -34,8 +34,6 @@ class TourResource extends JsonResource
                 "Code"=> $this->TourAssignmentItem->Assignment->Transporter->Code,
                 "FullName" => $this->TourAssignmentItem->Assignment->Transporter->FirstName .' '. $this->TourAssignmentItem->Assignment->Transporter->LastName,
             ],
-
-            "Transporter"=> $this->TourAssignmentItem->Assignment->Transporter,
             "CreationDate" => (new DateController)->toPersian2(date($this->CreationDate)),
             "Invoices" => TourInvoiceResource::collection($this->Invoices),
 

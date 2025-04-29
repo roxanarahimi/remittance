@@ -17,7 +17,7 @@ class Transporter extends Model
     }
     public function Assignment()
     {
-        return $this->hasOne(Assignment::class,  'TransporterRef','TransporterID')
+        return $this->belongsTo(Assignment::class,  'TransporterRef','TransporterID')
             ->with('TourAssignmentItems',function ($q){
                 $q->with('Tour');
             });

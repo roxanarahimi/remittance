@@ -630,8 +630,8 @@ class RemittanceController extends Controller
             ->first();
         //if there is an error, check if 2 visitors with same data both have transporters assigned/
 
-//        return $party;
-//        return [$party,$ts];
+        return $party;
+
 
 
         if(!count($party)){

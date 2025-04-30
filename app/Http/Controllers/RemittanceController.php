@@ -624,7 +624,12 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $dat = Part::select()->where('Name', 'نودالیت قارچ و پنیر آماده لذیذ')->get();
+//        $dat = Part::where('Name', 'نودالیت قارچ و پنیر آماده لذیذ')->get();
+        $dat = InventoryVoucher::where('Number', "8659")
+            ->with('OrderItems',function($q){
+                $q->with('Part');
+            })
+            ->get();
         return $dat;
 
         if ($request['mobile'] && $request['mobile']!=''){

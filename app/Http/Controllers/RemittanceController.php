@@ -632,11 +632,13 @@ class RemittanceController extends Controller
 
 //        return $party;
 //        return [$party,$ts];
-        return response(new PartyResource2($party),200);
 
-//        if($party==null){
-//            return {};
-//        }
+
+        if($party==null){
+            response($party,200);
+        }else{
+            return response(new PartyResource2($party),200);
+        }
         $dat = Tour::orderByDESC('TourID')
             ->where('State', 2)
             ->whereDate('StartDate', date(today()))

@@ -11,6 +11,7 @@ use App\Http\Resources\InvoiceItemResource;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\InvoiceResource2;
 use App\Http\Resources\OrderResource;
+use App\Http\Resources\PartyResource;
 use App\Http\Resources\PartyResource2;
 use App\Http\Resources\RemittanceResource;
 use App\Http\Resources\TourResource;

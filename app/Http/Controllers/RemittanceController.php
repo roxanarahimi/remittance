@@ -624,6 +624,9 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        $dat = Part::select()->where('Name', 'نودالیت قارچ و پنیر آماده لذیذ')->get();
+        return $dat;
+
         if ($request['mobile'] && $request['mobile']!=''){
             $party = Party::orderByDESC('PartyID')->where('Mobile', $request['mobile'])
                 ->whereHas('Transporter', function ($q) {

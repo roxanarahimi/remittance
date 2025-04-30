@@ -23,7 +23,7 @@ class PartyResource extends JsonResource
 //            "TransporterID" => $this->Transporter->TransporterID,
 //            "TransporterCode" => $this->Transporter->Code,
 //            "TransporterName" => $this->Transporter->FirstName . ' ' . $this->Transporter->LastName,
-            "TransporterName" => null,
+            "TransporterName" => '',
 
             "Tours" => [],
         ];

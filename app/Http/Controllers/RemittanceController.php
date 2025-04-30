@@ -645,7 +645,7 @@ class RemittanceController extends Controller
 //        }
         $dat = Tour::orderByDESC('TourID')
             ->where('State', 2)
-            ->whereDate('StartDate', date(today()))
+            ->whereDate('StartDate', date(today()->subDays(2)))
             ->whereHas('TourAssignmentItem', function ($z) use ($request) {
                 $z->whereHas('Assignment', function ($x) use ($request) {
                     $x->whereHas('Transporter', function ($y) use ($request) {

@@ -628,6 +628,7 @@ class RemittanceController extends Controller
                 $q->whereHas('Assignments');
                         })
             ->first();
+
         //if there is an error, check if 2 visitors with same data both have transporters assigned/
 
 //        return $party;
@@ -635,7 +636,9 @@ class RemittanceController extends Controller
 
 
         if(!$party){
-            response($party,200);
+            $p = Party::orderByDESC('PartyID')->where('Mobile', $request['mobile'])
+                ->whereHas('Transporter')->first();
+            return response(new PartyResource($p),200);
         }else{
             return response(new PartyResource2($party),200);
         }

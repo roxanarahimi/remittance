@@ -636,16 +636,16 @@ class RemittanceController extends Controller
 
 
 
-//        if(!$party){
-//            $p = Party::orderByDESC('PartyID')->where('Mobile', $request['mobile'])
-//                ->whereHas('Transporter')->first();
-//            return response(new PartyResource($p),200);
-//        }else{
-//            return response(new PartyResource2($party),200);
-//        }
+        if(!$party){
+            $p = Party::orderByDESC('PartyID')->where('Mobile', $request['mobile'])
+                ->whereHas('Transporter')->first();
+            return response(new PartyResource($p),200);
+        }else{
+            return response(new PartyResource2($party),200);
+        }
         $dat = Tour::orderByDESC('TourID')
             ->where('State', 2)
-            ->whereDate('StartDate', date(today()->subDays(2)))
+            ->whereDate('StartDate', date(today()))
             ->whereHas('TourAssignmentItem', function ($z) use ($request) {
                 $z->whereHas('Assignment', function ($x) use ($request) {
                     $x->whereHas('Transporter', function ($y) use ($request) {

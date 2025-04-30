@@ -624,25 +624,28 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $party = Party::orderByDESC('PartyID')->where('Mobile', $request['mobile'])
-            ->whereHas('Transporter', function ($q) {
-                $q->whereHas('Assignments');
-                        })
-            ->first();
+        if ($request['mobile'] && $request['mobile']!=''){
+            $party = Party::orderByDESC('PartyID')->where('Mobile', $request['mobile'])
+                ->whereHas('Transporter', function ($q) {
+                    $q->whereHas('Assignments');
+                })
+                ->first();
 
-        //if there is an error, check if 2 visitors with same data both have transporters assigned/
+            //if there is an error, check if 2 visitors with same data both have transporters assigned/
 
 //        return $party;
 
 
 
-        if(!$party){
-            $p = Party::orderByDESC('PartyID')->where('Mobile', $request['mobile'])
-                ->whereHas('Transporter')->first();
-            return response(new PartyResource($p),200);
-        }else{
-            return response(new PartyResource2($party),200);
+            if(!$party){
+                $p = Party::orderByDESC('PartyID')->where('Mobile', $request['mobile'])
+                    ->whereHas('Transporter')->first();
+                return response(new PartyResource($p),200);
+            }else{
+                return response(new PartyResource2($party),200);
+            }
         }
+
         $dat = Tour::orderByDESC('TourID')
             ->where('State', 2)
             ->whereDate('StartDate', date(today()))

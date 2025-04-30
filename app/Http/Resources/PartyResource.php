@@ -16,7 +16,7 @@ class PartyResource extends JsonResource
     {
         return [
 //            "PartyID" => $this->PartyID,
-            "Number" => $this->Number,
+//            "Number" => $this->Number,
             "FullName" => $this->FullName,
             "Mobile" => $this->Mobile,
 

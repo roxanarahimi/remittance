@@ -20,14 +20,5 @@ class Party extends Model
     {
         return $this->hasOne(PartyAddress::class,'PartyRef','PartyID');
     }
-    public function Transporter()
-    {
-        return $this->belongsTo(Transporter::class,'PartyID','PartyRef');
-//            ->whereHas('Assignments',function ($q){
-//                $q->whereHas('TourAssignmentItem',function ($x){
-//                    $x->whereHas('Tour');
-//                });
-//            });
 
-    }
 }

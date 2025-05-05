@@ -638,14 +638,17 @@ class RemittanceController extends Controller
 //            ->take(2000)
 //            ->get();
 //        return $oss;
-        $is = Invoice::select('OrderNumber','orderID')
-            ->orderBy('OrderNumber')
+        $is = Invoice::select('OrderNumber','OrderID')
+//            ->orderBy('OrderNumber')
+            ->Where('OrderNumber','100214')
             ->WhereIn('Type',['Deputation','InventoryVoucher'])
             ->WhereIn('OrderNumber',$os)
             ->WhereHas('rrBarcodes')
+            ->where('rrBarcodes',function ($q){
+                $q->where('orderID',$this['OrderID']);
+            })
             ->with('rrBarcodes')
-            ->take(100)
-            ->get();
+            ->first();
                 return $is;
                 return [count($os),count($is)];
 

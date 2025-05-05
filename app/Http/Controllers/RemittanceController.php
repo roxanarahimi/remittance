@@ -627,7 +627,7 @@ class RemittanceController extends Controller
         $os = DB::table('remittances')
             ->select('OrderNumber', DB::raw('count(*) as total'))
             ->groupBy('OrderNumber')
-            ->take(3500)
+            ->take(3456)
             ->pluck('OrderNumber');
 
         return $os;

@@ -631,7 +631,7 @@ class RemittanceController extends Controller
             ->pluck('OrderNumber');
 
 //        return $os;
-        return count($os);
+//        return count($os);
 
         foreach ($os as $OrderNumber) {
             $r=Remittance::where('OrderNumber',$OrderNumber)->get();

@@ -634,7 +634,8 @@ class RemittanceController extends Controller
 //        return count($os);
         $oss = Remittance::whereIn('OrderNumber', $os)
             ->pluck('orderID','OrderNumber')
-            ->unique();
+            ->unique()
+            ->count();
         return $oss;
         $is = Invoice::WhereIn('OrderNumber',$os)->get();
                 return [count($os),count($is)];

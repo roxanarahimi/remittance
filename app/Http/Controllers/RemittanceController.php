@@ -645,7 +645,7 @@ class RemittanceController extends Controller
             ->WhereIn('OrderNumber',$os)
             ->WhereHas('rrBarcodes')
             ->with('rrBarcodes')
-            ->paginate(500);
+            ->take(100)->get();
                 return $is;
                 return [count($os),count($is)];
 

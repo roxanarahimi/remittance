@@ -643,12 +643,9 @@ class RemittanceController extends Controller
             ->Where('OrderNumber','100214')
             ->WhereIn('Type',['Deputation','InventoryVoucher'])
             ->WhereIn('OrderNumber',$os)
-//            ->WhereHas('rrBarcodes')
-//            ->where('rrBarcodes')
-            ->with('rrBarcodes');
-        $is = $is->WhereHas('rrBarcodes')->where('orderID', $is['OrderID']) ->with('rrBarcodes')
+            ->WhereHas('rrBarcodes')
             ->first();
-                return $is;
+                return [$is,$is->rrBarcodes()->where('orderID', $is->OrderID)];
                 return [count($os),count($is)];
 
 

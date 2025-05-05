@@ -905,7 +905,7 @@ class RemittanceController extends Controller
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
 
 
-            if (isset($request['duplicate'])&& $request['duplicate']!=''){
+            if (isset($request['duplicate'])&& $request['duplicate']==1){
                 $bars1 = array_column($input1, 'Barcode');
                 $duplicates1 = array_values(array_unique(array_diff_assoc($bars1, array_unique($bars1))));
                 $bars2 = array_column($input2, 'barcode');

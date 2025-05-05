@@ -639,8 +639,8 @@ class RemittanceController extends Controller
 //            ->get();
 //        return $oss;
         $is = Invoice::select('OrderNumber','OrderID')
-//            ->orderBy('OrderNumber')
-            ->Where('OrderNumber','100214')
+            ->orderBy('OrderNumber')
+//            ->Where('OrderNumber','100214')
             ->WhereIn('Type',['Deputation','InventoryVoucher'])
             ->WhereIn('OrderNumber',$os)
             ->WhereHas('rrBarcodes')

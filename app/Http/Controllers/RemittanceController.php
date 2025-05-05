@@ -635,6 +635,7 @@ class RemittanceController extends Controller
         $oss = Remittance::whereIn('OrderNumber', $os)
             ->select('OrderNumber','orderID')
             ->orderBy('OrderNumber')
+            ->take(500)
             ->get()
             ->unique();
         return $oss;

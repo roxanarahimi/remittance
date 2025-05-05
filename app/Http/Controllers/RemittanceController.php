@@ -643,7 +643,9 @@ class RemittanceController extends Controller
             ->WhereIn('Type',['Deputation','InventoryVoucher'])
             ->WhereIn('OrderNumber',$os)
             ->WhereHas('rrBarcodes')
-            ->with('rrBarcodesCount')
+            ->with('rrBarcodes',function ($q){
+                return $q->count();
+            })
             ->take(100)
             ->get();
                 return $is;

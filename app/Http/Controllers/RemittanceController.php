@@ -636,8 +636,7 @@ class RemittanceController extends Controller
             ->select('OrderNumber','orderID')
             ->orderBy('OrderNumber')
             ->take(2000)
-            ->get()
-            ->unique();
+            ->get();
         return $oss;
         $is = Invoice::WhereIn('OrderNumber',$os)->get();
                 return [count($os),count($is)];

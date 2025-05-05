@@ -637,19 +637,19 @@ class RemittanceController extends Controller
             $info = Remittance::orderBy('id')->take(3456)->get();
             foreach($info as $item){
                 $x = str_replace('کرمان','',$item['OrderNumber']);
-                $x = str_replace('اصفهان','',$item['OrderNumber']);
-                $x = str_replace('شیراز','',$item['OrderNumber']);
-                $x = str_replace('بیرجند','',$item['OrderNumber']);
-                $x = str_replace('چالوس','',$item['OrderNumber']);
-                $x = str_replace('یزد','',$item['OrderNumber']);
-                $x = str_replace('بندرعباس','',$item['OrderNumber']);
-                $x = str_replace('بوشهر','',$item['OrderNumber']);
-                $x = str_replace('رشت','',$item['OrderNumber']);
-                $x = str_replace('مشهد','',$item['OrderNumber']);
-                $x = str_replace('کاشان','',$item['OrderNumber']);
-                $x = str_replace('تبریز','',$item['OrderNumber']);
-                $x = str_replace('کرمانشاه','',$item['OrderNumber']);
-                $x = str_replace('شهرکرد','',$item['OrderNumber']);
+                $x = str_replace('اصفهان','',$x);
+                $x = str_replace('شیراز','',$x);
+                $x = str_replace('بیرجند','',$x);
+                $x = str_replace('چالوس','',$x);
+                $x = str_replace('یزد','',$x);
+                $x = str_replace('بندرعباس','',$x);
+                $x = str_replace('بوشهر','',$x);
+                $x = str_replace('رشت','',$x);
+                $x = str_replace('مشهد','',$x);
+                $x = str_replace('کاشان','',$x);
+                $x = str_replace('تبریز','',$x);
+                $x = str_replace('کرمانشاه','',$x);
+                $x = str_replace('شهرکرد','',$x);
                 $item->update(['OrderNumber' => $x]);
             }
 //        }

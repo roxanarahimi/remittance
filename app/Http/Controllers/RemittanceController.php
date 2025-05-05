@@ -624,8 +624,13 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $info = Remittance::orderBy('id')->skip(1500)->take(1500)->get();
-//        return $info;
+        $info = DB::table('remittances')
+            ->select('orderID', DB::raw('count(*) as total'))
+            ->groupBy('orderID')
+            ->pluck('total','orderID');
+                return $info;
+
+        $info = Remittance::orderBy('id')->get();
 
         foreach ($info as $item){
             $x = $item['addressName'];

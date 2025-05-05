@@ -627,29 +627,17 @@ class RemittanceController extends Controller
         $os = DB::table('remittances')
             ->select('OrderNumber', DB::raw('count(*) as total'))
             ->groupBy('OrderNumber')
-            ->take(3456)
+//            ->take(3456)
             ->pluck('OrderNumber');
 
-        return $os;
+//        return $os;
 //        return $os;
 
 //        foreach ($os as $OrderNumber) {
             $info = Remittance::orderBy('id')->take(3456)->get();
             foreach($info as $item){
-                $x = str_replace('کرمان','',$item['OrderNumber']);
-                $x = str_replace('اصفهان','',$x);
-                $x = str_replace('شیراز','',$x);
-                $x = str_replace('بیرجند','',$x);
-                $x = str_replace('چالوس','',$x);
-                $x = str_replace('یزد','',$x);
-                $x = str_replace('بندرعباس','',$x);
-                $x = str_replace('بوشهر','',$x);
-                $x = str_replace('رشت','',$x);
-                $x = str_replace('مشهد','',$x);
-                $x = str_replace('کاشان','',$x);
-                $x = str_replace('تبریز','',$x);
-                $x = str_replace('کرمانشاه','',$x);
-                $x = str_replace('شهرکرد','',$x);
+                $x = str_replace('بابل','',$item['OrderNumber']);
+                $x = str_replace('شاه','',$x);
                 $item->update(['OrderNumber' => $x]);
             }
 //        }

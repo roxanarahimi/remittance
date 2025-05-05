@@ -630,7 +630,8 @@ class RemittanceController extends Controller
             ->take(3456)
             ->pluck('OrderNumber');
 
-        return $os;
+//        return $os;
+
         foreach ($os as $OrderNumber) {
             $info = Remittance::where('OrderNumber',$OrderNumber)->get();
             foreach($info as $item){
@@ -639,11 +640,23 @@ class RemittanceController extends Controller
                 $x = str_replace('شیراز','',$item['OrderNumber']);
                 $x = str_replace('بیرجند','',$item['OrderNumber']);
                 $x = str_replace('چالوس','',$item['OrderNumber']);
-                $x = str_replace('بابل','',$item['OrderNumber']);
+                $x = str_replace('یزد','',$item['OrderNumber']);
+                $x = str_replace('بندرعباس','',$item['OrderNumber']);
+                $x = str_replace('بوشهر','',$item['OrderNumber']);
+                $x = str_replace('رشت','',$item['OrderNumber']);
+                $x = str_replace('مشهد','',$item['OrderNumber']);
+                $x = str_replace('کاشان','',$item['OrderNumber']);
+                $x = str_replace('تبریز','',$item['OrderNumber']);
+                $x = str_replace('کرمانشاه','',$item['OrderNumber']);
+                $x = str_replace('شهرکرد','',$item['OrderNumber']);
+                $x = str_replace('شهرکرد','',$item['OrderNumber']);
+                $x = str_replace('شهرکرد','',$item['OrderNumber']);
+                $x = str_replace('شهرکرد','',$item['OrderNumber']);
                 $item->update(['OrderNumber' => $x]);
             }
         }
 
+        return $os;
 
 
         $os = DB::table('remittances')

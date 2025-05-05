@@ -638,8 +638,8 @@ class RemittanceController extends Controller
 //            ->take(2000)
 //            ->get();
 //        return $oss;
-//        $is = Invoice::WhereIn('OrderNumber',$os)->get();
-//                return [count($os),count($is)];
+        $is = Invoice::where('Type'!='Order')->WhereIn('OrderNumber',$os)->get();
+                return [count($os),count($is)];
 
 
         foreach ($os as $OrderNumber) {

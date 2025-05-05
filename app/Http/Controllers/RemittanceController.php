@@ -624,11 +624,21 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $x = 'شرکت مهرگان کاوه هیرکان 39432';
-        $y = explode(' ',$x);
-        return $y[count($y)-1];
-        $info = Remittance::orderByDesc('id');
-        if (isset($request['OrderID'])) {
+        $info = Remittance::orderBy('id')->get();
+        foreach ($info as $item){
+            $x = $item['addressName'];
+            $y = explode(' ',$x);
+            $orderNumber =  $y[count($y)-1];
+            $item->update(['OrderNumber', $orderNumber]);
+        }
+
+        $n = Remittance::orderBy('id')->paginate(200);
+        return RemittanceResource::collection($n);
+//        $x = 'شرکت مهرگان کاوه هیرکان 39432';
+//        $y = explode(' ',$x);
+//        $orderNumber =  $y[count($y)-1];
+//        $info = Remittance::orderByDesc('id');
+        if (isset($request['OrderNumber'])) {
             $info = $info->where('OrderID', $request['OrderID']);
         }
         if (isset($request['search'])) {

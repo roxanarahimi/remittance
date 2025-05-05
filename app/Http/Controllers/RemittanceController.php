@@ -625,7 +625,8 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
         $x = 'شرکت مهرگان کاوه هیرکان 39432';
-        return implode(' ',$x)[0];
+        $y = explode(' ',$x);
+        return $y[count($y)-1];
         $info = Remittance::orderByDesc('id');
         if (isset($request['OrderID'])) {
             $info = $info->where('OrderID', $request['OrderID']);

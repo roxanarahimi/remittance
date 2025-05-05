@@ -649,9 +649,6 @@ class RemittanceController extends Controller
                 $x = str_replace('تبریز','',$item['OrderNumber']);
                 $x = str_replace('کرمانشاه','',$item['OrderNumber']);
                 $x = str_replace('شهرکرد','',$item['OrderNumber']);
-                $x = str_replace('شهرکرد','',$item['OrderNumber']);
-                $x = str_replace('شهرکرد','',$item['OrderNumber']);
-                $x = str_replace('شهرکرد','',$item['OrderNumber']);
                 $item->update(['OrderNumber' => $x]);
             }
         }

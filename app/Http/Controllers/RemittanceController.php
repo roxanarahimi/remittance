@@ -625,6 +625,10 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
         $info = Remittance::groupBy('orderID')->get();
+        $info = Remittance::select('*')
+            ->groupBy('orderID')
+            ->orderBy('orderID')
+            ->get();
         return $info;
 
         foreach ($info as $item){

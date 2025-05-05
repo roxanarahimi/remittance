@@ -639,6 +639,7 @@ class RemittanceController extends Controller
 //            ->get();
 //        return $oss;
         $is = Invoice::WhereIn('Type',['Deputation','InventoryVoucher'])->WhereIn('OrderNumber',$os)->get();
+                return [$is];
                 return [count($os),count($is)];
 
 

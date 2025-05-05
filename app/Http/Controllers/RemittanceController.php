@@ -624,11 +624,19 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $os = DB::table('remittances')
-            ->select('OrderNumber','addressName', DB::raw('["addressName"] as addressName'))
-            ->groupBy('OrderNumber')
-            ->pluck('OrderNumber','addressName');
+//        $os = DB::table('remittances')
+//            ->select('OrderNumber','addressName', DB::raw('["addressName"] as addressName'))
+//            ->groupBy('OrderNumber')
+//            ->pluck('OrderNumber','addressName');
 
+
+        $os = DB::table('remittances')
+            ->select('OrderNumber', 'addressName')
+            ->get()
+            ->groupBy('OrderNumber')
+            ->map(function ($group) {
+                return $group->pluck('addressName')->unique()->values();
+            });
         return $os;
 //        return $os;
 

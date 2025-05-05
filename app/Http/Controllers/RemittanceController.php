@@ -625,7 +625,7 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
         $info = Remittance::groupBy('orderID')->get();
-        $info = Remittance::select('*')
+        $info = Remittance::select('MIN(id) as id, orderID')
             ->groupBy('orderID')
             ->orderBy('orderID')
             ->get();

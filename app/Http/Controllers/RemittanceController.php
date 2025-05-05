@@ -634,10 +634,10 @@ class RemittanceController extends Controller
 //        return count($os);
 
         foreach ($os as $OrderNumber) {
-            $r= Remittance::where('OrderNumber',$OrderNumber)->get()->toArray();
+            $r= Remittance::where('OrderNumber',$OrderNumber)->get();
 //            return $r[0]['orderID'];
             $invoice = Invoice::where('OrderNumber',$OrderNumber)
-            ->where('OrderID',$r[0]['orderID'])->first();
+            ->where('OrderID',$r->toArray()[0]['orderID'])->first();
             foreach($r as $item){
                 $item->update(['invoice_id' => $invoice['id']]);
             }

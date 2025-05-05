@@ -627,7 +627,7 @@ class RemittanceController extends Controller
         $info = DB::table('remittances')
             ->select('orderID', DB::raw('count(*) as total'))
             ->groupBy('orderID')
-            ->pluck('orderID','orderID');
+            ->pluck('orderID');
                 return $info;
 
         $info = Remittance::orderBy('id')->get();

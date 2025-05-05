@@ -624,9 +624,17 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+//        $os = DB::table('remittances')
+//            ->select('OrderNumber', DB::raw('count(*) as total'))
+//            ->groupBy('OrderNumber')
+//            ->take(3500)
+//            ->pluck('OrderNumber');
+//
+//        return $os;
         $os = DB::table('remittances')
             ->select('orderID', DB::raw('count(*) as total'))
             ->groupBy('orderID')
+            ->where('OrderNumber',null)
             ->pluck('orderID');
 
 //        $info = Remittance::orderBy('id')->get();

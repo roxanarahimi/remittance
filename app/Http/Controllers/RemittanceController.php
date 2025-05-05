@@ -632,7 +632,7 @@ class RemittanceController extends Controller
 
 //        return $os;
 //        return count($os);
-        $oss = Remittance::select('OrderNumber','orderID')->whereIn('OrderNumber',$os)->get()->toArray()->unique();
+        $oss = Remittance::select('OrderNumber','orderID')->whereIn('OrderNumber',$os)->unique()->get();
         return $oss;
         $is = Invoice::WhereIn('OrderNumber',$os)->get();
                 return [count($os),count($is)];

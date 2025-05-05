@@ -29,5 +29,9 @@ class Invoice extends Model
     {
         return $this->hasMany(Test::class,  'invoice_id','id');
     }
-
+    public function rrBarcodes()
+    {
+        return $this->hasMany(Remittance::class,  'OrderNumber','OrderNumber')
+            ->where('orderID',$this->OrderID);
+    }
 }

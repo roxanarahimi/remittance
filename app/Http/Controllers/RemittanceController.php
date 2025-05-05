@@ -624,19 +624,21 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $info = DB::table('remittances')
+        $os = DB::table('remittances')
             ->select('orderID', DB::raw('count(*) as total'))
             ->groupBy('orderID')
             ->pluck('orderID');
-                return $info;
 
-        $info = Remittance::orderBy('id')->get();
+//        $info = Remittance::orderBy('id')->get();
 
-        foreach ($info as $item){
-            $x = $item['addressName'];
-            $y = explode(' ',$x);
-            $orderNumber =  $y[count($y)-1];
-            $item->update(['OrderNumber'=> $orderNumber]);
+        foreach ($os as $orderID) {
+            $info = Remittance::where('orderID',$orderID)->get();
+            foreach($info as $item){
+                $x = $item['addressName'];
+                $y = explode(' ', $x);
+                $orderNumber = $y[count($y) - 1];
+                $item->update(['OrderNumber' => $orderNumber]);
+            }
         }
 
         $n = Remittance::orderBy('id')->paginate(200);
@@ -658,19 +660,16 @@ class RemittanceController extends Controller
         return RemittanceResource::collection($info);
 
 
-
-
-
 //        $dat = Part::where('Name', 'نودالیت قارچ و پنیر آماده لذیذ')->get();
         $dat = Invoice::where('OrderNumber', "6536")->first();
         $dat2 = InvoiceBarcode::where('invoice_id', $dat['id'])->paginate(100);
         return response($dat2, 200);
 
-        return response([count($dat->barcodes),new InvoiceResource($dat)], 200);
+        return response([count($dat->barcodes), new InvoiceResource($dat)], 200);
 
 
         $dat = InventoryVoucher::where('Number', "8659")
-            ->with('OrderItems',function($q){
+            ->with('OrderItems', function ($q) {
                 $q->with('Part');
             })
             ->get();
@@ -948,22 +947,17 @@ class RemittanceController extends Controller
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
 
 
-            if (isset($request['duplicate'])&& $request['duplicate']==1){
+            if (isset($request['duplicate']) && $request['duplicate'] == 1) {
                 $bars1 = array_column($input1, 'Barcode');
                 $duplicates1 = array_values(array_unique(array_diff_assoc($bars1, array_unique($bars1))));
                 $bars2 = array_column($input2, 'barcode');
                 $duplicates2 = array_values(array_unique(array_diff_assoc($bars2, array_unique($bars2))));
                 return response()->json([['duplicates' => [$duplicates1, $duplicates2]], $paginator], 200);
 
-            }else{
+            } else {
                 return response()->json($paginator, 200);
 
             }
-
-
-
-
-
 
 
         } catch (\Exception $exception) {

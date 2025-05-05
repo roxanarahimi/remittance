@@ -626,7 +626,8 @@ class RemittanceController extends Controller
     {
 //        $dat = Part::where('Name', 'نودالیت قارچ و پنیر آماده لذیذ')->get();
         $dat = Invoice::where('OrderNumber', "6536")->get();
-        return response( InvoiceResource::collection($dat));
+        return response([count($dat->barcodes),new InvoiceResource($dat)], 200);
+
 
         $dat = InventoryVoucher::where('Number', "8659")
             ->with('OrderItems',function($q){

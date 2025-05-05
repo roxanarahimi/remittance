@@ -634,8 +634,9 @@ class RemittanceController extends Controller
 //        return count($os);
         $oss = Remittance::whereIn('OrderNumber', $os)
             ->groupBy('OrderNumber')
+            ->take()
             ->get()
-            ->unique();
+   ;
         return $oss;
         $is = Invoice::WhereIn('OrderNumber',$os)->get();
                 return [count($os),count($is)];

@@ -893,12 +893,6 @@ class RemittanceController extends Controller
             $filtered2 = json_decode(json_encode($i2));
             $input1 = array_values($filtered);
             $input2 = array_values($filtered2);
-
-            $bars1 = array_column($input1, 'Barcode');
-            $duplicates1 = array_values(array_unique(array_diff_assoc($bars1, array_unique($bars1))));
-            $bars2 = array_column($input2, 'barcode');
-            $duplicates2 = array_values(array_unique(array_diff_assoc($bars2, array_unique($bars2))));
-
             $input = array_merge($input1, $input2);
 
 
@@ -911,7 +905,22 @@ class RemittanceController extends Controller
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
 
 
-            return response()->json([['duplicates' => [$duplicates1, $duplicates2]], $paginator], 200);
+            if (isset($request['duplicate'])&& $request['duplicate']!=''){
+                $bars1 = array_column($input1, 'Barcode');
+                $duplicates1 = array_values(array_unique(array_diff_assoc($bars1, array_unique($bars1))));
+                $bars2 = array_column($input2, 'barcode');
+                $duplicates2 = array_values(array_unique(array_diff_assoc($bars2, array_unique($bars2))));
+                return response()->json([['duplicates' => [$duplicates1, $duplicates2]], $paginator], 200);
+
+            }else{
+                return response()->json($paginator, 200);
+
+            }
+
+
+
+
+
 
 
         } catch (\Exception $exception) {

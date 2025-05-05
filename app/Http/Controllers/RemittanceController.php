@@ -629,7 +629,7 @@ class RemittanceController extends Controller
             $x = $item['addressName'];
             $y = explode(' ',$x);
             $orderNumber =  $y[count($y)-1];
-            $item->update(['OrderNumber', $orderNumber]);
+            $item->update(['OrderNumber'=> $orderNumber]);
         }
 
         $n = Remittance::orderBy('id')->paginate(200);

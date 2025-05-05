@@ -634,9 +634,9 @@ class RemittanceController extends Controller
             ->select('OrderNumber', 'addressName')
             ->get()
             ->groupBy('OrderNumber')
-            ->map(function ($group) {
-                return $group->pluck('addressName')->unique()->values();
-            });
+//            ->map(function ($group) {
+//                return $group->pluck('addressName')->values();
+//            });
         return $os;
 //        return $os;
 

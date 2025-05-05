@@ -624,13 +624,28 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-//        $os = DB::table('remittances')
-//            ->select('OrderNumber', DB::raw('count(*) as total'))
-//            ->groupBy('OrderNumber')
-//            ->take(3500)
-//            ->pluck('OrderNumber');
-//
-//        return $os;
+        $os = DB::table('remittances')
+            ->select('OrderNumber', DB::raw('count(*) as total'))
+            ->groupBy('OrderNumber')
+            ->take(3500)
+            ->pluck('OrderNumber');
+
+        return $os;
+        foreach ($os as $OrderNumber) {
+            $info = Remittance::where('OrderNumber',$OrderNumber)->get();
+            foreach($info as $item){
+                $x = str_replace('کرمان','',$item['OrderNumber']);
+                $x = str_replace('اصفهان','',$item['OrderNumber']);
+                $x = str_replace('شیراز','',$item['OrderNumber']);
+                $x = str_replace('بیرجند','',$item['OrderNumber']);
+                $x = str_replace('چالوس','',$item['OrderNumber']);
+                $x = str_replace('بابل','',$item['OrderNumber']);
+                $item->update(['OrderNumber' => $x]);
+            }
+        }
+
+
+
         $os = DB::table('remittances')
             ->select('orderID', DB::raw('count(*) as total'))
             ->groupBy('orderID')

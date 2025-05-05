@@ -624,6 +624,23 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        $info = Remittance::orderByDesc('id');
+        if (isset($request['OrderID'])) {
+            $info = $info->where('addressName', 'like', '%' . $request['OrderNumber'] . '%');
+        }
+        if (isset($request['search'])) {
+            $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
+        } else {
+            $info = $info->take(500);
+        }
+        $info = $info->get();
+
+        return RemittanceResource::collection($info);
+
+
+
+
+
 //        $dat = Part::where('Name', 'نودالیت قارچ و پنیر آماده لذیذ')->get();
         $dat = Invoice::where('OrderNumber', "6536")->first();
         $dat2 = InvoiceBarcode::where('invoice_id', $dat['id'])->paginate(100);
@@ -863,7 +880,7 @@ class RemittanceController extends Controller
         if (isset($request['search'])) {
             $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
         } else {
-            $info = $info->take(500);
+            $info = $info->get();
         }
         $info = $info->get();
         return InvoiceBarcodeResource::collection($info);
@@ -879,7 +896,7 @@ class RemittanceController extends Controller
         if (isset($request['search'])) {
             $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
         } else {
-            $info = $info->take(500);
+            $info = $info->get();
         }
         $info = $info->get();
 

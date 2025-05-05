@@ -624,8 +624,8 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $info = Remittance::orderBy('id')->paginate(200);
-        return $info;
+        $info = Remittance::orderBy('id')->get();
+//        return $info;
 
         foreach ($info as $item){
             $x = $item['addressName'];

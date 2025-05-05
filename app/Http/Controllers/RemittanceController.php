@@ -630,7 +630,7 @@ class RemittanceController extends Controller
             ->groupBy('OrderNumber')
             ->pluck('OrderNumber');
 
-//        return $os;
+        return $os;
 //        return count($os);
 //        $oss = Remittance::whereIn('OrderNumber', $os)
 //            ->select('OrderNumber','orderID')

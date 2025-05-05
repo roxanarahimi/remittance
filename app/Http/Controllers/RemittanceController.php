@@ -629,18 +629,18 @@ class RemittanceController extends Controller
             ->groupBy('OrderNumber')
             ->pluck('OrderNumber');
 
-        return $os;
 //        return $os;
+        return count($os);
 
-//        foreach ($os as $OrderNumber) {
-            $info = Remittance::orderBy('id')->take(3456)->get();
-            foreach($info as $item){
-                $x = str_replace('بابل','',$item['OrderNumber']);
-                $x = str_replace('شاه','',$x);
-                $item->update(['OrderNumber' => $x]);
+        foreach ($os as $OrderNumber) {
+            $r=Remittance::where('OrderNumber',$OrderNumber)->get();
+            $invoice = Invoice::where('OrderNumber',$r['OrderNumber'])
+            ->where('OrderID',$r['orderID'])->first();
+            foreach($r as $item){
+                $item->update(['invoice_id' => $invoice['id']]);
             }
-//        }
-
+        }
+        $info=Remittance::orderBy('id')->paginate(200);
         return $info;
 
 

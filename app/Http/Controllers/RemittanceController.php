@@ -632,7 +632,6 @@ class RemittanceController extends Controller
 
         $os = DB::table('remittances')
             ->select('OrderNumber', 'addressName')
-            ->get()
             ->groupBy('OrderNumber')
             ->map(function ($group) {
                 return $group->pluck('addressName')->values();

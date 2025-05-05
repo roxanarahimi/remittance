@@ -625,7 +625,7 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
 //        $dat = Part::where('Name', 'نودالیت قارچ و پنیر آماده لذیذ')->get();
-        $dat = Invoice::where('OrderNumber', "6536")->get();
+        $dat = Invoice::where('OrderNumber', "6536")->first();
         return response([count($dat->barcodes),new InvoiceResource($dat)], 200);
 
 

@@ -626,6 +626,9 @@ class RemittanceController extends Controller
     {
 //        $dat = Part::where('Name', 'نودالیت قارچ و پنیر آماده لذیذ')->get();
         $dat = Invoice::where('OrderNumber', "6536")->first();
+        $dat2 = InvoiceBarcode::where('invoice_id', $dat['id'])->paginate(100);
+
+        return response(InvoiceBarcodeResource::collection($dat), 200);
         return response([count($dat->barcodes),new InvoiceResource($dat)], 200);
 
 

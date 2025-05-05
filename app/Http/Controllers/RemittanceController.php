@@ -633,9 +633,7 @@ class RemittanceController extends Controller
         $os = DB::table('remittances')
             ->select('OrderNumber', 'addressName')
             ->groupBy('OrderNumber')
-            ->pluck(function ($group) {
-                return $group->addressName;
-            });
+            ->pluck('addressName');
         return $os;
 //        return $os;
 

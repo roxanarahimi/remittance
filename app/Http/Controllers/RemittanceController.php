@@ -650,7 +650,7 @@ class RemittanceController extends Controller
         $is = Invoice::select('OrderNumber','OrderID')
             ->orderBy('OrderNumber')
             ->WhereIn('Type',['Deputation','InventoryVoucher'])
-            ->WhereIn('OrderNumber',$os)
+//            ->WhereIn('OrderNumber',$os)
 //            ->with('rrBarcodes')
                 ->whereDoesntHave('invoiceItems')
                 ->with('invoiceItems')

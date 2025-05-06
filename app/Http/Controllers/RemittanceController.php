@@ -652,8 +652,8 @@ class RemittanceController extends Controller
             ->WhereIn('Type',['Deputation','InventoryVoucher'])
             ->WhereIn('OrderNumber',$os)
 //            ->with('rrBarcodes')
-                ->whereDoesntHave('Order')
-                ->with('Order')
+                ->whereDoesntHave('invoiceItems')
+                ->with('invoiceItems')
             ->take(100)
             ->get();
                 return $is;

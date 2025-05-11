@@ -628,7 +628,7 @@ class RemittanceController extends Controller
             ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
             ->groupBy('OrderID', 'OrderNumber', 'Type')
             ->having('count', '>', 1)
-            ->paginate(200);
+            ->pluck('id');
 
         return $duplicates;
 //        $os = DB::table('remittances')

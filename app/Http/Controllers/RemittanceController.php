@@ -621,10 +621,10 @@ class RemittanceController extends Controller
 
         $all = Invoice::where('Type', 'Order')
             ->get();
-        $all->each(function ($invoice) {
-            $invoice->invoiceItems->each->delete(); // delete each InvoiceItem
-            $invoice->delete();              // delete the Invoice
-        });
+//        $all->each(function ($invoice) {
+//            $invoice->invoiceItems->each->delete(); // delete each InvoiceItem
+//            $invoice->delete();              // delete the Invoice
+//        });
         return $all;
 
 

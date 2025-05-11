@@ -624,14 +624,27 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        $duplicates = DB::table('invoices')
+            ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
+            ->groupBy('OrderID', 'OrderNumber', 'Type')
+            ->having('count', '>', 1)
+            ->get();
+
+        return $duplicates;
 //        $os = DB::table('remittances')
 //            ->select('OrderNumber', DB::raw('count(*) as total'))
 //            ->groupBy('OrderNumber')
 //            ->pluck('OrderNumber');
 //        return $os;
 
-        $os = Remittance::orderBy('id')
-//            ->whereHas('invoices','or')
+        $os = DB::table('remittances')
+            ->select('OrderNumber', DB::raw('count(*) as total'))
+            ->groupBy('OrderNumber')
+//            ->whereHas('invoices')
+            ->get();
+
+        $os = Invoice::orderBy('id')
+
             ->has('invoices', '=', 2)
             ->with('invoices')
             ->take(1000)->get()->unique()

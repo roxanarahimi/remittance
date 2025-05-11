@@ -633,7 +633,7 @@ class RemittanceController extends Controller
         foreach($os as $item){
             $ON = InventoryVoucher::where('InventoryVoucherID',$item['orderID'])->first();
             $ON2 = Invoice::where('OrderID',$item['orderID'])->first();
-            $item->OrderNumber = $ON['Number'];
+            $item->OrderNumber = $ON->Number;
             $item->OrderNumber2 = $ON2['OrderNumber'];
         }
         return $os;

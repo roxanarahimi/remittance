@@ -644,14 +644,15 @@ class RemittanceController extends Controller
                     ->on('invoices.Type', '=', 'dupes.Type');
             })
             ->select('invoices.*') // includes 'id' and all other columns
-            ->pluck('id');
-//        return $duplicates;
+//            ->pluck('id');
+            ->get();
+        return $duplicates;
 
-                $d = Invoice::whereIn('id',$duplicates)
-            ->with('barcodes')
-            ->with('rrBarcodes')
-            ->paginate(200);
-                return $d;
+//                $d = Invoice::whereIn('id',$duplicates)
+//            ->with('barcodes')
+//            ->with('rrBarcodes')
+//            ->paginate(200);
+//                return $d;
 
         $duplicates = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))

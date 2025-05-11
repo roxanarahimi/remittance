@@ -622,7 +622,7 @@ class RemittanceController extends Controller
        try{
            $os = DB::table('remittances')
                ->select('orderID','OrderNumber', DB::raw('count(*) as total'))
-               ->groupBy('orderID')
+               ->groupBy('orderID','OrderNumber')
                ->get()->toArray();
 //        return $os;
            foreach($os as $item){

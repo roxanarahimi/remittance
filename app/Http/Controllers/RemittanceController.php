@@ -973,11 +973,11 @@ class RemittanceController extends Controller
         if (isset($request['search'])) {
             $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
         }else {
-            if (isset($request['count'])) {
-                $info = $info->take($request['count']);
-            }else{
+//            if (isset($request['count'])) {
+//                $info = $info->take($request['count']);
+//            }else{
                 $info = $info->take(500);
-            }
+//            }
 
         }
         $info = $info->get();
@@ -989,30 +989,44 @@ class RemittanceController extends Controller
     public function report(Request $request)
     {
         try {
-            $i1 = $this->getInvoiceBarcodes($request);
-            $i2 = $this->getRemittances($request);
-
-            $filtered = json_decode(json_encode($i1));
-            $filtered2 = json_decode(json_encode($i2));
-            $input1 = array_values($filtered);
-            $input2 = array_values($filtered2);
-            $input = array_merge($input1, $input2);
+            if (isset($request['count'])){
+                $i1 = $this->getInvoiceBarcodes($request);
+                $filtered = json_decode(json_encode($i1));
+                $input1 = array_values($filtered);
 
 
-            $offset = 0;
-            $perPage = 200;
-            if ($request['page'] && $request['page'] > 1) {
-                $offset = ($request['page'] - 1) * $perPage;
+                $offset = 0;
+                $perPage = 200;
+                if ($request['page'] && $request['page'] > 1) {
+                    $offset = ($request['page'] - 1) * $perPage;
+                }
+
+                $info = array_slice($input1, $offset, $perPage);
+                $paginator = new LengthAwarePaginator($info, count($input1), $perPage, $request['page']);
+
+                return response()->json($paginator, 200);
+            }else{
+                $i1 = $this->getInvoiceBarcodes($request);
+                $i2 = $this->getRemittances($request);
+                $filtered = json_decode(json_encode($i1));
+                $filtered2 = json_decode(json_encode($i2));
+                $input1 = array_values($filtered);
+                $input2 = array_values($filtered2);
+                $input = array_merge($input1, $input2);
+
+
+                $offset = 0;
+                $perPage = 200;
+                if ($request['page'] && $request['page'] > 1) {
+                    $offset = ($request['page'] - 1) * $perPage;
+                }
+
+                $info = array_slice($input, $offset, $perPage);
+                $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+
+                return response()->json($paginator, 200);
             }
 
-            usort($input, function ($a, $b) {
-                return $a->created_at <=> $b->created_at;
-            });
-
-            $info = array_slice($input, $offset, $perPage);
-            $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
-
-            return response()->json($paginator, 200);
 
 //            if (isset($request['duplicate']) && $request['duplicate'] == 1) {
 //                $bars1 = array_column($input1, 'Barcode');

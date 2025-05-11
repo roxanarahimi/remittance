@@ -628,12 +628,12 @@ class RemittanceController extends Controller
             ->select('OrderNumber', DB::raw('count(*) as total'))
             ->groupBy('OrderNumber')
             ->pluck('OrderNumber', 'total');
-        return $os;
+//        return $os;
         $os = DB::table('remittances')
             ->select('OrderNumber','barcode')
             ->where('OrderNumber',137)
             ->get()->unique();
-        return $os;
+        return count($os);
 
 //            ->where('invoice_id', null)
 

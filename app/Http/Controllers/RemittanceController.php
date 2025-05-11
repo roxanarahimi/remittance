@@ -1004,6 +1004,11 @@ class RemittanceController extends Controller
             if ($request['page'] && $request['page'] > 1) {
                 $offset = ($request['page'] - 1) * $perPage;
             }
+
+            usort($input, function ($a, $b) {
+                return $a['created_at'] <=> $b['created_at'];
+            });
+
             $info = array_slice($input, $offset, $perPage);
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
 

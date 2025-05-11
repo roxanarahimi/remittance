@@ -11,11 +11,7 @@ use App\Http\Resources\InvoiceItemResource;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\InvoiceResource2;
 use App\Http\Resources\OrderResource;
-use App\Http\Resources\PartyResource;
-use App\Http\Resources\PartyResource2;
 use App\Http\Resources\RemittanceResource;
-use App\Http\Resources\TourResource;
-use App\Http\Resources\TransporterResource;
 use App\Models\Address;
 use App\Models\InventoryVoucher;
 use App\Models\InventoryVoucherItem;
@@ -33,8 +29,6 @@ use App\Models\PartyAddress;
 use App\Models\Product;
 use App\Models\Remittance;
 use App\Models\Store;
-use App\Models\Tour;
-use App\Models\Transporter;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -627,22 +621,35 @@ class RemittanceController extends Controller
 
        try{
            $os = DB::table('remittances')
-               ->select('orderID', DB::raw('count(*) as total'))
-               ->where('OrderNumber',Null)
+               ->select('orderID','OrderNumber', DB::raw('count(*) as total'))
                ->groupBy('orderID')
                ->get()->toArray();
 //        return $os;
            foreach($os as $item){
                $ON = Invoice::where('OrderID',$item->orderID)->where('Type','!=','Order')->first();
-               $rs = Remittance::where('orderID',$item->orderID)->get();
-               $rs->each(function($item2) use ($ON) {
-                   $item2->update(['OrderNumber' => $ON->OrderNumber]);
-               });
+               $item->checkON = $ON->OrderNumber;
+//               $rs = Remittance::where('orderID',$item->orderID)->get();
+//               $rs->each(function($item2) use ($ON) {
+//                   $item2->update(['OrderNumber' => $ON->OrderNumber]);
+//               });
            }
            return $os;
        }catch(\Exception $exception){
            return $exception;
        }
+        // Step 1: Subquery to get the duplicate keys (grouped)
+        $xx = Invoice::where('Type', 'Order')
+//            ->whereHas('barcodes')
+//            ->with('barcodes')
+//            ->get();
+            ->paginate(200);
+
+       return $xx;
+        $rs->each(function($item2) use ($ON) {
+            $x = InvoiceItem::where('invoice_id',$xx->id)->get();
+            $item2->update(['OrderNumber' => $ON->OrderNumber]);
+        });
+
         // Step 1: Subquery to get the duplicate keys (grouped)
         $duplicateKeys = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type')

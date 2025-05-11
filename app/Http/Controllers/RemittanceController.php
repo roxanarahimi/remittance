@@ -1006,7 +1006,7 @@ class RemittanceController extends Controller
             }
 
             usort($input, function ($a, $b) {
-                return $a['created_at'] <=> $b['created_at'];
+                return $a->created_at <=> $b->created_at;
             });
 
             $info = array_slice($input, $offset, $perPage);

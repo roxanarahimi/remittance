@@ -638,7 +638,7 @@ class RemittanceController extends Controller
                     ->on('invoices.Type', '=', 'dupes.Type');
             })
             ->select('invoices.*') // includes 'id' and all other columns
-            ->with('')->get();
+            ->with('barcodes','rrBarcodes')->get();
         return $duplicates;
 
         $duplicates = DB::table('invoices')

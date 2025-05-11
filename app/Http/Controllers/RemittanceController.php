@@ -619,18 +619,14 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
 
-        $xx = Invoice::where('Type', 'Order')
-            ->whereHas('rrBarcodes')
-            ->with('rrBarcodes')
-//            ->with('invoiceItems')
-//            ->get();
-            ->paginate(200);
-
-        return $xx;
-        $rs->each(function($item2) use ($ON) {
-            $x = InvoiceItem::where('invoice_id',$xx->id)->get();
-            $item2->update(['OrderNumber' => $ON->OrderNumber]);
+        $all = Invoice::where('Type', 'Order')
+            ->get();
+        $all->each(function ($invoice) {
+            $invoice->items->each->delete(); // delete each InvoiceItem
+            $invoice->delete();              // delete the Invoice
         });
+        return $all;
+
 
        try{
            $os = DB::table('remittances')

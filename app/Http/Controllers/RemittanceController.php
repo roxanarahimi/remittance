@@ -651,7 +651,7 @@ class RemittanceController extends Controller
             ->with('barcodes')
             ->with('rrBarcodes')
             ->get();
-
+                return $d;
 
         $duplicates = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))

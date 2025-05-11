@@ -635,7 +635,7 @@ class RemittanceController extends Controller
             ->with('invoices')
             ->paginate(200)
         ;
-        return count($os);
+        return $os;
 
         $is = Invoice::select('OrderNumber', 'OrderID')
             ->orderBy('OrderNumber')

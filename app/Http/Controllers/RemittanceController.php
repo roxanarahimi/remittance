@@ -633,7 +633,9 @@ class RemittanceController extends Controller
         foreach($os as $item){
             $ON = Invoice::where('OrderID',$item->orderID)->where('Type','!=','Order')->first();
             $rs = Remittance::where('orderID',$item->orderID)->get();
-            $rs->each()->update(['OrderNumber'=>$ON->OrderNumber]);
+            $rs->each(function($item2) use ($ON) {
+                $item2->update(['OrderNumber' => $ON->OrderNumber]);
+            });
         }
         return $os;
         // Step 1: Subquery to get the duplicate keys (grouped)

@@ -624,16 +624,17 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-        $d = Invoice::whereIn('id',[1358,1330])
-            ->with('barcodes')
-            ->with('rrBarcodes')
-            ->get();
-        return $d;
+//        $d = Invoice::whereIn('id',[1358,1330])
+//            ->with('barcodes')
+//            ->with('rrBarcodes')
+//            ->get();
+//        return $d;
         // Step 1: Subquery to get the duplicate keys (grouped)
         $duplicateKeys = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type')
             ->groupBy('OrderID', 'OrderNumber', 'Type')
             ->where('Type', '!=', 'Order')
+            ->whereHas('barcodes')
             ->havingRaw('COUNT(*) > 1');
 
 // Step 2: Join back to original table to get full rows including 'id'

@@ -631,7 +631,7 @@ class RemittanceController extends Controller
 //        return $os;
 
         $os = Remittance::orderBy('id')
-            ->whereHas('invoices')
+            ->whereHas('invoices','>',1)
             ->with('invoices')
             ->paginate(200)
         ;

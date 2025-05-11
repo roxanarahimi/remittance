@@ -631,10 +631,10 @@ class RemittanceController extends Controller
             ->get();
 //        return $os;
         foreach($os as $item){
-            $ON = InventoryVoucher::where('InventoryVoucherID',$item['orderID'])->first();
-            $ON2 = Invoice::where('OrderID',$item['orderID'])->first();
+            $ON = InventoryVoucher::where('InventoryVoucherID',$item->orderID)->first();
+            $ON2 = Invoice::where('OrderID',$item->orderID)->first();
             $item->OrderNumber = $ON->Number;
-            $item->OrderNumber2 = $ON2['OrderNumber'];
+            $item->OrderNumber2 = $ON2->OrderNumber;
         }
         return $os;
         // Step 1: Subquery to get the duplicate keys (grouped)

@@ -624,10 +624,36 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+//        $os = DB::table('remittances')
+//            ->select('OrderNumber', DB::raw('count(*) as total'))
+//            ->groupBy('OrderNumber')
+//            ->pluck('OrderNumber');
+//        return $os;
+
+        $os = Remittance::orderBy('id')
+            ->whereHas('invoices')
+            ->with('invoices')
+            ->get()
+        ;
+        return count($os);
+
+        $is = Invoice::select('OrderNumber', 'OrderID')
+            ->orderBy('OrderNumber')
+            ->WhereIn('Type', ['Deputation', 'InventoryVoucher'])
+            ->WhereIn('OrderNumber', $os)
+            ->WhereHas('rrBarcodes')
+            ->with('rrBarcodes')
+//            ->take(100)
+            ->get();
+
+        return $is;
+
+
         $os = DB::table('remittances')
             ->select('OrderNumber', DB::raw('count(*) as total'))
             ->groupBy('OrderNumber')
-            ->pluck('OrderNumber');
+//            ->whereHas('invoices')
+            ->get();
         return $os;
 //        $os = DB::table('remittances')
 //            ->select('OrderNumber','barcode')

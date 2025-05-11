@@ -628,6 +628,7 @@ class RemittanceController extends Controller
         $duplicateKeys = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type')
             ->groupBy('OrderID', 'OrderNumber', 'Type')
+            ->where('Type', '!=', 'Order')
             ->havingRaw('COUNT(*) > 1');
 
 // Step 2: Join back to original table to get full rows including 'id'

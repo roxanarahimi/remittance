@@ -954,6 +954,9 @@ class RemittanceController extends Controller
             $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
         }
         else {
+            if (isset($request['count'])) {
+                $info = $info->take($request['count']);
+            }
             $info = $info->take(500);
         }
         $info = $info->get();
@@ -971,6 +974,9 @@ class RemittanceController extends Controller
             $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
         }
         else {
+            if (isset($request['count'])) {
+                $info = $info->take($request['count']);
+            }
             $info = $info->take(500);
         }
         $info = $info->get();

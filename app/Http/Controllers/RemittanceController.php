@@ -625,10 +625,11 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
         $os = DB::table('remittances')
+            ->orderBy('id')
             ->select('OrderNumber', DB::raw('count(*) as total'))
-            ->where('invoice_id', null)
+//            ->where('invoice_id', null)
             ->groupBy('OrderNumber')
-            ->pluck('OrderNumber','total');
+            ->pluck('OrderNumber', 'total');
         return $os;
 
 //        return $os;
@@ -986,43 +987,41 @@ class RemittanceController extends Controller
     {
         try {
             $i2 = $this->getRemittances($request);
-                if (count($i2)){
-                    $i1 = $this->getInvoiceBarcodes($request);
-                    $filtered = json_decode(json_encode($i1));
-                    $filtered2 = json_decode(json_encode($i2));
-                    $input1 = array_values($filtered);
-                    $input2 = array_values($filtered2);
-                    $input = array_merge($input1, $input2);
+            if (count($i2)) {
+                $i1 = $this->getInvoiceBarcodes($request);
+                $filtered = json_decode(json_encode($i1));
+                $filtered2 = json_decode(json_encode($i2));
+                $input1 = array_values($filtered);
+                $input2 = array_values($filtered2);
+                $input = array_merge($input1, $input2);
 
-                    $offset = 0;
-                    $perPage = 200;
-                    if ($request['page'] && $request['page'] > 1) {
-                        $offset = ($request['page'] - 1) * $perPage;
-                    }
-
-                    $info = array_slice($input, $offset, $perPage);
-                    $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
-
-                    return response()->json($paginator, 200);
-                }else{
-                    $info = InvoiceBarcode::orderByDesc('id');
-                    if (isset($request['OrderNumber'])) {
-                        $info = $info->whereHas('invoice', function ($q) use ($request) {
-                            $q->where('OrderNumber', $request['OrderNumber']);
-                        });
-                    }
-                    if (isset($request['search'])) {
-                        $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
-                    }
-                    if (isset($request['count']) && $request['count']<=500) {
-                        $info = $info->take($request['count'])->get();
-                    }else{
-                        $info = $info->paginate(200);
-                    }
-                    return InvoiceBarcodeResource::collection($info);
+                $offset = 0;
+                $perPage = 200;
+                if ($request['page'] && $request['page'] > 1) {
+                    $offset = ($request['page'] - 1) * $perPage;
                 }
 
+                $info = array_slice($input, $offset, $perPage);
+                $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
 
+                return response()->json($paginator, 200);
+            } else {
+                $info = InvoiceBarcode::orderByDesc('id');
+                if (isset($request['OrderNumber'])) {
+                    $info = $info->whereHas('invoice', function ($q) use ($request) {
+                        $q->where('OrderNumber', $request['OrderNumber']);
+                    });
+                }
+                if (isset($request['search'])) {
+                    $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
+                }
+                if (isset($request['count']) && $request['count'] <= 500) {
+                    $info = $info->take($request['count'])->get();
+                } else {
+                    $info = $info->paginate(200);
+                }
+                return InvoiceBarcodeResource::collection($info);
+            }
 
 
 //            if (isset($request['duplicate']) && $request['duplicate'] == 1) {

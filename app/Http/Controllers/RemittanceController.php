@@ -629,8 +629,14 @@ class RemittanceController extends Controller
             ->select('orderID', DB::raw('count(*) as total'))
             ->groupBy('orderID')
             ->get();
+//        return $os;
+        foreach($os as $item){
+            $ON = InventoryVoucher::where('InventoryVoucherID',$item['orderID'])->first();
+            $ON2 = Invoice::where('OrderID',$item['orderID'])->first();
+            $item->OrderNumber = $ON['Number'];
+            $item->OrderNumber2 = $ON2['OrderNumber'];
+        }
         return $os;
-
         // Step 1: Subquery to get the duplicate keys (grouped)
         $duplicateKeys = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type')

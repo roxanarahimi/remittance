@@ -639,6 +639,7 @@ class RemittanceController extends Controller
 // Step 2: Join back to original table to get full rows including 'id'
         $duplicates = DB::table('invoices')
             ->orderBy('OrderID')
+            ->with('barcodes')
             ->joinSub($duplicateKeys, 'dupes', function ($join) {
                 $join->on('invoices.OrderID', '=', 'dupes.OrderID')
                     ->on('invoices.OrderNumber', '=', 'dupes.OrderNumber')

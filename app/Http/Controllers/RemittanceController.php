@@ -627,6 +627,7 @@ class RemittanceController extends Controller
 
         $os = DB::table('remittances')
             ->select('orderID', DB::raw('count(*) as total'))
+            ->where('OrderNumber',Null)
             ->groupBy('orderID')
             ->get()->toArray();
 //        return $os;

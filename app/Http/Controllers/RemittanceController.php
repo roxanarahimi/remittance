@@ -626,7 +626,7 @@ class RemittanceController extends Controller
     {
         $os = DB::table('remittances')
             ->select('OrderNumber', DB::raw('count(*) as total'))
-            ->where('invoice_id',null)
+            ->where('invoice_id', null)
             ->groupBy('OrderNumber')
             ->pluck('OrderNumber');
 
@@ -638,56 +638,56 @@ class RemittanceController extends Controller
 //            ->take(2000)
 //            ->get();
 //        return $oss;
-        $is = Invoice::select('OrderNumber','OrderID')
+        $is = Invoice::select('OrderNumber', 'OrderID')
             ->orderBy('OrderNumber')
 //            ->Where('OrderNumber','100214')
-            ->WhereIn('Type',['Deputation','InventoryVoucher'])
-            ->WhereIn('OrderNumber',$os)
+            ->WhereIn('Type', ['Deputation', 'InventoryVoucher'])
+            ->WhereIn('OrderNumber', $os)
             ->WhereHas('rrBarcodes')
             ->with('rrBarcodes')
             ->take(100)
             ->get();
-        $is = Invoice::select('OrderNumber','OrderID')
+        $is = Invoice::select('OrderNumber', 'OrderID')
             ->orderBy('OrderNumber')
-            ->WhereIn('Type',['Deputation','InventoryVoucher'])
+            ->WhereIn('Type', ['Deputation', 'InventoryVoucher'])
 //            ->WhereIn('OrderNumber',$os)
 //            ->with('rrBarcodes')
-                ->whereDoesntHave('invoiceItems')
-                ->with('invoiceItems')
+            ->whereDoesntHave('invoiceItems')
+            ->with('invoiceItems')
             ->take(100)
             ->get();
-                return $is;
-                return [count($os),count($is)];
+        return $is;
+        return [count($os), count($is)];
 
 
         foreach ($os as $OrderNumber) {
-            $r= Remittance::where('OrderNumber',$OrderNumber)->get();
+            $r = Remittance::where('OrderNumber', $OrderNumber)->get();
 //            return $r[0]['orderID'];
-            $invoice = Invoice::where('OrderNumber',$OrderNumber)
-                ->where('OrderID',$r->toArray()[0]['orderID'])->first();
-            if ($invoice!=null){
-                foreach($r as $item){
+            $invoice = Invoice::where('OrderNumber', $OrderNumber)
+                ->where('OrderID', $r->toArray()[0]['orderID'])->first();
+            if ($invoice != null) {
+                foreach ($r as $item) {
                     $item->update(['invoice_id' => $invoice['id']]);
                 }
             }
 
 
         }
-        $info=Remittance::orderBy('id')->paginate(200);
+        $info = Remittance::orderBy('id')->paginate(200);
         return $info;
 
 
         $os = DB::table('remittances')
             ->select('orderID', DB::raw('count(*) as total'))
             ->groupBy('orderID')
-            ->where('OrderNumber',null)
+            ->where('OrderNumber', null)
             ->pluck('orderID');
 
 //        $info = Remittance::orderBy('id')->get();
 
         foreach ($os as $orderID) {
-            $info = Remittance::where('orderID',$orderID)->get();
-            foreach($info as $item){
+            $info = Remittance::where('orderID', $orderID)->get();
+            foreach ($info as $item) {
                 $x = $item['addressName'];
                 $y = explode(' ', $x);
                 $orderNumber = $y[count($y) - 1];
@@ -952,10 +952,10 @@ class RemittanceController extends Controller
         }
         if (isset($request['search'])) {
             $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
-        }else {
+        } else {
             if (isset($request['count'])) {
                 $info = $info->take($request['count']);
-            }else{
+            } else {
                 $info = $info->take(500);
             }
         }
@@ -972,11 +972,11 @@ class RemittanceController extends Controller
         }
         if (isset($request['search'])) {
             $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
-        }else {
+        } else {
 //            if (isset($request['count'])) {
 //                $info = $info->take($request['count']);
 //            }else{
-                $info = $info->take(500);
+            $info = $info->take(500);
 //            }
 
         }
@@ -989,23 +989,34 @@ class RemittanceController extends Controller
     public function report(Request $request)
     {
         try {
-            if (isset($request['count'])){
-                $i1 = $this->getInvoiceBarcodes($request);
-                $filtered = json_decode(json_encode($i1));
-                $input1 = array_values($filtered);
-
-
-                $offset = 0;
-                $perPage = 200;
-                if ($request['page'] && $request['page'] > 1) {
-                    $offset = ($request['page'] - 1) * $perPage;
+            if (isset($request['count'])) {
+//                $i1 = $this->getInvoiceBarcodes($request);
+//                $filtered = json_decode(json_encode($i1));
+//                $input1 = array_values($filtered);
+//                $offset = 0;
+//                $perPage = 200;
+//                if ($request['page'] && $request['page'] > 1) {
+//                    $offset = ($request['page'] - 1) * $perPage;
+//                }
+//                $info = array_slice($input1, $offset, $perPage);
+//                $paginator = new LengthAwarePaginator($info, count($input1), $perPage, $request['page']);
+//                return response()->json($paginator, 200);
+                $info = InvoiceBarcode::orderByDesc('id');
+                if (isset($request['OrderNumber'])) {
+                    $info = $info->whereHas('invoice', function ($q) use ($request) {
+                        $q->where('OrderNumber', $request['OrderNumber']);
+                    });
+                }
+                if (isset($request['search'])) {
+                    $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
+                }
+                if (isset($request['count'])) {
+                    $info = $info->take($request['count']);
                 }
 
-                $info = array_slice($input1, $offset, $perPage);
-                $paginator = new LengthAwarePaginator($info, count($input1), $perPage, $request['page']);
-
-                return response()->json($paginator, 200);
-            }else{
+                $info = $info->paginate(200);
+                return InvoiceBarcodeResource::collection($info);
+            } else {
                 $i1 = $this->getInvoiceBarcodes($request);
                 $i2 = $this->getRemittances($request);
                 $filtered = json_decode(json_encode($i1));

@@ -618,6 +618,43 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        // Step 1: Subquery to get the duplicate keys (grouped)
+        $duplicateKeys = DB::table('invoices')
+            ->select('OrderID', 'OrderNumber', 'Type')
+            ->groupBy('OrderID', 'OrderNumber', 'Type')
+            ->where('Type', '!=', 'Order')
+            ->havingRaw('COUNT(*) > 1');
+
+// Step 2: Join back to original table to get full rows including 'id'
+        $duplicates = DB::table('invoices')
+            ->orderBy('OrderID')
+            ->joinSub($duplicateKeys, 'dupes', function ($join) {
+                $join->on('invoices.OrderID', '=', 'dupes.OrderID')
+                    ->on('invoices.OrderNumber', '=', 'dupes.OrderNumber')
+                    ->on('invoices.Type', '=', 'dupes.Type');
+            })
+            ->select('invoices.*') // includes 'id' and all other columns
+//            ->pluck('id');
+            ->get();
+        return $duplicates;
+
+        $d = Invoice::whereIn('id', $duplicates)
+            ->orderBy('OrderID')
+            ->with('barcodes')
+            ->with('rrBarcodes')
+            ->paginate(500);
+        return $d;
+
+        $duplicates = DB::table('invoices')
+            ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
+            ->groupBy('OrderID', 'OrderNumber', 'Type')
+            ->having('count', '>', 1)
+            ->get();
+
+
+        return $duplicates;
+
+
 
         $all = InvoiceItem::has('invoice','=', 1)
           ->take(100)  ->get();
@@ -649,41 +686,7 @@ class RemittanceController extends Controller
        }
 
 
-        // Step 1: Subquery to get the duplicate keys (grouped)
-        $duplicateKeys = DB::table('invoices')
-            ->select('OrderID', 'OrderNumber', 'Type')
-            ->groupBy('OrderID', 'OrderNumber', 'Type')
-            ->where('Type', '!=', 'Order')
-            ->havingRaw('COUNT(*) > 1');
 
-// Step 2: Join back to original table to get full rows including 'id'
-        $duplicates = DB::table('invoices')
-            ->orderBy('OrderID')
-            ->joinSub($duplicateKeys, 'dupes', function ($join) {
-                $join->on('invoices.OrderID', '=', 'dupes.OrderID')
-                    ->on('invoices.OrderNumber', '=', 'dupes.OrderNumber')
-                    ->on('invoices.Type', '=', 'dupes.Type');
-            })
-            ->select('invoices.*') // includes 'id' and all other columns
-            ->pluck('id');
-//            ->get();
-//        return $duplicates;
-
-        $d = Invoice::whereIn('id', $duplicates)
-            ->orderBy('OrderID')
-            ->with('barcodes')
-            ->with('rrBarcodes')
-            ->paginate(500);
-        return $d;
-
-        $duplicates = DB::table('invoices')
-            ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
-            ->groupBy('OrderID', 'OrderNumber', 'Type')
-            ->having('count', '>', 1)
-            ->get();
-
-
-        return $duplicates;
 //        $os = DB::table('remittances')
 //            ->select('OrderNumber', DB::raw('count(*) as total'))
 //            ->groupBy('OrderNumber')

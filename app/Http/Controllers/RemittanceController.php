@@ -625,7 +625,7 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
         $duplicates = DB::table('invoices')
-            ->select('id','OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'),'created_at')
+            ->select('id','OrderID', 'OrderNumber', 'Type','created_at', DB::raw('COUNT(*) as count'))
             ->groupBy('OrderID', 'OrderNumber', 'Type')
             ->having('count', '>', 1)
             ->take(100)->get();

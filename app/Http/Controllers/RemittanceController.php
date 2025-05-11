@@ -634,7 +634,6 @@ class RemittanceController extends Controller
             ->select('OrderID', 'OrderNumber', 'Type')
             ->groupBy('OrderID', 'OrderNumber', 'Type')
             ->where('Type', '!=', 'Order')
-            ->whereHas('barcodes')
             ->havingRaw('COUNT(*) > 1');
 
 // Step 2: Join back to original table to get full rows including 'id'
@@ -644,6 +643,7 @@ class RemittanceController extends Controller
                     ->on('invoices.OrderNumber', '=', 'dupes.OrderNumber')
                     ->on('invoices.Type', '=', 'dupes.Type');
             })
+            ->whereHas('barcodes')
             ->select('invoices.*') // includes 'id' and all other columns
             ->get();
         return $duplicates;

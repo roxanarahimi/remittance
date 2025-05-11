@@ -632,7 +632,8 @@ class RemittanceController extends Controller
         $os = DB::table('remittances')
             ->select('OrderNumber','barcode')
             ->where('OrderNumber',137)
-            ->get()->unique();
+            ->where('barcode','701031835101800000058A22004000003652')
+            ->get();
         return count($os);
 
 //            ->where('invoice_id', null)

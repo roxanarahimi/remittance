@@ -1010,7 +1010,7 @@ class RemittanceController extends Controller
                 if (isset($request['search'])) {
                     $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
                 }
-                if (isset($request['count'])) {
+                if (isset($request['count']) && $request['count']<=500) {
                     $info = $info->take($request['count'])->get();
                 }else{
                     $info = $info->paginate(200);

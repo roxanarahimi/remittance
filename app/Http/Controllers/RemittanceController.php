@@ -621,6 +621,7 @@ class RemittanceController extends Controller
 
         $all = InvoiceItem::has('invoice','=', 0)
             ->get();
+
 //        $all->each(function ($invoice) {
 //            $invoice->invoiceItems->each->delete(); // delete each InvoiceItem
 //            $invoice->delete();              // delete the Invoice

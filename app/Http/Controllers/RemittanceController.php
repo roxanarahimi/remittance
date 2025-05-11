@@ -625,7 +625,7 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
         $os = DB::table('remittances')
-            ->select('OrderNumber', DB::raw('count(*) as total'),'invoices')
+            ->select('OrderNumber', DB::raw('count(*) as total'))
             ->whereHas('invoices')
             ->groupBy('OrderNumber')
             ->get();

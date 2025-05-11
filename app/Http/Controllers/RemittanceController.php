@@ -625,20 +625,24 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
 
-        $os = DB::table('remittances')
-            ->select('orderID', DB::raw('count(*) as total'))
-            ->where('OrderNumber',Null)
-            ->groupBy('orderID')
-            ->get()->toArray();
+       try{
+           $os = DB::table('remittances')
+               ->select('orderID', DB::raw('count(*) as total'))
+               ->where('OrderNumber',Null)
+               ->groupBy('orderID')
+               ->get()->toArray();
 //        return $os;
-        foreach($os as $item){
-            $ON = Invoice::where('OrderID',$item->orderID)->where('Type','!=','Order')->first();
-            $rs = Remittance::where('orderID',$item->orderID)->get();
-            $rs->each(function($item2) use ($ON) {
-                $item2->update(['OrderNumber' => $ON->OrderNumber]);
-            });
-        }
-        return $os;
+           foreach($os as $item){
+               $ON = Invoice::where('OrderID',$item->orderID)->where('Type','!=','Order')->first();
+               $rs = Remittance::where('orderID',$item->orderID)->get();
+               $rs->each(function($item2) use ($ON) {
+                   $item2->update(['OrderNumber' => $ON->OrderNumber]);
+               });
+           }
+           return $os;
+       }catch(\Exception $exception){
+           return $exception;
+       }
         // Step 1: Subquery to get the duplicate keys (grouped)
         $duplicateKeys = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type')

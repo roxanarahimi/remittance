@@ -634,9 +634,9 @@ class RemittanceController extends Controller
                     ->on('invoices.Type', '=', 'dupes.Type');
             })
             ->select('invoices.*') // includes 'id' and all other columns
-//            ->pluck('id');
-            ->get();
-        return $duplicates;
+            ->pluck('id');
+//            ->get();
+//        return $duplicates;
 
         $d = Invoice::whereIn('id', $duplicates)
             ->orderBy('OrderID')

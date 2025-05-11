@@ -21,6 +21,10 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoiceBarcode::class,  'invoice_id','id');
     }
+    public function rrBarcodes()
+    {
+        return $this->hasMany(Remittance::class, 'orderID', 'OrderID');
+    }
     public function barcodes2()
     {
         return $this->hasMany(Remittance::class,  'orderID','OrderID');
@@ -29,10 +33,6 @@ class Invoice extends Model
     {
         return $this->hasMany(Test::class,  'invoice_id','id');
     }
-    public function rrBarcodes()
-    {
-        return $this->hasMany(Remittance::class, 'orderID', 'OrderID')
-;
-    }
+
 
 }

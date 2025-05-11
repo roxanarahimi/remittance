@@ -634,7 +634,7 @@ class RemittanceController extends Controller
 //            ->whereHas('invoices','or')
             ->has('invoices', '=', 2)
             ->with('invoices')
-            ->take(200)->get()
+            ->take(1000)->get()->unique()
         ;
         return $os;
 

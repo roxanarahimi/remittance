@@ -629,6 +629,7 @@ class RemittanceController extends Controller
             ->where('invoice_id', null)
             ->groupBy('OrderNumber')
             ->pluck('OrderNumber');
+        return $os;
 
 //        return $os;
 //        return count($os);
@@ -984,12 +985,9 @@ class RemittanceController extends Controller
     public function report(Request $request)
     {
         try {
-
-
-                $i2 = $this->getRemittances($request);
+            $i2 = $this->getRemittances($request);
                 if (count($i2)){
                     $i1 = $this->getInvoiceBarcodes($request);
-//                    $i2 = $this->getRemittances($request);
                     $filtered = json_decode(json_encode($i1));
                     $filtered2 = json_decode(json_encode($i2));
                     $input1 = array_values($filtered);

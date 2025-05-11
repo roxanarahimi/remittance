@@ -626,11 +626,11 @@ class RemittanceController extends Controller
     {
 
         $os = DB::table('remittances')
-            ->select('OrderNumber', DB::raw('count(*) as total'))
-            ->groupBy('OrderNumber')
-//            ->whereHas('invoices')
+            ->select('orderID', DB::raw('count(*) as total'))
+            ->groupBy('orderID')
             ->get();
         return $os;
+
         // Step 1: Subquery to get the duplicate keys (grouped)
         $duplicateKeys = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type')

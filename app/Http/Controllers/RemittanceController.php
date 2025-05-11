@@ -639,22 +639,22 @@ class RemittanceController extends Controller
 // Step 2: Join back to original table to get full rows including 'id'
         $duplicates = DB::table('invoices')
             ->orderBy('OrderID')
-            ->with('barcodes')
             ->joinSub($duplicateKeys, 'dupes', function ($join) {
                 $join->on('invoices.OrderID', '=', 'dupes.OrderID')
                     ->on('invoices.OrderNumber', '=', 'dupes.OrderNumber')
                     ->on('invoices.Type', '=', 'dupes.Type');
             })
             ->select('invoices.*') // includes 'id' and all other columns
-//            ->pluck('id');
-            ->get();
-        return $duplicates;
+            ->pluck('id');
+//            ->get();
+//        return $duplicates;
 
-//                $d = Invoice::whereIn('id',$duplicates)
-//            ->with('barcodes')
-//            ->with('rrBarcodes')
-//            ->paginate(200);
-//                return $d;
+        $d = Invoice::whereIn('id', $duplicates)
+            ->orderBy('OrderID')
+            ->with('barcodes')
+            ->with('rrBarcodes')
+            ->paginate(200);
+        return $d;
 
         $duplicates = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
@@ -677,11 +677,9 @@ class RemittanceController extends Controller
             ->get();
 
         $os = Invoice::orderBy('id')
-
             ->has('invoices', '=', 2)
             ->with('invoices')
-            ->take(1000)->get()->unique()
-        ;
+            ->take(1000)->get()->unique();
         return $os;
 
         $is = Invoice::select('OrderNumber', 'OrderID')

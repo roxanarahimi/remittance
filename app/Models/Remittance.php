@@ -12,7 +12,7 @@ class Remittance extends Model
 
     public function invoices()
     {
-        return $this->belongsTo(Invoice::class,  'OrderNumber','OrderNumber')
-            ->whereColumn('orderID','=','OrderID');
+        return $this->hasMany(Invoice::class,  'OrderNumber','OrderNumber')
+            ->whereColumn('OrderID','=','orderID');
     }
 }

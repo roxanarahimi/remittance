@@ -619,7 +619,7 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
 
-        $all = Invoice::where('Type', 'Order')
+        $all = InvoiceItem::has('invoice','=', 0)
             ->get();
 //        $all->each(function ($invoice) {
 //            $invoice->invoiceItems->each->delete(); // delete each InvoiceItem

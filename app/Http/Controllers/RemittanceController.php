@@ -621,8 +621,8 @@ class RemittanceController extends Controller
 
         $xx = Invoice::where('Type', 'Order')
 //            ->whereHas('barcodes')
-//            ->with('barcodes')
-            ->with('invoiceItems')
+            ->with('barcodes')
+//            ->with('invoiceItems')
 //            ->get();
             ->paginate(200);
 

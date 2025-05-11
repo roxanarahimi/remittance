@@ -954,7 +954,7 @@ class RemittanceController extends Controller
             $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
         }
         else {
-            $info = $info->get(500);
+            $info = $info->take(500);
         }
         $info = $info->get();
         return InvoiceBarcodeResource::collection($info);

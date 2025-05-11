@@ -1011,10 +1011,10 @@ class RemittanceController extends Controller
                     $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
                 }
                 if (isset($request['count'])) {
-                    $info = $info->take($request['count']);
+                    $info = $info->take($request['count'])->get();
+                }else{
+                    $info = $info->paginate(200);
                 }
-
-                $info = $info->paginate(200);
                 return InvoiceBarcodeResource::collection($info);
             } else {
                 $i1 = $this->getInvoiceBarcodes($request);

@@ -624,11 +624,29 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        // Step 1: Subquery to get the duplicate keys (grouped)
+        $duplicateKeys = DB::table('invoices')
+            ->select('OrderID', 'OrderNumber', 'Type')
+            ->groupBy('OrderID', 'OrderNumber', 'Type')
+            ->havingRaw('COUNT(*) > 1');
+
+// Step 2: Join back to original table to get full rows including 'id'
+        $duplicates = DB::table('invoices')
+            ->joinSub($duplicateKeys, 'dupes', function ($join) {
+                $join->on('invoices.OrderID', '=', 'dupes.OrderID')
+                    ->on('invoices.OrderNumber', '=', 'dupes.OrderNumber')
+                    ->on('invoices.Type', '=', 'dupes.Type');
+            })
+            ->select('invoices.*') // includes 'id' and all other columns
+            ->get();
+        return $duplicates;
+
         $duplicates = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
             ->groupBy('OrderID', 'OrderNumber', 'Type')
             ->having('count', '>', 1)
             ->get();
+
 
         return $duplicates;
 //        $os = DB::table('remittances')

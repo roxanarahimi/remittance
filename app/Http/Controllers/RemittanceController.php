@@ -628,8 +628,8 @@ class RemittanceController extends Controller
         $os = DB::table('remittances')
             ->select('orderID', DB::raw('count(*) as total'))
             ->groupBy('orderID')
-            ->get();
-//        return $os;
+            ->get()->toArray();
+        return $os;
         foreach($os as $item){
             $ON = InventoryVoucher::where('InventoryVoucherID',$item->orderID)->first();
             $ON2 = Invoice::where('OrderID',$item->orderID)->first();

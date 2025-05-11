@@ -619,6 +619,18 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
 
+        $xx = Invoice::where('Type', 'Order')
+//            ->whereHas('barcodes')
+//            ->with('barcodes')
+//            ->get();
+            ->paginate(200);
+
+        return $xx;
+        $rs->each(function($item2) use ($ON) {
+            $x = InvoiceItem::where('invoice_id',$xx->id)->get();
+            $item2->update(['OrderNumber' => $ON->OrderNumber]);
+        });
+
        try{
            $os = DB::table('remittances')
                ->select('orderID','OrderNumber', DB::raw('count(*) as total'))
@@ -637,18 +649,7 @@ class RemittanceController extends Controller
        }catch(\Exception $exception){
            return $exception;
        }
-        // Step 1: Subquery to get the duplicate keys (grouped)
-        $xx = Invoice::where('Type', 'Order')
-//            ->whereHas('barcodes')
-//            ->with('barcodes')
-//            ->get();
-            ->paginate(200);
 
-       return $xx;
-        $rs->each(function($item2) use ($ON) {
-            $x = InvoiceItem::where('invoice_id',$xx->id)->get();
-            $item2->update(['OrderNumber' => $ON->OrderNumber]);
-        });
 
         // Step 1: Subquery to get the duplicate keys (grouped)
         $duplicateKeys = DB::table('invoices')

@@ -630,6 +630,7 @@ class RemittanceController extends Controller
             $d = Invoice::select('*')
                 ->whereIn('OrderID', $dup->OrderID)
                 ->whereHas('rrBarcodes')
+                ->with('barcodes')
                 ->get();
             return [$d[1]->barcodes,$d[1]->barcodes->count()];
             if (count($d[1]->barcodes) == 0) {

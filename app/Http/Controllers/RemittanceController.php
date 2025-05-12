@@ -631,8 +631,8 @@ class RemittanceController extends Controller
                 ->where('OrderNumber',$item->OrderNumber)
                 ->where('barcode',$item->barcode)
                 ->get()->toArray();
-            return $x;
-            for ($i=1; $i++; $i<count($x)-1){
+//            return $x;
+            for ($i=1;  $i<count($x)-1;$i++){
                 $x[$i]->delete();
             }
         }

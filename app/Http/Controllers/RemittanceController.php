@@ -626,8 +626,11 @@ class RemittanceController extends Controller
 //        return $duplicates;
 
         foreach($duplicates as $item){
-            $x = Remittance::orderBy('id')->where('orderID',$item->orderID)->where('OrderNumber',$item->OrderNumber)->where('barcode',$item->barcode)->get();
-            for ($i=1; $i++; $i<count($x)-2){
+            $x = Remittance::orderBy('id')->where('orderID',$item->orderID)
+                ->where('OrderNumber',$item->OrderNumber)
+                ->where('barcode',$item->barcode)
+                ->get()->toArray();
+            for ($i=1; $i++; $i<count($x)-1){
                 $x[$i]->delete();
             }
         }

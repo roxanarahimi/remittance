@@ -631,6 +631,7 @@ class RemittanceController extends Controller
                 ->whereIn('OrderID', $dup->OrderID)
                 ->whereHas('rrBarcodes')
                 ->get();
+            return [$d[1]->barcodes,$d[1]->barcodes->count()];
             if (count($d[1]->barcodes) == 0) {
                 $d[1]->delete();
             }

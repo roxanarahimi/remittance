@@ -630,6 +630,7 @@ class RemittanceController extends Controller
         whereIn('OrderID', $duplicates)->
         orderBy('OrderID')
             ->with('barcodes')
+            ->with('rrBarcodes')
             ->get();
         return $d;
 

@@ -642,12 +642,12 @@ class RemittanceController extends Controller
 //            for($i=1;  $i<count($x)-1; $i++){
 //               return $x[$i]->delete();
 //            }
-            $x = Remittance::orderBy('id')
-                ->where('orderID',$item->orderID)
-                ->where('OrderNumber',$item->OrderNumber)
-                ->where('barcode',$item->barcode)
-                ->get();
-            return $x;
+//            $x = Remittance::orderBy('id')
+//                ->where('orderID',$item->orderID)
+//                ->where('OrderNumber',$item->OrderNumber)
+//                ->where('barcode',$item->barcode)
+//                ->get();
+//            return $x;
         }
         $duplicates = DB::table('remittances')
             ->select('orderID', 'OrderNumber', 'barcode', DB::raw('COUNT(*) as count'))

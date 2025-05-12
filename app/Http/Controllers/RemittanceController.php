@@ -623,7 +623,7 @@ class RemittanceController extends Controller
             ->groupBy('orderID', 'OrderNumber', 'barcode')
             ->having('count', '>', 1)
             ->get();
-//        return $duplicates;
+        return $duplicates;
 
         foreach($duplicates as $item){
             $x = Remittance::orderBy('id')->where('orderID',$item->orderID)

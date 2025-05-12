@@ -618,6 +618,12 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        $duplicateKeys = DB::table('remittances')
+            ->select('OrderID', 'OrderNumber', 'barcode')
+            ->groupBy('OrderID', 'OrderNumber', 'barcode')
+            ->havingRaw('COUNT(*) > 1');
+        return $duplicateKeys;
+
         // Step 1: Subquery to get the duplicate keys (grouped)
         $duplicateKeys = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type')

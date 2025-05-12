@@ -623,10 +623,12 @@ class RemittanceController extends Controller
             ->groupBy('OrderID', 'OrderNumber', 'barcode')
             ->having('count', '>', 1)
             ->get();
-
-        $x=Remittance::where('barcode','701030435101800000469B21004000066777')->where('orderID','188823')->get();
-        return [count($x),$x[0]];
         return $duplicates;
+
+        for ($i=1, $i++; $i<count($x)-1){
+            $x[$i]->delete();
+        }
+        return [count($x),$x[0]];
 
         // Step 1: Subquery to get the duplicate keys (grouped)
         $duplicateKeys = DB::table('invoices')

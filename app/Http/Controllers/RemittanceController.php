@@ -631,7 +631,12 @@ class RemittanceController extends Controller
                 $x[$i]->delete();
             }
         }
-
+        $duplicates = DB::table('remittances')
+            ->select('orderID', 'OrderNumber', 'barcode', DB::raw('COUNT(*) as count'))
+            ->groupBy('orderID', 'OrderNumber', 'barcode')
+            ->having('count', '>', 1)
+            ->get();
+        return $duplicates;
         return [count($x),$x[0]];
 
         // Step 1: Subquery to get the duplicate keys (grouped)

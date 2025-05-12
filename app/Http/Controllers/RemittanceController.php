@@ -624,7 +624,7 @@ class RemittanceController extends Controller
             ->having('count', '>', 1)
             ->get();
 
-        $x=Remittance::where('barcode','701030435101800000469B21004000066777')->get();
+        $x=Remittance::where('barcode','701030435101800000469B21004000066777')->where('orderID','188823')->get();
         return [count($x),$x];
         return $duplicates;
 

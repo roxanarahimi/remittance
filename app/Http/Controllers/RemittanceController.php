@@ -623,12 +623,10 @@ class RemittanceController extends Controller
             ->groupBy('OrderID', 'OrderNumber', 'Type')
             ->having('count', '>', 1)
             ->get();
-        return [$duplicates, count($duplicates)];
+//        return [$duplicates, count($duplicates)];
         $d = Invoice::
-//        whereIn('id', $duplicates)
-//            ->
+        whereIn('OrderID', $duplicates['OrderID'])->
         orderBy('OrderID')
-            ->whereHas('barcodes')
             ->with('barcodes')
             ->paginate(500);
         return $d;

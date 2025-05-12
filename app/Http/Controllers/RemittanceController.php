@@ -623,11 +623,11 @@ class RemittanceController extends Controller
             ->groupBy('orderID', 'OrderNumber', 'barcode')
             ->having('count', '>', 1)
             ->get();
-        return $duplicates;
+//        return $duplicates;
 //        return count($duplicates);
 //701030435101800000469B21004000066777
-//        foreach($duplicates as $item){
-        $item = $duplicates['0'];
+        foreach($duplicates as $item){
+//        $item = $duplicates['0'];
             $x = Remittance::orderBy('id')
                 ->where('orderID',$item->orderID)
                 ->where('OrderNumber',$item->OrderNumber)
@@ -648,8 +648,7 @@ class RemittanceController extends Controller
                 ->where('barcode',$item->barcode)
                 ->get();
             return $x;
-            //701030135101500000273A32004000021571
-//        }
+        }
         $duplicates = DB::table('remittances')
             ->select('orderID', 'OrderNumber', 'barcode', DB::raw('COUNT(*) as count'))
             ->groupBy('orderID', 'OrderNumber', 'barcode')

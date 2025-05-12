@@ -626,23 +626,30 @@ class RemittanceController extends Controller
 //        return $duplicates;
 //        return count($duplicates);
 //701030435101800000469B21004000066777
-        foreach($duplicates as $item){
+//        foreach($duplicates as $item){
+        $item = $duplicates['0'];
             $x = Remittance::orderBy('id')
                 ->where('orderID',$item->orderID)
                 ->where('OrderNumber',$item->OrderNumber)
                 ->where('barcode',$item->barcode)
                 ->get();
 //            return $x[0];
-            for($i=1;  $i<count($x)-1; $i++){
-               return $x[$i]->delete();
+            foreach($x as $d){
+                if($d->id!= $x[0]->id){
+                    $d->delete();
+                }
             }
+//            for($i=1;  $i<count($x)-1; $i++){
+//               return $x[$i]->delete();
+//            }
             $x = Remittance::orderBy('id')
                 ->where('orderID',$item->orderID)
                 ->where('OrderNumber',$item->OrderNumber)
                 ->where('barcode',$item->barcode)
                 ->get();
             return $x;
-        }
+            //701030135101500000273A32004000021571
+//        }
         $duplicates = DB::table('remittances')
             ->select('orderID', 'OrderNumber', 'barcode', DB::raw('COUNT(*) as count'))
             ->groupBy('orderID', 'OrderNumber', 'barcode')

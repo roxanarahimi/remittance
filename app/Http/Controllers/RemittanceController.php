@@ -624,6 +624,8 @@ class RemittanceController extends Controller
             ->having('count', '>', 1)
             ->get();
 
+        $x=Remittance::where('barcode','701030435101800000469B21004000066777')->get();
+        return [count($x),$x];
         return $duplicates;
 
         // Step 1: Subquery to get the duplicate keys (grouped)

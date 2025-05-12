@@ -624,12 +624,13 @@ class RemittanceController extends Controller
             ->having('count', '>', 1)
             ->pluck('OrderID');
 //            ->get();
-        return [$duplicates, count($duplicates)];
+//        return [$duplicates, count($duplicates)];
         $d = Invoice::
+            select('*')->
         whereIn('OrderID', $duplicates)->
         orderBy('OrderID')
             ->with('barcodes')
-            ->paginate(500);
+            ->get();
         return $d;
 
         $duplicates = DB::table('invoices')
@@ -1230,4 +1231,3 @@ class RemittanceController extends Controller
 
     }
 }
-

@@ -624,7 +624,7 @@ class RemittanceController extends Controller
             ->having('count', '>', 1)
             ->pluck('OrderID');
 //            ->get();
-//        return [$duplicates, count($duplicates)];
+        return [$duplicates, count($duplicates)];
         $d = Invoice::
         whereIn('OrderID', $duplicates)->
         orderBy('OrderID')
@@ -1230,3 +1230,4 @@ class RemittanceController extends Controller
 
     }
 }
+

@@ -618,35 +618,60 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+//        $duplicates = DB::table('invoices')
+//            ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
+//            ->groupBy('OrderID', 'OrderNumber', 'Type')
+//            ->having('count', '>', 1)
+//            ->get();
+        $d = Invoice::
+//        whereIn('id', $duplicates)
+//            ->
+        orderBy('OrderID')
+            ->whereHas('barcodes')
+            ->with('barcodes')
+            ->paginate(500);
+        return $d;
+
+        $duplicates = DB::table('invoices')
+            ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
+            ->groupBy('OrderID', 'OrderNumber', 'Type')
+            ->having('count', '>', 1)
+            ->get();
+
+
+        return $duplicates;
+
+
+        $all = InvoiceItem::has('invoice', '=', 1)
+            ->take(100)->get();
+
+//        $all->each(function ($invoice) {
+//            $invoice->invoiceItems->each->delete(); // delete each InvoiceItem
+//            $invoice->delete();              // delete the Invoice
+//        });
+        return $all;
+
         $duplicates = DB::table('remittances')
             ->select('orderID', 'OrderNumber', 'barcode', DB::raw('COUNT(*) as count'))
             ->groupBy('orderID', 'OrderNumber', 'barcode')
             ->having('count', '>', 1)
             ->get();
-        return [$duplicates,count($duplicates)];
+        return [$duplicates, count($duplicates)];
 //701030435101800000469B21004000066777
-        foreach($duplicates as $item){
+        foreach ($duplicates as $item) {
 //        $item = $duplicates['0'];
             $x = Remittance::orderBy('id')
-                ->where('orderID',$item->orderID)
-                ->where('OrderNumber',$item->OrderNumber)
-                ->where('barcode',$item->barcode)
+                ->where('orderID', $item->orderID)
+                ->where('OrderNumber', $item->OrderNumber)
+                ->where('barcode', $item->barcode)
                 ->get();
 //            return $x[1]->delete();
-            foreach($x as $d){
-                if($d->id!= $x[0]->id){
+            foreach ($x as $d) {
+                if ($d->id != $x[0]->id) {
                     $d->delete();
                 }
             }
-//            for($i=1;  $i<count($x)-1; $i++){
-//               return $x[$i]->delete();
-//            }
-//            $x = Remittance::orderBy('id')
-//                ->where('orderID',$item->orderID)
-//                ->where('OrderNumber',$item->OrderNumber)
-//                ->where('barcode',$item->barcode)
-//                ->get();
-//            return $x;
+
         }
         $duplicates = DB::table('remittances')
             ->select('orderID', 'OrderNumber', 'barcode', DB::raw('COUNT(*) as count'))
@@ -654,7 +679,7 @@ class RemittanceController extends Controller
             ->having('count', '>', 1)
             ->get();
         return $duplicates;
-        return [count($x),$x[0]];
+        return [count($x), $x[0]];
 
         // Step 1: Subquery to get the duplicate keys (grouped)
         $duplicateKeys = DB::table('invoices')
@@ -676,43 +701,15 @@ class RemittanceController extends Controller
 //            ->get();
 //        return $duplicates;
 
-        $d = Invoice::whereIn('id', $duplicates)
-            ->orderBy('OrderID')
-            ->whereHas('barcodes')
-            ->with('barcodes')
-            ->with('rrBarcodes')
-            ->paginate(500);
-        return $d;
 
-        $duplicates = DB::table('invoices')
-            ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
-            ->groupBy('OrderID', 'OrderNumber', 'Type')
-            ->having('count', '>', 1)
-            ->get();
-
-
-        return $duplicates;
-
-
-
-        $all = InvoiceItem::has('invoice','=', 1)
-            ->take(100)  ->get();
-
-//        $all->each(function ($invoice) {
-//            $invoice->invoiceItems->each->delete(); // delete each InvoiceItem
-//            $invoice->delete();              // delete the Invoice
-//        });
-        return $all;
-
-
-        try{
+        try {
             $os = DB::table('remittances')
-                ->select('orderID','OrderNumber', DB::raw('count(*) as total'))
-                ->groupBy('orderID','OrderNumber')
+                ->select('orderID', 'OrderNumber', DB::raw('count(*) as total'))
+                ->groupBy('orderID', 'OrderNumber')
                 ->get()->toArray();
 //        return $os;
-            foreach($os as $item){
-                $ON = Invoice::where('OrderID',$item->orderID)->where('Type','!=','Order')->first();
+            foreach ($os as $item) {
+                $ON = Invoice::where('OrderID', $item->orderID)->where('Type', '!=', 'Order')->first();
                 $item->checkON = $ON->OrderNumber;
 //               $rs = Remittance::where('orderID',$item->orderID)->get();
 //               $rs->each(function($item2) use ($ON) {
@@ -720,10 +717,9 @@ class RemittanceController extends Controller
 //               });
             }
             return $os;
-        }catch(\Exception $exception){
+        } catch (\Exception $exception) {
             return $exception;
         }
-
 
 
 //        $os = DB::table('remittances')

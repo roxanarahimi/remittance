@@ -633,8 +633,8 @@ class RemittanceController extends Controller
                 ->where('barcode',$item->barcode)
                 ->get();
 //            return $x[0];
-            for ($i=1;  $i<count($x)-1;$i++){
-                $x[$i]->delete();
+            for($i=1;  $i<count($x)-1; $i++){
+               return $x[$i]->delete();
             }
             $x = Remittance::orderBy('id')
                 ->where('orderID',$item->orderID)

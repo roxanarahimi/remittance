@@ -623,7 +623,7 @@ class RemittanceController extends Controller
             ->groupBy('orderID', 'OrderNumber', 'barcode')
             ->having('count', '>', 1)
             ->get();
-        return [$duplicates,count($duplicates)];
+//        return [$duplicates,count($duplicates)];
 //701030435101800000469B21004000066777
         foreach($duplicates as $item){
 //        $item = $duplicates['0'];
@@ -632,12 +632,12 @@ class RemittanceController extends Controller
                 ->where('OrderNumber',$item->OrderNumber)
                 ->where('barcode',$item->barcode)
                 ->get();
-//            return $x[0];
-            foreach($x as $d){
-                if($d->id!= $x[0]->id){
-                    $d->delete();
-                }
-            }
+            return $x[1]->delete();
+//            foreach($x as $d){
+//                if($d->id!= $x[0]->id){
+//                    $d->delete();
+//                }
+//            }
 //            for($i=1;  $i<count($x)-1; $i++){
 //               return $x[$i]->delete();
 //            }

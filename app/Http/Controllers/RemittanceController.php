@@ -641,7 +641,7 @@ class RemittanceController extends Controller
                 ->where('OrderNumber',$item->OrderNumber)
                 ->where('barcode',$item->barcode)
                 ->get();
-            return;
+            return $x;
         }
         $duplicates = DB::table('remittances')
             ->select('orderID', 'OrderNumber', 'barcode', DB::raw('COUNT(*) as count'))

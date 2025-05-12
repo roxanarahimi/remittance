@@ -632,10 +632,8 @@ class RemittanceController extends Controller
                 ->whereHas('rrBarcodes')
                 ->with('barcodes')
                 ->get();
-            return $d;
-            if (count($d[1]->barcodes) == 0) {
-                $d[1]->delete();
-            }
+            return [$d,$d[1]];
+            
         }
 
         $d = Invoice::select('*')

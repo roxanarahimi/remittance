@@ -618,11 +618,12 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
-//        $duplicates = DB::table('invoices')
-//            ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
-//            ->groupBy('OrderID', 'OrderNumber', 'Type')
-//            ->having('count', '>', 1)
-//            ->get();
+        $duplicates = DB::table('invoices')
+            ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
+            ->groupBy('OrderID', 'OrderNumber', 'Type')
+            ->having('count', '>', 1)
+            ->get();
+        return $duplicates;
         $d = Invoice::
 //        whereIn('id', $duplicates)
 //            ->

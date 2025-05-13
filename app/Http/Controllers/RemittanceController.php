@@ -618,6 +618,13 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+        $rs = DB::table('remittances')
+            ->select('orderID',  DB::raw('COUNT(*) as count'))
+            ->groupBy('orderID')
+//            ->having('count', '>', 1)
+            ->get();
+        return $rs;
+
         $duplicates = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
             ->groupBy('OrderID', 'OrderNumber', 'Type')
@@ -626,13 +633,13 @@ class RemittanceController extends Controller
             ->get();
 
         $all = InvoiceItem::has('invoice', '=', 0)->get();
-        
+
         $rd = DB::table('remittances')
             ->select('orderID', 'OrderNumber', 'barcode', DB::raw('COUNT(*) as count'))
             ->groupBy('orderID', 'OrderNumber', 'barcode')
             ->having('count', '>', 1)
             ->get();
-        
+
         return ['iitems:'=>$all, 'invoice dd'=>$duplicates,'rr'=>$rd];
 
 //        $all->each(function ($invoice) {

@@ -619,8 +619,8 @@ class RemittanceController extends Controller
     public function fix(Request $request)
     {
         $all = InvoiceItem::has('invoice', '=', 0)->with('invoice')->get();
-        return $all;
-        return $all->count();
+       // return $all;
+      //  return $all->count();
         $all->each(function ($invoiceItem) {
             $invoiceItem->delete();              // delete the InvoiceItem
         });

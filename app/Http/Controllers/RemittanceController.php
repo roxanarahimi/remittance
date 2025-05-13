@@ -642,10 +642,11 @@ class RemittanceController extends Controller
                 ->with('barcodes')
                 ->get();
 //            return $t[1];
-            if ($t[1]&&$t[1]->barcodes->count() == 0) {
-                $t[1]->delete();
-            }else{
+            if(!$t[1]){
                 return $t;
+            }
+            if ($t[1]->barcodes->count() == 0) {
+                $t[1]->delete();
             }
         }
 //        return $d;

@@ -626,20 +626,6 @@ class RemittanceController extends Controller
 //            ->get();
 //        return ['ooo',$duplicates, count($duplicates)];
 
-//$z=[];
-//        foreach ($duplicates as $dup) {
-//            $d = Invoice::select('*')
-//                ->where('OrderID', $dup->OrderID)
-//                ->whereHas('rrBarcodes')
-//                ->with('barcodes')
-//                ->get();
-//            if ($d[1]->barcodes->count() == 0) {
-//                $d[1]->delete();
-//            }
-//        }
-
-//        return 'ok';
-
         $d = Invoice::select('*')
             ->whereIn('OrderID', $duplicates)
             ->orderBy('OrderID')
@@ -655,21 +641,19 @@ class RemittanceController extends Controller
                 ->whereHas('rrBarcodes')
                 ->with('barcodes')
                 ->get();
-            return [$t,$t[1]->barcodes->count()];
             if ($t[1]->barcodes->count() == 0) {
                 $t[1]->delete();
             }
         }
-        return $d;
+//        return $d;
 
         $duplicates = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
             ->groupBy('OrderID', 'OrderNumber', 'Type')
             ->having('count', '>', 1)
+//            ->pluck('OrderID');
             ->get();
-
-
-        return $duplicates;
+        return ['mm',$duplicates, count($duplicates)];
 
 
         $all = InvoiceItem::has('invoice', '=', 1)

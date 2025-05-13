@@ -624,22 +624,21 @@ class RemittanceController extends Controller
             ->having('count', '>', 1)
 //            ->pluck('OrderID');
             ->get();
-        return ['ooo',$duplicates, count($duplicates)];
+//        return ['ooo',$duplicates, count($duplicates)];
 
+//$z=[];
+//        foreach ($duplicates as $dup) {
+//            $d = Invoice::select('*')
+//                ->where('OrderID', $dup->OrderID)
+//                ->whereHas('rrBarcodes')
+//                ->with('barcodes')
+//                ->get();
+//            if ($d[1]->barcodes->count() == 0) {
+//                $d[1]->delete();
+//            }
+//        }
 
-        foreach ($duplicates as $dup) {
-            $d = Invoice::select('*')
-                ->where('OrderID', $dup->OrderID)
-                ->whereHas('rrBarcodes')
-                ->with('barcodes')
-                ->get();
-            return $d;
-            if ($d[1]->barcodes->count() == 0) {
-                $d[1]->delete();
-            }
-        }
-
-        return 'ok';
+//        return 'ok';
         $d = Invoice::select('*')
             ->whereIn('OrderID', $duplicates)
             ->orderBy('OrderID')

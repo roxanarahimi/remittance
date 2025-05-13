@@ -641,7 +641,7 @@ class RemittanceController extends Controller
                 ->where('OrderID', $item)
                 ->get();
             if (count($t)==2 && $t[1]->barcodes->count() == 0) {
-                $t->invoiceItems->each->delete();//
+                $t[1]->invoiceItems->each->delete();//
                 $t[1]->delete();
             }
         }

@@ -618,16 +618,23 @@ class RemittanceController extends Controller
 
     public function fix(Request $request)
     {
+
+        $duplicates = DB::table('invoices')
+            ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
+            ->groupBy('OrderID', 'OrderNumber', 'Type')
+            ->having('count', '>', 1)
+//            ->pluck('OrderID');
+            ->get();
         $all = InvoiceItem::has('invoice', '=', 0)->with('invoice')->get();
-       // return $all;
-      //  return $all->count();
+        return ['d'=>$duplicates,'aa'=>$all];
+//        return $all->count();
         $all->each(function ($invoiceItem) {
             $invoiceItem->delete();              // delete the InvoiceItem
         });
         $all = InvoiceItem::has('invoice', '=', 0)->get();
         return $all;
 
-        
+
         $duplicates = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
             ->groupBy('OrderID', 'OrderNumber', 'Type')
@@ -1245,5 +1252,3 @@ class RemittanceController extends Controller
             return response($exception);
         }
 
-    }
-}

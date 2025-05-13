@@ -622,9 +622,9 @@ class RemittanceController extends Controller
             ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
             ->groupBy('OrderID', 'OrderNumber', 'Type')
             ->having('count', '>', 1)
-            ->pluck('OrderID');
-//            ->get();
-//        return ['ooo',$duplicates, count($duplicates)];
+//            ->pluck('OrderID');
+            ->get();
+        return ['ooo',$duplicates, count($duplicates)];
 
         $d = Invoice::select('*')
             ->whereIn('OrderID', $duplicates)

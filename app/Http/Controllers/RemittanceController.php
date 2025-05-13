@@ -622,8 +622,16 @@ class RemittanceController extends Controller
             ->select('orderID',  DB::raw('COUNT(*) as count'))
             ->groupBy('orderID')
 //            ->having('count', '>', 1)
+            ->where('invoice_id', null)
             ->get();
-        return $rs;
+//        return $rs;
+        $rs->each(function ($r){
+            $invoice= Invoice::where('OrderID',$r->orderID)->first();
+            $b = Remittance::where('orderID',$r->orderID)->get();
+            $b->each(function ($u) use ($invoice) {
+                $u->update(['invoice_id'=>$invoice->id]);
+            });
+        });
 
         $duplicates = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))

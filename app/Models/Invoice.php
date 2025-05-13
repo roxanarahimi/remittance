@@ -21,13 +21,10 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoiceBarcode::class,  'invoice_id','id');
     }
-    public function rrBarcodes()
+    public function rBarcodes()
     {
         return $this->hasMany(Remittance::class, 'orderID', 'OrderID');
-    }
-    public function barcodes2()
-    {
-        return $this->hasMany(Remittance::class,  'orderID','OrderID');
+//        return $this->hasMany(Remittance::class, 'invoice_id', 'id');
     }
     public function testBarcodes()
     {

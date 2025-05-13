@@ -624,6 +624,22 @@ class RemittanceController extends Controller
             ->having('count', '>', 1)
 //            ->pluck('OrderID');
             ->get();
+
+        $all = InvoiceItem::has('invoice', '=', 0)->get();
+        
+        $rd = DB::table('remittances')
+            ->select('orderID', 'OrderNumber', 'barcode', DB::raw('COUNT(*) as count'))
+            ->groupBy('orderID', 'OrderNumber', 'barcode')
+            ->having('count', '>', 1)
+            ->get();
+        
+        return ['iitems:'=>$all, 'invoice dd'=>$duplicates,'rr'=>$rd];
+
+//        $all->each(function ($invoice) {
+//            $invoice->invoiceItems->each->delete(); // delete each InvoiceItem
+//            $invoice->delete();              // delete the Invoice
+//        });
+        return $all;
         return [$duplicates, count($duplicates)];
 
         foreach ($duplicates as $dup) {

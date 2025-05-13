@@ -639,8 +639,6 @@ class RemittanceController extends Controller
         foreach ($duplicates as $item) {
             $t = Invoice::select('*')
                 ->where('OrderID', $item)
-                ->whereHas('barcodes')
-                ->with('barcodes')
                 ->get();
             if (count($t)==2 && $t[1]->barcodes->count() == 0) {
                 $t->invoiceItems->each->delete();//
@@ -658,13 +656,13 @@ class RemittanceController extends Controller
         return ['mm',$duplicates, count($duplicates)];
 
 
-        $all = InvoiceItem::has('invoice', '=', 1)
-            ->take(100)->get();
-
-//        $all->each(function ($invoice) {
-//            $invoice->invoiceItems->each->delete(); // delete each InvoiceItem
-//            $invoice->delete();              // delete the Invoice
-//        });
+        $all = InvoiceItem::has('invoice', '=', 0)->with('invoice')->get();
+        return $all;
+        return $all->count();
+        $all->each(function ($invoiceItem) {
+            $invoiceItem->delete();              // delete the InvoiceItem
+        });
+        $all = InvoiceItem::has('invoice', '=', 0)->get();
         return $all;
 
         $duplicates = DB::table('remittances')

@@ -648,6 +648,18 @@ class RemittanceController extends Controller
 //            ->with('barcodes')
 //            ->with('rrBarcodes')
             ->paginate(100);
+
+        foreach ($d as $item) {
+            $t = Invoice::select('*')
+                ->where('OrderID', $item->OrderID)
+                ->whereHas('rrBarcodes')
+                ->with('barcodes')
+                ->get();
+
+            if ($t[1]->barcodes->count() == 0) {
+                $t[1]->delete();
+            }
+        }
         return $d;
 
         $duplicates = DB::table('invoices')

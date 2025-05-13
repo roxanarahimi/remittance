@@ -176,7 +176,7 @@ class CacheController extends Controller
                     foreach ($item->OrderItems as $item2) {
                         $exist = InvoiceItem::where('invoice_id',$invoice->id)->where('ProductNumber',$item2->Part->Code)->first();
                         if ($exist){
-                            $exist->update(['Quantity',$exist->Quantity + $item2->Quantity]);
+                            $exist->update(['Quantity'=>$exist->Quantity + $item2->Quantity]);
                         }else{
                             if (!str_contains($item2->Part->Name,'لیوانی') && !str_contains($item2->Part->Name,'کیلویی')){
                                 $invoiceItem = InvoiceItem::create([
@@ -232,7 +232,7 @@ class CacheController extends Controller
                         }
                         $exist = InvoiceItem::where('invoice_id',$invoice->id)->where('ProductNumber',$item2->Part->Code)->first();
                         if ($exist){
-                            $exist->update(['Quantity',$exist->Quantity + $q]);
+                            $exist->update(['Quantity'=>$exist->Quantity + $q]);
                         }else{
                             if (!str_contains($item2->Part->Name,'لیوانی') && !str_contains($item2->Part->Name,'کیلویی')){
                                 $invoiceItem = InvoiceItem::create([
@@ -282,7 +282,7 @@ class CacheController extends Controller
 //                    foreach ($item->OrderItems as $item2) {
 //                        $exist = InvoiceItem::where('invoice_id',$invoice->id)->where('ProductNumber',$item2->Product->Number)->first();
 //                        if ($exist){
-//                            $exist->update(['Quantity',$exist->Quantity + $item2->Quantity]);
+//                            $exist->update(['Quantity'=>$exist->Quantity + $item2->Quantity]);
 //                        }else{
 //                            if (!str_contains($item2->Product->Name,'لیوانی') && !str_contains($item2->Product->Name,'کیلویی')){
 //                                $invoiceItem = InvoiceItem::create([

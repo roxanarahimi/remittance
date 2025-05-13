@@ -624,7 +624,7 @@ class RemittanceController extends Controller
             ->having('count', '>', 1)
 //            ->pluck('OrderID');
             ->get();
-//        return [$duplicates, count($duplicates)];
+        return [$duplicates, count($duplicates)];
 
         foreach ($duplicates as $dup) {
             $d = Invoice::select('*')

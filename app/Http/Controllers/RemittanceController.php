@@ -641,7 +641,7 @@ class RemittanceController extends Controller
                 ->whereHas('rrBarcodes')
                 ->with('barcodes')
                 ->get();
-            return $t[1];
+//            return $t[1];
             if ($t[1]->barcodes->count() == 0) {
                 $t[1]->delete();
             }

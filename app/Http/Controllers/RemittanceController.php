@@ -634,6 +634,8 @@ class RemittanceController extends Controller
         });
 
         return 'ok';
+
+
         $duplicates = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
             ->groupBy('OrderID', 'OrderNumber', 'Type')

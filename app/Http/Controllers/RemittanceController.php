@@ -640,7 +640,7 @@ class RemittanceController extends Controller
 
 //        return 'ok';
         $d = Invoice::select('*')
-            ->whereIn('OrderID', $duplicates->OrderID)
+            ->whereIn('OrderID', $duplicates->orderID)
             ->orderBy('OrderID')
 //            ->wherehas('barcodes')
             ->whereHas('rrBarcodes')

@@ -21,7 +21,7 @@ class ReportController extends Controller
     public function fix(Request $request)
     {
         $rrr = DB::table('remittances')
-            ->select('OrderID', 'invoice', DB::raw('COUNT(*) as count'))
+            ->select('OrderID', DB::raw('COUNT(*) as count'))
             ->groupBy('OrderID')
 //            ->having('count', '>', 1)
 //            ->pluck('OrderID');

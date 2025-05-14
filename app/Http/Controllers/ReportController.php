@@ -18,66 +18,10 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
-    public function report(Request $request)
-    {
-        try {
-            $i2 = $this->getRemittances($request);
-            if (count($i2)) {
-                $i1 = $this->getInvoiceBarcodes($request);
-                $filtered = json_decode(json_encode($i1));
-                $filtered2 = json_decode(json_encode($i2));
-                $input1 = array_values($filtered);
-                $input2 = array_values($filtered2);
-                $input = array_merge($input1, $input2);
-
-                $offset = 0;
-                $perPage = 200;
-                if ($request['page'] && $request['page'] > 1) {
-                    $offset = ($request['page'] - 1) * $perPage;
-                }
-
-                $info = array_slice($input, $offset, $perPage);
-                $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
-
-                return response()->json($paginator, 200);
-            } else {
-                $info = InvoiceBarcode::orderByDesc('id');
-                if (isset($request['OrderNumber'])) {
-                    $info = $info->whereHas('invoice', function ($q) use ($request) {
-                        $q->where('OrderNumber', $request['OrderNumber']);
-                    });
-                }
-                if (isset($request['search'])) {
-                    $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
-                }
-                if (isset($request['count']) && $request['count'] <= 500) {
-                    $info = $info->take($request['count'])->get();
-                } else {
-                    $info = $info->paginate(200);
-                }
-                return InvoiceBarcodeResource::collection($info);
-            }
-
-
-//            if (isset($request['duplicate']) && $request['duplicate'] == 1) {
-//                $bars1 = array_column($input1, 'Barcode');
-//                $duplicates1 = array_values(array_unique(array_diff_assoc($bars1, array_unique($bars1))));
-//                $bars2 = array_column($input2, 'barcode');
-//                $duplicates2 = array_values(array_unique(array_diff_assoc($bars2, array_unique($bars2))));
-//                return response()->json([['duplicates' => [$duplicates1, $duplicates2]], $paginator], 200);
-//
-//            } else {
-//
-//            }
-
-
-        } catch (\Exception $exception) {
-            return response($exception);
-        }
-    }
-
     public function fix(Request $request)
     {
+        $r = Remittance::orderBy('id')->with('invoice')->paginate('200');
+        return $r;
         $rs = DB::table('remittances')
             ->select('orderID',  DB::raw('COUNT(*) as count'))
             ->groupBy('orderID')
@@ -528,6 +472,64 @@ class ReportController extends Controller
 //            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
 //           ->paginate(100);
 //        return $dat3;
+    }
+
+    public function report(Request $request)
+    {
+        try {
+            $i2 = $this->getRemittances($request);
+            if (count($i2)) {
+                $i1 = $this->getInvoiceBarcodes($request);
+                $filtered = json_decode(json_encode($i1));
+                $filtered2 = json_decode(json_encode($i2));
+                $input1 = array_values($filtered);
+                $input2 = array_values($filtered2);
+                $input = array_merge($input1, $input2);
+
+                $offset = 0;
+                $perPage = 200;
+                if ($request['page'] && $request['page'] > 1) {
+                    $offset = ($request['page'] - 1) * $perPage;
+                }
+
+                $info = array_slice($input, $offset, $perPage);
+                $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+
+                return response()->json($paginator, 200);
+            } else {
+                $info = InvoiceBarcode::orderByDesc('id');
+                if (isset($request['OrderNumber'])) {
+                    $info = $info->whereHas('invoice', function ($q) use ($request) {
+                        $q->where('OrderNumber', $request['OrderNumber']);
+                    });
+                }
+                if (isset($request['search'])) {
+                    $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
+                }
+                if (isset($request['count']) && $request['count'] <= 500) {
+                    $info = $info->take($request['count'])->get();
+                } else {
+                    $info = $info->paginate(200);
+                }
+                return InvoiceBarcodeResource::collection($info);
+            }
+
+
+//            if (isset($request['duplicate']) && $request['duplicate'] == 1) {
+//                $bars1 = array_column($input1, 'Barcode');
+//                $duplicates1 = array_values(array_unique(array_diff_assoc($bars1, array_unique($bars1))));
+//                $bars2 = array_column($input2, 'barcode');
+//                $duplicates2 = array_values(array_unique(array_diff_assoc($bars2, array_unique($bars2))));
+//                return response()->json([['duplicates' => [$duplicates1, $duplicates2]], $paginator], 200);
+//
+//            } else {
+//
+//            }
+
+
+        } catch (\Exception $exception) {
+            return response($exception);
+        }
     }
 
     public function filter(Request $request)

@@ -20,6 +20,10 @@ class ReportController extends Controller
 {
     public function fix(Request $request)
     {
+        $x= InventoryVoucher::where('InventoryVoucherID','321009')
+            ->with('OrderItems')
+            ->first();
+        return $x;
         $rrr = DB::table('remittances')
             ->select('OrderID', DB::raw('COUNT(*) as count'))
             ->groupBy('OrderID')
@@ -563,10 +567,8 @@ class ReportController extends Controller
 //                $bars2 = array_column($input2, 'barcode');
 //                $duplicates2 = array_values(array_unique(array_diff_assoc($bars2, array_unique($bars2))));
 //                return response()->json([['duplicates' => [$duplicates1, $duplicates2]], $paginator], 200);
-//
-//            } else {
-//
-//            }
+//}
+
 
 
         } catch (\Exception $exception) {

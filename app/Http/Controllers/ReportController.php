@@ -25,7 +25,6 @@ class ReportController extends Controller
             ->groupBy('OrderID')
 //            ->having('count', '>', 1)
 //            ->pluck('OrderID');
-            ->with('invoice')
             ->get();
         return $rrr;
         $r = Remittance::orderBy('id')->with('invoice')->paginate('200');

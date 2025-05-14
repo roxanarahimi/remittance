@@ -56,14 +56,13 @@ class CacheController extends Controller
             })
             ->pluck('StoreID');
         $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
-            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef","AddressID",
+            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef", "AddressID",
             'GNR3.RegionalDivision.Name as City')
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID','=','GNR3.Address.RegionalDivisionRef' )
-
-            //            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))
+            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
+            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
             ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $inventoryVoucherIDs)
             ->whereIn('LGS3.Store.StoreID', $storeIDs)
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
@@ -82,13 +81,12 @@ class CacheController extends Controller
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
         $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
             "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef",
-            "AddressID",'GNR3.Address.Name as AddressName', 'GNR3.Address.Phone','Details','GNR3.RegionalDivision.Name as City')
+            "AddressID", 'GNR3.Address.Name as AddressName', 'GNR3.Address.Phone', 'Details', 'GNR3.RegionalDivision.Name as City')
             ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
             ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
-            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID','=','GNR3.Address.RegionalDivisionRef' )
-
-            //            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))
+            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
+            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
             ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $deputationIds)
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
             ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
@@ -106,11 +104,11 @@ class CacheController extends Controller
     {
         $dat2 = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
             "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef',
-            'GNR3.Address.AddressID','GNR3.RegionalDivision.Name as City')
+            'GNR3.Address.AddressID', 'GNR3.RegionalDivision.Name as City')
             ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
             ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
-            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID','=','GNR3.Address.RegionalDivisionRef' )
+            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
 //            ->where('SLS3.Order.Date', '>=', today()->subDays(2))
             ->whereNotIn('SLS3.Order.OrderID', $orderIDs)
             ->where('SLS3.Order.InventoryRef', 1)
@@ -141,10 +139,13 @@ class CacheController extends Controller
 
 
             $this->cacheProducts();
-            $inventoryVoucherIDs = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
+            $inventoryVoucherIDs = Invoice::
+            where('DeliveryDate', '>=', today()->subDays(2))->//
             where('Type', 'InventoryVoucher')->orderBy('id')->pluck('OrderID');
-            $deputationIds = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
+            $deputationIds = Invoice::
+            where('DeliveryDate', '>=', today()->subDays(2))->//
             where('Type', 'Deputation')->orderBy('id')->pluck('OrderID');
+
 //            $orderIDs = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
 //            where('Type', 'Order')->orderBy('id')->pluck('OrderID');
             $d1 = $this->getInventoryVouchers($inventoryVoucherIDs);
@@ -153,8 +154,8 @@ class CacheController extends Controller
 
 
             foreach ($d1 as $item) {
-                $exx = Invoice::where('OrderID',$item->InventoryVoucherID)->where('OrderNumber',$item->Number)->where('Type','InventoryVoucher')->first();
-                if(!$exx){
+                $exx = Invoice::where('OrderID', $item->InventoryVoucherID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->first();
+                if (!$exx) {
                     $invoice = Invoice::create([
                         'Type' => 'InventoryVoucher',
                         'OrderID' => $item->InventoryVoucherID,
@@ -174,11 +175,11 @@ class CacheController extends Controller
                         ]);
                     }
                     foreach ($item->OrderItems as $item2) {
-                        $exist = InvoiceItem::where('invoice_id',$invoice->id)->where('ProductNumber',$item2->Part->Code)->first();
-                        if ($exist){
-                            $exist->update(['Quantity'=>$exist->Quantity + $item2->Quantity]);
-                        }else{
-                            if (!str_contains($item2->Part->Name,'لیوانی') && !str_contains($item2->Part->Name,'کیلویی')){
+                        $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Part->Code)->first();
+                        if ($exist) {
+                            $exist->update(['Quantity' => $exist->Quantity + $item2->Quantity]);
+                        } else {
+                            if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
                                 $invoiceItem = InvoiceItem::create([
                                     'invoice_id' => $invoice->id,
                                     'ProductNumber' => $item2->Part->Code,
@@ -190,7 +191,7 @@ class CacheController extends Controller
 
                         $product = InvoiceProduct::where('ProductNumber', $item2->Part->Code)->first();
                         if (!$product) {
-                            if (!str_contains($item2->Part->Name,'لیوانی')  && !str_contains($item2->Part->Name,'کیلویی')){
+                            if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
                                 InvoiceProduct::create([
                                     'ProductName' => $item2->Part->Name,
                                     'ProductNumber' => $item2->Part->Code,
@@ -203,8 +204,8 @@ class CacheController extends Controller
                 }
             }
             foreach ($d2 as $item) {
-                $exx2 = Invoice::where('OrderID',$item->InventoryVoucherID)->where('OrderNumber',$item->Number)->where('Type','Deputation')->first();
-                if(!$exx2){
+                $exx2 = Invoice::where('OrderID', $item->InventoryVoucherID)->where('OrderNumber', $item->Number)->where('Type', 'Deputation')->first();
+                if (!$exx2) {
                     $invoice = Invoice::create([
                         'Type' => 'Deputation',
                         'OrderID' => $item->InventoryVoucherID,
@@ -226,15 +227,15 @@ class CacheController extends Controller
                     foreach ($item->OrderItems as $item2) {
                         $q = $item2->Quantity;
                         $int = (int)$item2->Quantity;
-                        if(str_contains($item2->PartUnit->Name,'پک')){
-                            $t = (int)PartUnit::where('PartID',$item2->PartRef)->where('Name','like','%کارتن%')->pluck('DSRatio')[0];
-                            $q = (string)floor($int/$t);
+                        if (str_contains($item2->PartUnit->Name, 'پک')) {
+                            $t = (int)PartUnit::where('PartID', $item2->PartRef)->where('Name', 'like', '%کارتن%')->pluck('DSRatio')[0];
+                            $q = (string)floor($int / $t);
                         }
-                        $exist = InvoiceItem::where('invoice_id',$invoice->id)->where('ProductNumber',$item2->Part->Code)->first();
-                        if ($exist){
-                            $exist->update(['Quantity'=>$exist->Quantity + $q]);
-                        }else{
-                            if (!str_contains($item2->Part->Name,'لیوانی') && !str_contains($item2->Part->Name,'کیلویی')){
+                        $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Part->Code)->first();
+                        if ($exist) {
+                            $exist->update(['Quantity' => $exist->Quantity + $q]);
+                        } else {
+                            if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
                                 $invoiceItem = InvoiceItem::create([
                                     'invoice_id' => $invoice->id,
                                     'ProductNumber' => $item2->Part->Code,
@@ -246,7 +247,7 @@ class CacheController extends Controller
 
                         $product = InvoiceProduct::where('ProductNumber', $item2->Part->Code)->first();
                         if (!$product) {
-                            if (!str_contains($item2->Part->Name,'لیوانی') && !str_contains($item2->Part->Name,'کیلویی')){
+                            if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
                                 InvoiceProduct::create([
                                     'ProductName' => $item2->Part->Name,
                                     'ProductNumber' => $item2->Part->Code,
@@ -307,13 +308,13 @@ class CacheController extends Controller
 //                    }
 //                }
 //            }
-            $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
-            $nowTime  = $datetime->format( 'Y-m-d G:i');
+            $datetime = new \DateTime("now", new \DateTimeZone("Asia/Tehran"));
+            $nowTime = $datetime->format('Y-m-d G:i');
             echo $nowTime . ' - Tehran Time: cache is ok
 ';
         } catch (\Exception $exception) {
-            $datetime = new \DateTime( "now", new \DateTimeZone( "Asia/Tehran" ));
-            $nowTime  = $datetime->format( 'Y-m-d G:i');
+            $datetime = new \DateTime("now", new \DateTimeZone("Asia/Tehran"));
+            $nowTime = $datetime->format('Y-m-d G:i');
             echo $nowTime . ' - Tehran Time: ' . $exception->getMessage() . '
 ';
         }

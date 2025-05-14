@@ -17,6 +17,7 @@ class RemittanceResource extends JsonResource
     {
         return [
             "id" => (string)$this->id,
+            "invoice_id" => $this->invoice_id,
             "orderID" => $this->orderID,
             "OrderNumber" => $this->OrderNumber,
             "addressName" => $this->addressName,

@@ -112,7 +112,6 @@ class ReportController extends Controller
             ->having('count', '>', 1)
             ->get();
         return [$duplicates, count($duplicates)];
-//701030435101800000469B21004000066777
         foreach ($duplicates as $item) {
 //        $item = $duplicates['0'];
             $x = Remittance::orderBy('id')
@@ -473,7 +472,43 @@ class ReportController extends Controller
 //           ->paginate(100);
 //        return $dat3;
     }
+    public function getInvoiceBarcodes(Request $request)
+    {
+        $info = InvoiceBarcode::orderByDesc('id');
+        if (isset($request['OrderNumber'])) {
+            $info = $info->whereHas('invoice', function ($q) use ($request) {
+                $q->where('OrderNumber', $request['OrderNumber']);
+            });
+        }
+        if (isset($request['search'])) {
+            $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
+        } else {
+            if (isset($request['count'])) {
+                $info = $info->take($request['count']);
+            } else {
+                $info = $info->take(500);
+            }
+        }
+        $info = $info->get();
+        return InvoiceBarcodeResource::collection($info);
 
+    }
+    public function getRemittances(Request $request)
+    {
+        $info = Remittance::orderByDesc('id');
+        if (isset($request['OrderNumber'])) {
+            $info = $info->where('OrderNumber', $request['OrderNumber']);
+        }
+        if (isset($request['search'])) {
+            $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
+        } else {
+            $info = $info->take(500);
+        }
+        $info = $info->get();
+
+        return RemittanceResource::collection($info);
+
+    }
     public function report(Request $request)
     {
         try {

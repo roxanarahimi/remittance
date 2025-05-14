@@ -616,43 +616,6 @@ class RemittanceController extends Controller
         }
     }
 
-    public function getInvoiceBarcodes(Request $request)
-    {
-        $info = InvoiceBarcode::orderByDesc('id');
-        if (isset($request['OrderNumber'])) {
-            $info = $info->whereHas('invoice', function ($q) use ($request) {
-                $q->where('OrderNumber', $request['OrderNumber']);
-            });
-        }
-        if (isset($request['search'])) {
-            $info = $info->where('Barcode', 'like', '%' . $request['search'] . '%');
-        } else {
-            if (isset($request['count'])) {
-                $info = $info->take($request['count']);
-            } else {
-                $info = $info->take(500);
-            }
-        }
-        $info = $info->get();
-        return InvoiceBarcodeResource::collection($info);
 
-    }
-
-    public function getRemittances(Request $request)
-    {
-        $info = Remittance::orderByDesc('id');
-        if (isset($request['OrderNumber'])) {
-            $info = $info->where('OrderNumber', $request['OrderNumber']);
-        }
-        if (isset($request['search'])) {
-            $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
-        } else {
-            $info = $info->take(500);
-        }
-        $info = $info->get();
-
-        return RemittanceResource::collection($info);
-
-    }
 
 }

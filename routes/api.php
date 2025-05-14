@@ -33,9 +33,7 @@ Route::controller(App\Http\Controllers\RemittanceController::class)->group(funct
     Route::post('/productTest/{id}', 'showProductTest');
 
 });
-Route::controller(App\Http\Controllers\RemittanceController::class)->group(function () {
-    Route::post('/safe/delete/barcode', 'safeDeleteBarcodes');
-});
+
 Route::controller(App\Http\Controllers\InvoiceBarcodeController::class)->group(function () {
     Route::prefix('barcode')->group(function () {
         Route::post('/', 'index');
@@ -44,6 +42,8 @@ Route::controller(App\Http\Controllers\InvoiceBarcodeController::class)->group(f
         Route::post('/update/{invoiceBarcode}', 'update');
         Route::post('/destroy/{invoiceBarcode}', 'destroy');
     });
+    Route::post('/safe/delete/barcode', 'safeDeleteBarcodes');
+
 });
 Route::controller(App\Http\Controllers\TestController::class)->group(function () {
     Route::prefix('test')->group(function () {

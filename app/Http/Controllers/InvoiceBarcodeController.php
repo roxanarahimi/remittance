@@ -128,5 +128,22 @@ class InvoiceBarcodeController extends Controller
             return response($exception);
         }
     }
+    public function safeDeleteBarcodes(Request $request)
+    {
+        try {
+            $bar = InvoiceBarcode::create([
+                "invoice_id" => $request['invoice_id'],
+                "Barcode" => $request['Barcode'],
+                "isDeleted" => 1,
+            ]);
+
+            return response()->json(['message' => 'Barcode was deleted safely.', 'data' => new InvoiceBarcodeResource($bar)], 200);
+
+
+        } catch (\Exception $exception) {
+            return response($exception);
+        }
+
+    }
 
 }

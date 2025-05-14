@@ -31,11 +31,11 @@ Route::controller(App\Http\Controllers\RemittanceController::class)->group(funct
     Route::get('/info2', 'readOnly2');
     Route::post('/product/{id}', 'showProduct');
     Route::post('/productTest/{id}', 'showProductTest');
-    Route::post('/query', 'query');
-    Route::post('/fix', 'fix');
 
 });
-
+Route::controller(App\Http\Controllers\RemittanceController::class)->group(function () {
+    Route::post('/safe/delete/barcode', 'safeDeleteBarcodes');
+});
 Route::controller(App\Http\Controllers\InvoiceBarcodeController::class)->group(function () {
     Route::prefix('barcode')->group(function () {
         Route::post('/', 'index');
@@ -60,18 +60,19 @@ Route::controller(App\Http\Controllers\CacheController::class)->group(function (
 });
 
 
-Route::controller(App\Http\Controllers\RemittanceController::class)->group(function () {
-        Route::get('/report', 'report');
-        Route::post('/safe/delete/barcode', 'safeDeleteBarcodes');
-});
 
-
-Route::controller(App\Http\Controllers\InvoiceController::class)->group(function () {
-        Route::get('/filter', 'filter');
-});
 
 
 Route::controller(App\Http\Controllers\DateController::class)->group(function () {
         Route::get('/tt', 'jalali_to_gregorian');
+});
+
+
+
+Route::controller(App\Http\Controllers\ReportController::class)->group(function () {
+    Route::get('/report', 'report');
+    Route::post('/fix', 'fix');
+    Route::get('/filter', 'filter');
+
 });
 

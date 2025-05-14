@@ -20,13 +20,14 @@ class ReportController extends Controller
 {
     public function fix(Request $request)
     {
-        $duplicates = DB::table('invoices')
+        $rrr = DB::table('invoices')
             ->select('OrderID', 'OrderNumber', 'Type', DB::raw('COUNT(*) as count'))
             ->groupBy('OrderID', 'OrderNumber', 'Type')
 //            ->having('count', '>', 1)
 //            ->pluck('OrderID');
             ->with('invoice')
             ->get();
+        return $rrr;
         $r = Remittance::orderBy('id')->with('invoice')->paginate('200');
         return $r;
         $rs = DB::table('remittances')

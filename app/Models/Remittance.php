@@ -10,9 +10,8 @@ class Remittance extends Model
     use HasFactory;
     protected $guarded= ['id'];
 
-    public function invoices()
+    public function invoice()
     {
-        return $this->hasMany(Invoice::class,  'OrderNumber','OrderNumber')
-            ->whereColumn('orderID','=','OrderID');
+        return $this->hasMany(Invoice::class,  'id','invoice_id');
     }
 }
